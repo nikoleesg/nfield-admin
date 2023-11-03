@@ -2,9 +2,9 @@
 
 namespace Nikoleesg\NfieldAdmin;
 
+use Nikoleesg\NfieldAdmin\Commands\NfieldAdminCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Nikoleesg\NfieldAdmin\Commands\NfieldAdminCommand;
 
 class NfieldAdminServiceProvider extends PackageServiceProvider
 {
