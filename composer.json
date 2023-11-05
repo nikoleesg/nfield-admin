@@ -36,7 +36,10 @@
         "psr-4": {
             "Nikoleesg\\NfieldAdmin\\": "src/",
             "Nikoleesg\\NfieldAdmin\\Database\\Factories\\": "database/factories/"
-        }
+        },
+        "files": [
+            "src/Helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
