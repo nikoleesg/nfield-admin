@@ -2,9 +2,8 @@
 
 namespace Nikoleesg\NfieldAdmin\Enums;
 
-enum SurveyStateEnum: int
+enum ChannelEnum: string
 {
-    case UnderConstruction = 0;
-    case Started = 1;
-    case Paused = 3;
+    case Online = 'Online';
+    case CAPI = 'Capi';
 }
