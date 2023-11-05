@@ -55,5 +55,4 @@ class SurveyData extends Data
             survey_name: $surveyName
         );
     }
-
 }

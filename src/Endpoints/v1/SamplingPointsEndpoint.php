@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Nikoleesg\NfieldAdmin\HttpClient;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
+use Nikoleesg\NfieldAdmin\HttpClient;
 
 class SurveysEndpoint
 {
@@ -21,7 +19,6 @@ class SurveysEndpoint
 
     /**
      * This method retrieves a list of surveys.
-     * @return Collection
      */
     public function getSurveys(): Collection
     {
@@ -31,8 +28,7 @@ class SurveysEndpoint
 
         $surveysCollection = collect();
 
-        foreach ($surveys as $survey)
-        {
+        foreach ($surveys as $survey) {
             $surveysCollection->push(SamplingPointData::from($survey));
         }
 
@@ -41,12 +37,10 @@ class SurveysEndpoint
 
     /**
      * This method retrieve details of a specific survey.
-     * @param string $surveyId
-     * @return SamplingPointData
      */
     public function getSurvey(string $surveyId): SamplingPointData
     {
-        $response = $this->httpClient->get($this->resourcePath . '/' . $surveyId);
+        $response = $this->httpClient->get($this->resourcePath.'/'.$surveyId);
 
         $survey = json_decode($response->body(), true);
 
