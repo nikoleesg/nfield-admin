@@ -2,9 +2,27 @@
 
 namespace Nikoleesg\NfieldAdmin\Enums;
 
-enum SurveyStateEnum: int
+enum SurveyTypeEnum: string
 {
-    case UnderConstruction = 0;
-    case Started = 1;
-    case Paused = 3;
+    case Online = 'OnlineBasic';
+    case FreeIntercept = 'Basic';
+//    case JointTargets = 'Basic';
+//    case IndividualTargets = 'Basic';
+    case SamplingPointsWithQuota = 'Advanced';
+    case SamplingPointsWithAddresses = 'EuroBarometer';
+    case SamplingPointsWithQuotaAndQuota = 'EuroBarometerAdvanced';
+
+    public function channel(): string
+    {
+        return match($this)
+        {
+            SurveyTypeEnum::Online => 'Online',
+            SurveyTypeEnum::FreeIntercept => 'CAPI',
+            SurveyTypeEnum::JointTargets => 'CAPI',
+            SurveyTypeEnum::IndividualTargets => 'CAPI',
+            SurveyTypeEnum::SamplingPointsWithQuota => 'CAPI',
+            SurveyTypeEnum::SamplingPointsWithAddresses => 'CAPI',
+            SurveyTypeEnum::SamplingPointsWithQuotaAndQuota => 'CAPI',
+        };
+    }
 }
