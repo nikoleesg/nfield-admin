@@ -8,48 +8,73 @@ use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\HttpClient;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
 
-class SurveysEndpoint
+class SamplingPointsEndpoint
 {
-    protected string $resourcePath = 'v1/Surveys';
+    protected string $resourcePath = 'v1/Surveys/{surveyId}/SamplingPoints';
 
     protected HttpClient $httpClient;
 
-    public function __construct()
+    public function __construct(string $surveyId)
     {
+        $this->resourcePath = Str::replace('{surveyId}', $surveyId, $this->resourcePath);
+
         $this->httpClient = new HttpClient();
     }
 
     /**
-     * This method retrieves a list of surveys.
+     * Get a list of all sampling points for a survey.
      * @return Collection
      */
-    public function getSurveys(): Collection
+    public function getSamplingPoints(): Collection
     {
         $response = $this->httpClient->get($this->resourcePath);
 
-        $surveys = json_decode($response->body(), true);
+        $samplingPoints = json_decode($response->body(), true);
 
-        $surveysCollection = collect();
+        $samplingPointsCollection = collect();
 
-        foreach ($surveys as $survey)
+        foreach ($samplingPoints as $samplingPoint)
         {
-            $surveysCollection->push(SamplingPointData::from($survey));
+            $samplingPointsCollection->push(SamplingPointData::from($samplingPoint));
         }
 
-        return $surveysCollection;
+        return $samplingPointsCollection;
     }
 
     /**
-     * This method retrieve details of a specific survey.
-     * @param string $surveyId
+     * Get the details of a specific sampling point.
+     * @param string $samplingPointId
      * @return SamplingPointData
      */
-    public function getSurvey(string $surveyId): SamplingPointData
+    public function getSamplingPoint(string $samplingPointId): SamplingPointData
     {
-        $response = $this->httpClient->get($this->resourcePath . '/' . $surveyId);
+        $response = $this->httpClient->get($this->resourcePath . '/' . $samplingPointId);
 
-        $survey = json_decode($response->body(), true);
+        $samplingPoint = json_decode($response->body(), true);
 
-        return SamplingPointData::from($survey);
+        return SamplingPointData::from($samplingPoint);
+    }
+
+    /**
+     * @param SamplingPointData $samplingPointData
+     */
+    public function createSamplingPoint(SamplingPointData $samplingPointData): SamplingPointData
+    {
+        $response = $this->httpClient->post($this->resourcePath, true, $samplingPointData->toArray());
+
+        $samplingPoint = json_decode($response->body(), true);
+
+        return SamplingPointData::from($samplingPoint);
+    }
+
+    /**
+     * Returns the number of samplingPoints of the survey.
+     * @return int
+     */
+    public function getCount(): int
+    {
+        $response = $this->httpClient->get($this->resourcePath . '/Count');
+
+        return $response->body();
     }
 }
