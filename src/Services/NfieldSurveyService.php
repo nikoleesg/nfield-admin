@@ -4,10 +4,10 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
+use Spatie\LaravelData\DataCollection;
 
 class NfieldSurveyService
 {
@@ -23,9 +23,6 @@ class NfieldSurveyService
     /**
      * Find Survey by survey_id
      * Supports multiple id providing by array
-     *
-     * @param string|array $surveyId
-     * @return DataCollection|SurveyData|null
      */
     public function find(string|array $surveyId): DataCollection|SurveyData|null
     {
@@ -41,9 +38,6 @@ class NfieldSurveyService
     /**
      * Find Survey by survey_name
      * Supports multiple name providing by array
-     *
-     * @param string|array $surveyName
-     * @return DataCollection|SurveyData|null
      */
     public function findByName(string|array $surveyName): DataCollection|SurveyData|null
     {
@@ -58,9 +52,6 @@ class NfieldSurveyService
 
     /**
      * Search Survey by a keyword
-     *
-     * @param string $keyWord
-     * @return DataCollection
      */
     public function search(string $keyWord): DataCollection
     {
@@ -73,14 +64,10 @@ class NfieldSurveyService
 
     /**
      * Retrieves all of the values for a given key
-     *
-     * @param string $valueName
-     * @param string|null $keyName
-     * @return Collection
      */
-    public function pluck(string $valueName, ?string $keyName = null): Collection
+    public function pluck(string $valueName, string $keyName = null): Collection
     {
-        if(!isset($this->surveyCollection)) {
+        if (! isset($this->surveyCollection)) {
             $this->retrieveSurveys();
         }
 
@@ -91,7 +78,7 @@ class NfieldSurveyService
         $this->surveyCollection
             ->each(function ($item, $key) use ($plucked, $valueName, $keyName) {
 
-                if (!is_null($keyName)) {
+                if (! is_null($keyName)) {
                     $plucked->put($item->$keyName, $item->$valueName);
                 } else {
                     $plucked->push($item->$valueName);
@@ -115,20 +102,18 @@ class NfieldSurveyService
     }
 
     /**
-     * @param string $property
-     * @param mixed $value
      * @return $this
      */
     public function where(string $property, mixed $value): self
     {
-        if (!isset($this->surveyCollection)) {
+        if (! isset($this->surveyCollection)) {
             $this->retrieveSurveys();
         }
 
         $this->surveyCollection = $this->surveyCollection
             ->filter(function (SurveyData $surveyData, int $key) use ($property, $value) {
 
-                return $surveyData->$property == $value;
+                return $value == $surveyData->$property;
 
             });
 
@@ -136,13 +121,12 @@ class NfieldSurveyService
     }
 
     /**
-     * @param string $property
-     * @param mixed $value
+     * @param  mixed  $value
      * @return $this
      */
     public function whereLike(string $property, string $value): self
     {
-        if (!isset($this->surveyCollection)) {
+        if (! isset($this->surveyCollection)) {
             $this->retrieveSurveys();
         }
 
@@ -157,13 +141,11 @@ class NfieldSurveyService
     }
 
     /**
-     * @param string $property
-     * @param array $values
      * @return $this
      */
     public function whereIn(string $property, array $values): self
     {
-        if (!isset($this->surveyCollection)) {
+        if (! isset($this->surveyCollection)) {
             $this->retrieveSurveys();
         }
 
@@ -179,12 +161,10 @@ class NfieldSurveyService
 
     /**
      * Return SurveyData
-     *
-     * @return SurveyData|null
      */
     public function first(): ?SurveyData
     {
-        if (!isset($this->surveyCollection)) {
+        if (! isset($this->surveyCollection)) {
             $this->retrieveSurveys();
         }
 
@@ -197,12 +177,10 @@ class NfieldSurveyService
 
     /**
      * Return SurveyData Collection
-     *
-     * @return DataCollection
      */
     public function get(): DataCollection
     {
-        if (!isset($this->surveyCollection)) {
+        if (! isset($this->surveyCollection)) {
             $this->retrieveSurveys();
         }
 
@@ -215,9 +193,6 @@ class NfieldSurveyService
 
     /**
      * Create Survey
-     *
-     * @param SurveyData $surveyData
-     * @return SurveyData
      */
     public function createSurvey(SurveyData $surveyData): SurveyData
     {
@@ -226,10 +201,6 @@ class NfieldSurveyService
 
     /**
      * Create Survey (with Survey Name and Channel)
-     *
-     * @param string $surveyName
-     * @param ChannelEnum|string $channel
-     * @return SurveyData
      */
     public function quickCreate(string $surveyName, ChannelEnum|string $channel = ''): SurveyData
     {
@@ -240,9 +211,6 @@ class NfieldSurveyService
 
     /**
      * Delete a Survey
-     *
-     * @param SurveyData|string $survey
-     * @return bool
      */
     public function deleteSurvey(SurveyData|string $survey): bool
     {
@@ -255,17 +223,14 @@ class NfieldSurveyService
 
     /**
      * Delete Survey from retrieved Collection
-     *
-     * @return bool
      */
     public function delete(): bool
     {
-        if (!isset($this->surveyCollection) || $this->surveyCollection->count() == 0) {
+        if (! isset($this->surveyCollection) || $this->surveyCollection->count() == 0) {
             return false;
         }
 
-        foreach ($this->surveyCollection as $survey)
-        {
+        foreach ($this->surveyCollection as $survey) {
             $this->deleteSurvey($survey);
         }
 

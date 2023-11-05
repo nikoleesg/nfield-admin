@@ -3,14 +3,14 @@
 namespace Nikoleesg\NfieldAdmin\Data;
 
 use Illuminate\Support\Str;
-use Spatie\LaravelData\Data;
+use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
+use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
+use Nikoleesg\NfieldAdmin\Enums\SurveyTypeEnum;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 use Spatie\LaravelData\Casts\EnumCast;
-use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
-use Nikoleesg\NfieldAdmin\Enums\SurveyTypeEnum;
-use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class SurveyData extends Data
