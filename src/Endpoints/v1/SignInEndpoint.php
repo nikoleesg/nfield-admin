@@ -19,15 +19,12 @@ class SignInEndpoint
         return $response->header('X-AuthenticationToken');
     }
 
-    /**
-     * @return array
-     */
     private function getCredentials(): array
     {
         return [
             'Domain' => config('nfield-admin.Domain'),
             'Username' => config('nfield-admin.Username'),
-            'Password' => config('nfield-admin.Password')
+            'Password' => config('nfield-admin.Password'),
         ];
     }
 }
