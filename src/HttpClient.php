@@ -2,26 +2,20 @@
 
 namespace Nikoleesg\NfieldAdmin;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SignInEndpoint;
 use Nikoleesg\NfieldAdmin\Exceptions\AuthenticationException;
 
 class HttpClient
 {
-    protected string $baseUrl = "https://apiap.nfieldmr.com";
+    protected string $baseUrl = 'https://apiap.nfieldmr.com';
 
     protected Response $httpResponse;
 
     /**
      * To make a GET request
-     *
-     * @param string $endpoint
-     * @param bool $authorized
-     * @return Response
      */
     public function get(string $endpoint, bool $authorized = true): Response
     {
@@ -34,10 +28,7 @@ class HttpClient
     /**
      * To make a POST request
      *
-     * @param string $endpoint
-     * @param bool $authorized
-     * @param array|null $data
-     * @return Response
+     * @param  array|null  $data
      */
     public function post(string $endpoint, bool $authorized = true, array $data = []): Response
     {
@@ -49,10 +40,6 @@ class HttpClient
 
     /**
      * To make a DELETE request
-     *
-     * @param string $endpoint
-     * @param bool $authorized
-     * @return Response
      */
     public function delete(string $endpoint, bool $authorized = true): Response
     {
@@ -64,11 +51,6 @@ class HttpClient
 
     /**
      * To make a PATCH request
-     *
-     * @param string $endpoint
-     * @param bool $authorized
-     * @param array $data
-     * @return Response
      */
     public function patch(string $endpoint, bool $authorized = true, array $data = []): Response
     {
@@ -91,26 +73,24 @@ class HttpClient
     protected function response(): Response
     {
         //TODO: handling http error
-//        throw_if($this->httpResponse->forbidden(), new AuthenticationException());
+        //        throw_if($this->httpResponse->forbidden(), new AuthenticationException());
 
         return $this->httpResponse;
     }
 
     /**
      * Return authentication token
-     * @return string
      */
     protected function getAuthenticationToken(): string
     {
         $signIn = new SignInEndpoint();
 
-        if (config('nfield-admin.cache_key'))
-        {
+        if (config('nfield-admin.cache_key')) {
             return cache()->remember(
                 config('nfield-admin.key_name'),
                 config('nfield-admin.expire_seconds'),
 
-                function() use ($signIn) {
+                function () use ($signIn) {
                     return $signIn();
                 }
             );
