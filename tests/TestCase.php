@@ -3,8 +3,8 @@
 namespace Nikoleesg\NfieldAdmin\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Nikoleesg\NfieldAdmin\NfieldAdminServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
