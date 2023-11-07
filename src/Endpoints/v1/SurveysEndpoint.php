@@ -2,10 +2,10 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
+use Nikoleesg\NfieldAdmin\Data\SurveyData;
+use Nikoleesg\NfieldAdmin\HttpClient;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
-use Nikoleesg\NfieldAdmin\HttpClient;
-use Nikoleesg\NfieldAdmin\Data\SurveyData;
 
 class SurveysEndpoint
 {
@@ -21,8 +21,6 @@ class SurveysEndpoint
     /**
      * This method retrieves a list of surveys.
      * https://apiap.nfieldmr.com/help/api/get-v1-surveys
-     *
-     * @return DataCollection
      */
     public function index(): DataCollection
     {
@@ -35,18 +33,14 @@ class SurveysEndpoint
         return SurveyData::collection($surveys);
     }
 
-
     /**
      * This method retrieve details of a specific survey.
      * Supports blueprint surveys.
      * https://apiap.nfieldmr.com/help/api/get-v1-surveys-surveyid
-     *
-     * @param string $surveyId
-     * @return SurveyData|null
      */
-    public function show(string $surveyId): SurveyData|null
+    public function show(string $surveyId): ?SurveyData
     {
-        $resourcePath = $this->resourcePath . "/$surveyId";
+        $resourcePath = $this->resourcePath."/$surveyId";
 
         $response = $this->httpClient->get($resourcePath);
 
@@ -62,14 +56,10 @@ class SurveysEndpoint
         return $surveyData;
     }
 
-
     /**
      * This method creates a new survey.
      * Supports blueprint surveys.
      * https://apiap.nfieldmr.com/help/api/post-v1-surveys
-     *
-     * @param SurveyData $surveyData
-     * @return SurveyData
      */
     public function store(SurveyData $surveyData): SurveyData
     {
@@ -85,37 +75,28 @@ class SurveysEndpoint
         return SurveyData::from($survey);
     }
 
-
     /**
      * This method deletes a specified survey.
      * Supports blueprint surveys.
      * https://apiap.nfieldmr.com/help/api/delete-v1-surveys-surveyid
-     *
-     * @param string $surveyId
-     * @return bool
      */
     public function destroy(string $surveyId): bool
     {
-        $resourcePath = $this->resourcePath . "/$surveyId";
+        $resourcePath = $this->resourcePath."/$surveyId";
 
         $response = $this->httpClient->delete($resourcePath);
 
         return $response->noContent();
     }
 
-
     /**
      * Update a survey with the specified fields.
      * Supports blueprint surveys.
      * https://apiap.nfieldmr.com/help/api/patch-v1-surveys-surveyid
-     *
-     * @param string $surveyId
-     * @param array $properties
-     * @return SurveyData
      */
     public function update(string $surveyId, array $properties): SurveyData
     {
-        $resourcePath = $this->resourcePath . "/$surveyId";
+        $resourcePath = $this->resourcePath."/$surveyId";
 
         $response = $this->httpClient->patch($resourcePath, true, $properties);
 
