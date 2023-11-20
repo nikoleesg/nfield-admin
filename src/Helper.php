@@ -4,7 +4,7 @@ use Illuminate\Support\Str;
 
 define('CASE_CAMEL', 2);
 define('CASE_KEBAB', 3);
-define('CASE_SNAKE',4);
+define('CASE_SNAKE', 4);
 define('CASE_STUDLY', 5);
 define('CASE_TITLE', 6);
 
