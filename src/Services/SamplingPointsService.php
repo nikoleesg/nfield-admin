@@ -43,7 +43,7 @@ class SamplingPointsService
         return $this;
     }
 
-    public function get(?string $samplingPointId)
+    public function get(?string $samplingPointId = null)
     {
         if (!is_null($samplingPointId)) {
             return $this->getSamplingPoint($samplingPointId);
