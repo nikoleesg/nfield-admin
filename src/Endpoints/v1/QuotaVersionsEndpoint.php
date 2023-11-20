@@ -7,6 +7,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Illuminate\Support\Str;
 use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\HttpClient;
+use Nikoleesg\NfieldAdmin\Data\QuotaFrameVersionData;
 
 class QuotaVersionsEndpoint
 {
@@ -21,7 +22,7 @@ class QuotaVersionsEndpoint
         $this->httpClient = new HttpClient();
     }
 
-    public function index()
+    public function index(): DataCollection
     {
         $resourcePath = $this->resourcePath;
 
@@ -29,6 +30,26 @@ class QuotaVersionsEndpoint
 
         $quotaVersions = json_decode($response->body(), true);
 
-        return $resourcePath;
+        return QuotaFrameVersionData::collection($quotaVersions);
+    }
+
+    public function show(string $eTag)
+    {
+        $resourcePath = $this->resourcePath . "/$eTag";
+
+        $response = $this->httpClient->get($resourcePath);
+
+        $quotaFrame = json_decode($response->body(), true);
+
+        return $quotaFrame;
+
+//        try {
+//            $addressData = AddressData::from($address);
+//
+//        } catch (CannotCreateData $exception) {
+//            $addressData = AddressData::optional(null);
+//        }
+//
+//        return $addressData;
     }
 }
