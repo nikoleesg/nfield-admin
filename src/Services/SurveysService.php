@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\QuotaVersionsEndpoint;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveyQuotaFrameEndpoint;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Spatie\LaravelData\DataCollection;
 
@@ -15,6 +16,8 @@ class SurveysService
     protected SurveysEndpoint $surveysEndpoint;
 
     protected QuotaVersionsEndpoint $quotaVersionsEndpoint;
+
+    protected SurveyQuotaFrameEndpoint $surveyQuotaFrameEndpoint;
 
     protected ?string $surveyId;
 
@@ -34,6 +37,8 @@ class SurveysService
     protected function initEndpoints(): self
     {
         $this->quotaVersionsEndpoint = new QuotaVersionsEndpoint($this->surveyId);
+
+        $this->surveyQuotaFrameEndpoint = new SurveyQuotaFrameEndpoint($this->surveyId);
 
         return $this;
     }
@@ -275,11 +280,28 @@ class SurveysService
 
     /**
      * |------------------------------------------------------------------------
+     * | Survey Quota Frame
+     * |------------------------------------------------------------------------
+     */
+    public function getSurveyQuotaFrame()
+    {
+        return $this->surveyQuotaFrameEndpoint->index();
+    }
+
+
+
+    /**
+     * |------------------------------------------------------------------------
      * | Quota Versions
      * |------------------------------------------------------------------------
      */
     public function getQuotaVersions()
     {
-        $this->quotaVersionsEndpoint->index();
+        return $this->quotaVersionsEndpoint->index();
+    }
+
+    public function getQuotaFrame(string $eTag)
+    {
+        return $this->quotaVersionsEndpoint->show($eTag);
     }
 }
