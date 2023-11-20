@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Spatie\LaravelData\DataCollection;
 use Illuminate\Http\Client\Response;
 use Nikoleesg\NfieldAdmin\HttpClient;
-use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
+use Nikoleesg\NfieldAdmin\Data\SurveyQuotaFrame\SurveyQuotaFrameResponseData;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 class SurveyQuotaFrameEndpoint
@@ -29,102 +29,14 @@ class SurveyQuotaFrameEndpoint
      *
      * @return DataCollection
      */
-    public function index()
+    public function index(): mixed
     {
         $resourcePath = $this->resourcePath;
 
         $response = $this->httpClient->get($resourcePath);
 
-        $quotaDefinition = json_decode($response->body(), true);
+        $surveyQuotaFrame = json_decode($response->body(), true);
 
-        return $quotaDefinition;
-
-//        return SamplingPointData::collection($samplingPoints);
-    }
-
-    /**
-     * Get the details of a specific sampling point.
-     *
-     * @param string $samplingPointId
-     * @return SamplingPointData
-     */
-    public function show(string $samplingPointId): SamplingPointData
-    {
-        $resourcePath = $this->resourcePath . "/$samplingPointId";
-
-        $response = $this->httpClient->get($resourcePath);
-
-        $samplingPoint = json_decode($response->body(), true);
-
-        try {
-            $samplingPointData = SamplingPointData::from($samplingPoint);
-
-        } catch (CannotCreateData $exception) {
-            $samplingPointData = SamplingPointData::optional(null);
-        }
-
-        return $samplingPointData;
-    }
-
-    /**
-     * Delete a specified sampling point.
-     *
-     * @param string $samplingPointId
-     * @return bool
-     */
-    public function destroy(string $samplingPointId): bool
-    {
-        $resourcePath = $this->resourcePath . "/$samplingPointId";
-
-        $response = $this->httpClient->delete($resourcePath);
-
-        return empty($response->body());
-    }
-
-    public function update()
-    {
-
-    }
-
-    /**
-     * Create a new sampling point.
-     *
-     * @param SamplingPointData $samplingPointData
-     * @return SamplingPointData
-     */
-    public function store(SamplingPointData $samplingPointData): SamplingPointData
-    {
-        $resourcePath = $this->resourcePath;
-
-        // Transform to Nfield API SurveyModel
-        $samplingPointCreationModel = array_change_key_casing($samplingPointData->toArray(), CASE_STUDLY);
-
-        $response = $this->httpClient->post($resourcePath, true, $samplingPointCreationModel);
-
-        $samplingPoint = json_decode($response->body(), true);
-
-        try {
-            $samplingPointData = SamplingPointData::from($samplingPoint);
-        } catch (CannotCreateData $exception) {
-            $samplingPointData = SamplingPointData::optional(null);
-        }
-
-        return $samplingPointData;
-    }
-
-    /**
-     * Returns the number of samplingPoints of the survey.
-     *
-     * @return int
-     */
-    public function count(): int
-    {
-        $resourcePath = $this->resourcePath . "/Count";
-
-        $response = $this->httpClient->get($resourcePath);
-
-        $samplingPointCnt = json_decode($response->body(), true);
-
-        return $samplingPointCnt;
+        return SurveyQuotaFrameResponseData::from($surveyQuotaFrame);
     }
 }
