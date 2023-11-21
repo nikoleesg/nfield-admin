@@ -12,8 +12,9 @@ use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 
 class SamplingPointService
 {
-    protected v1\SamplingPointsEndpoint $samplingPointsEndpoint;
     protected v1\AddressesEndpoint $addressesEndpoint;
+    protected v1\SamplingPointsEndpoint $samplingPointsEndpoint;
+    protected v1\SamplingPointsQuotaTargetsEndpoint $quotaTargetsEndpoint;
 
     protected ?string $surveyId;
 
@@ -37,7 +38,7 @@ class SamplingPointService
         if ($this->isSurveyConfigured() && $this->isSamplingPointConfigured()) {
             // initials other endpoints
             $this->addressesEndpoint = new v1\AddressesEndpoint($this->surveyId, $this->samplingPointId);
-
+            $this->quotaTargetsEndpoint = new v1\SamplingPointsQuotaTargetsEndpoint($this->surveyId, $this->samplingPointId);
         }
 
         return $this;
@@ -157,5 +158,25 @@ class SamplingPointService
     public function addressesCount(): int
     {
         return $this->addressesEndpoint->count();
+    }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Quota Targets
+     * |------------------------------------------------------------------------
+     */
+    public function getQuotaTargets(): DataCollection
+    {
+        return $this->quotaTargetsEndpoint->index();
+    }
+
+    public function getQuotaTarget(string $quotaLevelId): ?Data\SamplingPointQuotaTargetData
+    {
+        return $this->quotaTargetsEndpoint->show($quotaLevelId);
+    }
+
+    public function setQuotaTarget(string $quotaLevelId, int $target): ?Data\SamplingPointQuotaTargetData
+    {
+        $this->quotaTargetsEndpoint->update($quotaLevelId, $target);
     }
 }
