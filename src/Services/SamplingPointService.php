@@ -9,7 +9,7 @@ use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SamplingPointsEndpoint;
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 
-class SamplingPointsService
+class SamplingPointService
 {
     protected SamplingPointsEndpoint $samplingPointsEndpoint;
 
