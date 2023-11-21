@@ -2,10 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
-use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SamplingPointsEndpoint;
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 
@@ -15,7 +12,7 @@ class SamplingPointsService
 
     protected string $surveyId;
 
-    public function __construct(?string $surveyId = null)
+    public function __construct(string $surveyId = null)
     {
         if ($surveyId) {
             $this->initEndpoint($surveyId);
@@ -43,9 +40,9 @@ class SamplingPointsService
         return $this;
     }
 
-    public function get(?string $samplingPointId = null)
+    public function get(string $samplingPointId = null)
     {
-        if (!is_null($samplingPointId)) {
+        if (! is_null($samplingPointId)) {
             return $this->getSamplingPoint($samplingPointId);
         }
 
@@ -66,7 +63,7 @@ class SamplingPointsService
     {
         $samplingPointData = SamplingPointData::from([
             'name' => $name,
-            'kind' => !$spare ? SamplingPointKindEnum::Regular : SamplingPointKindEnum::Spare
+            'kind' => ! $spare ? SamplingPointKindEnum::Regular : SamplingPointKindEnum::Spare,
         ]);
 
         return $this->create($samplingPointData);

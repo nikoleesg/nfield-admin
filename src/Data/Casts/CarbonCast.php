@@ -2,10 +2,10 @@
 
 namespace Nikoleesg\NfieldAdmin\Data\Casts;
 
+use Carbon\Carbon;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\DataProperty;
-use Carbon\Carbon;
 
 class CarbonCast implements Cast
 {
@@ -13,5 +13,4 @@ class CarbonCast implements Cast
     {
         return Carbon::parse($value);
     }
-
 }

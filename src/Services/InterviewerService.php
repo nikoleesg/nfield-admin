@@ -2,12 +2,10 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Nikoleesg\NfieldAdmin\Data\NewCapiInterviewerRequestData;
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\CapiInterviewersEndpoint;
 use Nikoleesg\NfieldAdmin\Data\InterviewerData;
+use Nikoleesg\NfieldAdmin\Data\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\CapiInterviewersEndpoint;
+use Spatie\LaravelData\DataCollection;
 
 class InterviewerService
 {
@@ -61,5 +59,4 @@ class InterviewerService
 
         return $this->capiInterviewerEndpoint->update($interviewerId, $password);
     }
-
 }

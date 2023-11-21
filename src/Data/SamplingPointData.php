@@ -2,12 +2,12 @@
 
 namespace Nikoleesg\NfieldAdmin\Data;
 
-use Spatie\LaravelData\Data;
+use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 use Spatie\LaravelData\Casts\EnumCast;
-use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class SamplingPointData extends Data

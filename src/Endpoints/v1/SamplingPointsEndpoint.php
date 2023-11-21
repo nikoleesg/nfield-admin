@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\LaravelData\DataCollection;
-use Illuminate\Http\Client\Response;
-use Nikoleesg\NfieldAdmin\HttpClient;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
+use Nikoleesg\NfieldAdmin\HttpClient;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 class SamplingPointsEndpoint
@@ -26,8 +23,6 @@ class SamplingPointsEndpoint
 
     /**
      * Get a list of all sampling points for a survey.
-     *
-     * @return DataCollection
      */
     public function index(): DataCollection
     {
@@ -42,13 +37,10 @@ class SamplingPointsEndpoint
 
     /**
      * Get the details of a specific sampling point.
-     *
-     * @param string $samplingPointId
-     * @return SamplingPointData
      */
     public function show(string $samplingPointId): SamplingPointData
     {
-        $resourcePath = $this->resourcePath . "/$samplingPointId";
+        $resourcePath = $this->resourcePath."/$samplingPointId";
 
         $response = $this->httpClient->get($resourcePath);
 
@@ -66,13 +58,10 @@ class SamplingPointsEndpoint
 
     /**
      * Delete a specified sampling point.
-     *
-     * @param string $samplingPointId
-     * @return bool
      */
     public function destroy(string $samplingPointId): bool
     {
-        $resourcePath = $this->resourcePath . "/$samplingPointId";
+        $resourcePath = $this->resourcePath."/$samplingPointId";
 
         $response = $this->httpClient->delete($resourcePath);
 
@@ -86,9 +75,6 @@ class SamplingPointsEndpoint
 
     /**
      * Create a new sampling point.
-     *
-     * @param SamplingPointData $samplingPointData
-     * @return SamplingPointData
      */
     public function store(SamplingPointData $samplingPointData): SamplingPointData
     {
@@ -112,12 +98,10 @@ class SamplingPointsEndpoint
 
     /**
      * Returns the number of samplingPoints of the survey.
-     *
-     * @return int
      */
     public function count(): int
     {
-        $resourcePath = $this->resourcePath . "/Count";
+        $resourcePath = $this->resourcePath.'/Count';
 
         $response = $this->httpClient->get($resourcePath);
 

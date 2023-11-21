@@ -2,10 +2,6 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Nikoleesg\NfieldAdmin\Data\AddressData;
-use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SamplingPointsQuotaTargetsEndpoint as QuotaTargetsEndpoint;
 
 class SamplingPointsQuotaTargetsService
@@ -16,7 +12,7 @@ class SamplingPointsQuotaTargetsService
 
     protected ?string $samplingPointId;
 
-    public function __construct(?string $surveyId = null, ?string $samplingPointId = null)
+    public function __construct(string $surveyId = null, string $samplingPointId = null)
     {
         $this->surveyId = $surveyId;
 
@@ -66,9 +62,9 @@ class SamplingPointsQuotaTargetsService
         return $this;
     }
 
-    public function get(?string $quotaLevelId = null)
+    public function get(string $quotaLevelId = null)
     {
-        if (!is_null($quotaLevelId)) {
+        if (! is_null($quotaLevelId)) {
             return $this->getQuotaTarget($quotaLevelId);
         }
 
