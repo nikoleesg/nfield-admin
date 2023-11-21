@@ -2,9 +2,10 @@
 
 namespace Nikoleesg\NfieldAdmin\Enums;
 
-enum SurveyStateEnum: int
+enum SamplingPointKindEnum: int
 {
-    case UnderConstruction = 0;
-    case Started = 1;
-    case Paused = 3;
+    case Regular = 0;
+    case Spare = 1;
+    case SpareActive = 2;
+    case Replaced = 3;
 }

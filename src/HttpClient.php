@@ -60,6 +60,17 @@ class HttpClient
         return $this->response();
     }
 
+    /**
+     * To make a PUT request
+     */
+    public function put(string $endpoint, bool $authorized = true, array $data = []): Response
+    {
+        $this->httpResponse = $this->request($authorized)
+            ->put($endpoint, $data);
+
+        return $this->response();
+    }
+
     protected function request($authorized = true): PendingRequest
     {
         if ($authorized) {

@@ -3,14 +3,12 @@
 namespace Nikoleesg\NfieldAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Nikoleesg\NfieldAdmin\Services\InterviewerService;
 
-/**
- * @see \Nikoleesg\NfieldAdmin\NfieldAdmin
- */
-class NfieldAdmin extends Facade
+class Interviewer extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \Nikoleesg\NfieldAdmin\NfieldAdmin::class;
+        return InterviewerService::class;
     }
 }

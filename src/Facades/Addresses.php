@@ -3,12 +3,12 @@
 namespace Nikoleesg\NfieldAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Nikoleesg\NfieldAdmin\Services\SurveysService;
+use Nikoleesg\NfieldAdmin\Services\AddressesService;
 
-class Survey extends Facade
+class Addresses extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return SurveysService::class;
+        return AddressesService::class;
     }
 }
