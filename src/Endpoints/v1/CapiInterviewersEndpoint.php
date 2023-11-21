@@ -8,6 +8,7 @@ use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Nikoleesg\NfieldAdmin\HttpClient;
 use Nikoleesg\NfieldAdmin\Data\InterviewerData;
 use Nikoleesg\NfieldAdmin\Data\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Data\InterviewerDetailsData;
 
 class CapiInterviewersEndpoint
 {
@@ -102,19 +103,16 @@ class CapiInterviewersEndpoint
         } else {
             $response = $this->httpClient->patch($resourcePath, true, array_change_key_casing($data, CASE_STUDLY));
         }
+        
+        $interviewer = json_decode($response->body(), true);
 
-        return $response;
+        try {
+            $interviewerData = InterviewerDetailsData::from($interviewer);
+        } catch (CannotCreateData $exception) {
+            $interviewerData = InterviewerDetailsData::optional(null);
+        }
 
-//        $interviewer = json_decode($response->body(), true);
-//        return $response->body();
-
-//        try {
-//            $interviewerData = InterviewerData::from($interviewer);
-//        } catch (CannotCreateData $exception) {
-//            $interviewerData = InterviewerData::optional(null);
-//        }
-//
-//        return $interviewerData;
+        return $interviewerData;
     }
 
 }
