@@ -5,19 +5,56 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\QuotaVersionsEndpoint;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveyQuotaFrameEndpoint;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Spatie\LaravelData\DataCollection;
 
-class NfieldSurveyService
+class SurveysService
 {
-    protected SurveysEndpoint $surveyEndpoint;
+    protected SurveysEndpoint $surveysEndpoint;
+
+    protected QuotaVersionsEndpoint $quotaVersionsEndpoint;
+
+    protected SurveyQuotaFrameEndpoint $surveyQuotaFrameEndpoint;
+
+    protected ?string $surveyId;
 
     protected ?DataCollection $surveyCollection;
 
-    public function __construct()
+    public function __construct(string $surveyId = null)
     {
-        $this->surveyEndpoint = new SurveysEndpoint();
+        $this->surveyId = $surveyId;
+
+        $this->surveysEndpoint = new SurveysEndpoint();
+
+        if ($this->isSurveyConfigured()) {
+            $this->initEndpoints();
+        }
+    }
+
+    protected function initEndpoints(): self
+    {
+        $this->quotaVersionsEndpoint = new QuotaVersionsEndpoint($this->surveyId);
+
+        $this->surveyQuotaFrameEndpoint = new SurveyQuotaFrameEndpoint($this->surveyId);
+
+        return $this;
+    }
+
+    protected function isSurveyConfigured(): bool
+    {
+        return isset($this->surveyId);
+    }
+
+    public function setSurvey(string $surveyId): self
+    {
+        $this->surveyId = $surveyId;
+
+        $this->initEndpoints();
+
+        return $this;
     }
 
     /**
@@ -96,7 +133,7 @@ class NfieldSurveyService
      */
     protected function retrieveSurveys(): self
     {
-        $this->surveyCollection = $this->surveyEndpoint->index();
+        $this->surveyCollection = $this->surveysEndpoint->index();
 
         return $this;
     }
@@ -196,7 +233,7 @@ class NfieldSurveyService
      */
     public function createSurvey(SurveyData $surveyData): SurveyData
     {
-        return $this->surveyEndpoint->store($surveyData);
+        return $this->surveysEndpoint->store($surveyData);
     }
 
     /**
@@ -218,7 +255,7 @@ class NfieldSurveyService
             return $this->deleteSurvey($this->find($survey));
         }
 
-        return $this->surveyEndpoint->destroy($survey->survey_id);
+        return $this->surveysEndpoint->destroy($survey->survey_id);
     }
 
     /**
@@ -237,5 +274,30 @@ class NfieldSurveyService
         unset($this->surveyCollection);
 
         return true;
+    }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Survey Quota Frame
+     * |------------------------------------------------------------------------
+     */
+    public function getSurveyQuotaFrame()
+    {
+        return $this->surveyQuotaFrameEndpoint->index();
+    }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Quota Versions
+     * |------------------------------------------------------------------------
+     */
+    public function getQuotaVersions()
+    {
+        return $this->quotaVersionsEndpoint->index();
+    }
+
+    public function getQuotaFrame(string $eTag)
+    {
+        return $this->quotaVersionsEndpoint->show($eTag);
     }
 }
