@@ -103,7 +103,7 @@ class CapiInterviewersEndpoint
         } else {
             $response = $this->httpClient->patch($resourcePath, true, array_change_key_casing($data, CASE_STUDLY));
         }
-        
+
         $interviewer = json_decode($response->body(), true);
 
         try {
