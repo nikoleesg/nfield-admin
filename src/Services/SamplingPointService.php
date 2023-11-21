@@ -14,6 +14,8 @@ class SamplingPointService
 {
     protected v1\SamplingPointsEndpoint $samplingPointsEndpoint;
     protected v1\AddressesEndpoint $addressesEndpoint;
+    protected v1\SamplingPointsInterviewerAssignmentsEndpoint $interviewerAssignmentsEndpoint;
+    protected v1\SamplingPointsAssignmentsEndpoint $assignmentsEndpoint;
 
     protected ?string $surveyId;
 
@@ -32,12 +34,13 @@ class SamplingPointService
     {
         if ($this->isSurveyConfigured()) {
             $this->samplingPointsEndpoint = new v1\SamplingPointsEndpoint($this->surveyId);
+            $this->assignmentsEndpoint = new v1\SamplingPointsAssignmentsEndpoint($this->surveyId);
         }
 
         if ($this->isSurveyConfigured() && $this->isSamplingPointConfigured()) {
             // initials other endpoints
             $this->addressesEndpoint = new v1\AddressesEndpoint($this->surveyId, $this->samplingPointId);
-
+            $this->interviewerAssignmentsEndpoint = new v1\SamplingPointsInterviewerAssignmentsEndpoint($this->surveyId, $this->samplingPointId);
         }
 
         return $this;
@@ -157,5 +160,73 @@ class SamplingPointService
     public function addressesCount(): int
     {
         return $this->addressesEndpoint->count();
+    }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Interviewers
+     * |------------------------------------------------------------------------
+     */
+    public function getInterviewerAssignments()
+    {
+        return $this->interviewerAssignmentsEndpoint->index();
+    }
+
+    public function assignInterviewer(string|Data\InterviewerData $interviewer): ?Data\InterviewerData
+    {
+        if ($interviewer instanceof Data\InterviewerData) {
+            $interviewerId = $interviewer->interviewer_id;
+        } else {
+            $interviewerId = $interviewer;
+        }
+
+        return $this->interviewerAssignmentsEndpoint->store($interviewerId);
+    }
+
+    public function unassignInterviewer(string|Data\InterviewerData $interviewer): bool
+    {
+        if ($interviewer instanceof Data\InterviewerData) {
+            $interviewerId = $interviewer->interviewer_id;
+        } else {
+            $interviewerId = $interviewer;
+        }
+
+        return $this->interviewerAssignmentsEndpoint->destroy($interviewerId);
+    }
+
+    public function assign(string|array $samplingPoint, string|array $interviewer)
+    {
+        if (is_string($samplingPoint)) {
+            return $this->assign([$samplingPoint], $interviewer);
+        }
+
+        if (is_string($interviewer)) {
+            return $this->assign($samplingPoint, [$interviewer]);
+        }
+
+        $interviewerAssignmentsData = Data\SamplingPointInterviewerAssignmentsData::from([
+            'sampling_point_ids' => $samplingPoint,
+            'interviewer_ids' => $interviewer
+        ]);
+
+        return $this->assignmentsEndpoint->store($interviewerAssignmentsData);
+    }
+
+    public function unassign(string|array $samplingPoint, string|array $interviewer)
+    {
+        if (is_string($samplingPoint)) {
+            return $this->unassign([$samplingPoint], $interviewer);
+        }
+
+        if (is_string($interviewer)) {
+            return $this->unassign($samplingPoint, [$interviewer]);
+        }
+
+        $interviewerAssignmentsData = Data\SamplingPointInterviewerAssignmentsData::from([
+            'sampling_point_ids' => $samplingPoint,
+            'interviewer_ids' => $interviewer
+        ]);
+
+        return $this->assignmentsEndpoint->destroy($interviewerAssignmentsData);
     }
 }
