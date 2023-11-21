@@ -41,9 +41,9 @@ class SamplingPointsQuotaTargetsEndpoint
      * This method retrieves detail of quota level targets based on survey and sampling point.
      *
      * @param string $quotaLevelId
-     * @return QuotaTargetData
+     * @return QuotaTargetData|null
      */
-    public function show(string $quotaLevelId): QuotaTargetData
+    public function show(string $quotaLevelId): ?QuotaTargetData
     {
         $resourcePath = $this->resourcePath . "/$quotaLevelId";
 
@@ -67,9 +67,9 @@ class SamplingPointsQuotaTargetsEndpoint
      *
      * @param string $quotaLevelId
      * @param int $target
-     * @return QuotaTargetData
+     * @return QuotaTargetData|null
      */
-    public function update(string $quotaLevelId, int $target): QuotaTargetData
+    public function update(string $quotaLevelId, int $target): ?QuotaTargetData
     {
         $resourcePath = $this->resourcePath . "/$quotaLevelId";
 

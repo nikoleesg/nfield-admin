@@ -177,6 +177,6 @@ class SamplingPointService
 
     public function setQuotaTarget(string $quotaLevelId, int $target): ?Data\SamplingPointQuotaTargetData
     {
-        $this->quotaTargetsEndpoint->update($quotaLevelId, $target);
+        return $this->quotaTargetsEndpoint->update($quotaLevelId, $target);
     }
 }
