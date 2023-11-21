@@ -2,8 +2,6 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
 use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1;
@@ -13,6 +11,7 @@ use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 class SamplingPointService
 {
     protected v1\SamplingPointsEndpoint $samplingPointsEndpoint;
+    protected v1\SamplingPointsQuotaTargetsEndpoint $quotaTargetsEndpoint;
     protected v1\AddressesEndpoint $addressesEndpoint;
     protected v1\SamplingPointsInterviewerAssignmentsEndpoint $interviewerAssignmentsEndpoint;
     protected v1\SamplingPointsAssignmentsEndpoint $assignmentsEndpoint;
@@ -39,6 +38,7 @@ class SamplingPointService
 
         if ($this->isSurveyConfigured() && $this->isSamplingPointConfigured()) {
             // initials other endpoints
+            $this->quotaTargetsEndpoint = new v1\SamplingPointsQuotaTargetsEndpoint($this->surveyId, $this->samplingPointId);
             $this->addressesEndpoint = new v1\AddressesEndpoint($this->surveyId, $this->samplingPointId);
             $this->interviewerAssignmentsEndpoint = new v1\SamplingPointsInterviewerAssignmentsEndpoint($this->surveyId, $this->samplingPointId);
         }
@@ -102,7 +102,7 @@ class SamplingPointService
     public function delete(string|SamplingPointData $samplingPoint): bool
     {
         if ($samplingPoint instanceof SamplingPointData) {
-            $samplingPointId = $samplingPoint->id;
+            $samplingPointId = $samplingPoint->sampling_point_id;
         } else {
             $samplingPointId = $samplingPoint;
         }
@@ -172,7 +172,7 @@ class SamplingPointService
         return $this->interviewerAssignmentsEndpoint->index();
     }
 
-    public function assignInterviewer(string|Data\InterviewerData $interviewer): ?Data\InterviewerData
+    public function assignInterviewer(string|Data\InterviewerData $interviewer): ?Data\SamplingPointInterviewerAssignmentsData
     {
         if ($interviewer instanceof Data\InterviewerData) {
             $interviewerId = $interviewer->interviewer_id;
@@ -228,5 +228,26 @@ class SamplingPointService
         ]);
 
         return $this->assignmentsEndpoint->destroy($interviewerAssignmentsData);
+    }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Quota Targets
+     * |------------------------------------------------------------------------
+     *
+     */
+    public function getQuotaTargets(): DataCollection
+    {
+        return $this->quotaTargetsEndpoint->index();
+    }
+
+    public function getQuotaTarget(string $quotaLevelId): ?Data\SamplingPointQuotaTargetData
+    {
+        return $this->quotaTargetsEndpoint->show($quotaLevelId);
+    }
+
+    public function setQuotaTarget(string $quotaLevelId, int $target): ?Data\SamplingPointQuotaTargetData
+    {
+        return $this->quotaTargetsEndpoint->update($quotaLevelId, $target);
     }
 }
