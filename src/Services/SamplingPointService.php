@@ -6,27 +6,39 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
 use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SamplingPointsEndpoint;
+use Nikoleesg\NfieldAdmin\Endpoints\v1;
+use Nikoleesg\NfieldAdmin\Data;
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 
 class SamplingPointService
 {
-    protected SamplingPointsEndpoint $samplingPointsEndpoint;
+    protected v1\SamplingPointsEndpoint $samplingPointsEndpoint;
+    protected v1\AddressesEndpoint $addressesEndpoint;
 
-    protected string $surveyId;
+    protected ?string $surveyId;
 
-    public function __construct(?string $surveyId = null)
-    {
-        if ($surveyId) {
-            $this->initEndpoint($surveyId);
-        }
-    }
+    protected ?string $samplingPointId;
 
-    protected function initEndpoint(string $surveyId): self
+    public function __construct(?string $surveyId = null, ?string $samplingPointId = null)
     {
         $this->surveyId = $surveyId;
 
-        $this->samplingPointsEndpoint = new SamplingPointsEndpoint($surveyId);
+        $this->samplingPointId = $samplingPointId;
+
+        $this->initEndpoints();
+    }
+
+    protected function initEndpoints(): self
+    {
+        if ($this->isSurveyConfigured()) {
+            $this->samplingPointsEndpoint = new v1\SamplingPointsEndpoint($this->surveyId);
+        }
+
+        if ($this->isSurveyConfigured() && $this->isSamplingPointConfigured()) {
+            // initials other endpoints
+            $this->addressesEndpoint = new v1\AddressesEndpoint($this->surveyId, $this->samplingPointId);
+
+        }
 
         return $this;
     }
@@ -36,11 +48,23 @@ class SamplingPointService
         return isset($this->surveyId);
     }
 
+    public function isSamplingPointConfigured(): bool
+    {
+        return isset($this->samplingPointId);
+    }
+
     public function setSurvey(string $surveyId): self
     {
-        $this->initEndpoint($surveyId);
+        $this->surveyId = $surveyId;
 
-        return $this;
+        return $this->initEndpoints();
+    }
+
+    public function setSamplingPoint(string $samplingPointId): self
+    {
+        $this->samplingPointId = $samplingPointId;
+
+        return $this->initEndpoints();
     }
 
     public function get(?string $samplingPointId = null)
@@ -86,5 +110,52 @@ class SamplingPointService
     public function count(): int
     {
         return $this->samplingPointsEndpoint->count();
+    }
+
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Addresses
+     * |------------------------------------------------------------------------
+     */
+    public function getAddresses(): DataCollection
+    {
+        return $this->addressesEndpoint->index();
+    }
+
+    public function getAddress(string $addressId): Data\AddressData
+    {
+        return $this->addressesEndpoint->show($addressId);
+    }
+
+    public function createAddress(Data\AddressData $addressData): Data\AddressData
+    {
+        return $this->addressesEndpoint->store($addressData);
+    }
+
+    public function addAddress(string $details, ?string $addressId = null): Data\AddressData
+    {
+        $addressData = Data\AddressData::from([
+            'address_id' => $addressId,
+            'details' => $details
+        ]);
+
+        return $this->createAddress($addressData);
+    }
+
+    public function deleteAddress(string|Data\AddressData $address): bool
+    {
+        if ($address instanceof Data\AddressData) {
+            $addressId = $address->address_id;
+        } else {
+            $addressId = $address;
+        }
+
+        return $this->addressesEndpoint->destroy($addressId);
+    }
+
+    public function addressesCount(): int
+    {
+        return $this->addressesEndpoint->count();
     }
 }
