@@ -5,9 +5,9 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\QuotaVersionsEndpoint;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveyQuotaFrameEndpoint;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Spatie\LaravelData\DataCollection;
 
@@ -23,7 +23,7 @@ class SurveysService
 
     protected ?DataCollection $surveyCollection;
 
-    public function __construct(?string $surveyId = null)
+    public function __construct(string $surveyId = null)
     {
         $this->surveyId = $surveyId;
 
@@ -56,8 +56,6 @@ class SurveysService
 
         return $this;
     }
-
-
 
     /**
      * Find Survey by survey_id
@@ -287,8 +285,6 @@ class SurveysService
     {
         return $this->surveyQuotaFrameEndpoint->index();
     }
-
-
 
     /**
      * |------------------------------------------------------------------------

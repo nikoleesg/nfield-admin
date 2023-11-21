@@ -1,13 +1,11 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-
 use Illuminate\Support\Str;
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\HttpClient;
 use Nikoleesg\NfieldAdmin\Data\QuotaFrameVersionData;
+use Nikoleesg\NfieldAdmin\HttpClient;
+use Spatie\LaravelData\DataCollection;
 
 class QuotaVersionsEndpoint
 {
@@ -35,7 +33,7 @@ class QuotaVersionsEndpoint
 
     public function show(string $eTag)
     {
-        $resourcePath = $this->resourcePath . "/$eTag";
+        $resourcePath = $this->resourcePath."/$eTag";
 
         $response = $this->httpClient->get($resourcePath);
 
@@ -43,13 +41,13 @@ class QuotaVersionsEndpoint
 
         return $quotaFrame;
 
-//        try {
-//            $addressData = AddressData::from($address);
-//
-//        } catch (CannotCreateData $exception) {
-//            $addressData = AddressData::optional(null);
-//        }
-//
-//        return $addressData;
+        //        try {
+        //            $addressData = AddressData::from($address);
+        //
+        //        } catch (CannotCreateData $exception) {
+        //            $addressData = AddressData::optional(null);
+        //        }
+        //
+        //        return $addressData;
     }
 }

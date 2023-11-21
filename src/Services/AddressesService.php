@@ -2,10 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\AddressData;
-use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\AddressesEndpoint;
 
 class AddressesService
@@ -16,7 +13,7 @@ class AddressesService
 
     protected ?string $samplingPointId;
 
-    public function __construct(?string $surveyId = null, ?string $samplingPointId = null)
+    public function __construct(string $surveyId = null, string $samplingPointId = null)
     {
         $this->surveyId = $surveyId;
 
@@ -66,9 +63,9 @@ class AddressesService
         return $this;
     }
 
-    public function get(?string $addressId = null)
+    public function get(string $addressId = null)
     {
-        if (!is_null($addressId)) {
+        if (! is_null($addressId)) {
             return $this->getAddress($addressId);
         }
 

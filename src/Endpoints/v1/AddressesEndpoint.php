@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\HttpClient;
-use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Nikoleesg\NfieldAdmin\Data\AddressData;
+use Nikoleesg\NfieldAdmin\HttpClient;
+use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 class AddressesEndpoint
 {
@@ -23,8 +22,6 @@ class AddressesEndpoint
 
     /**
      * This method retrieves a list of Addresses.
-     *
-     * @return DataCollection
      */
     public function index(): DataCollection
     {
@@ -39,13 +36,10 @@ class AddressesEndpoint
 
     /**
      * Retrieve the details of a single address.
-     *
-     * @param string $addressId
-     * @return AddressData
      */
     public function show(string $addressId): AddressData
     {
-        $resourcePath = $this->resourcePath . "/$addressId";
+        $resourcePath = $this->resourcePath."/$addressId";
 
         $response = $this->httpClient->get($resourcePath);
 
@@ -63,7 +57,7 @@ class AddressesEndpoint
 
     public function destroy(string $addressId): mixed
     {
-        $resourcePath = $this->resourcePath . "/$addressId";
+        $resourcePath = $this->resourcePath."/$addressId";
 
         $response = $this->httpClient->delete($resourcePath);
 
@@ -97,12 +91,10 @@ class AddressesEndpoint
 
     /**
      * Returns the number of addresses at the sampling point.
-     *
-     * @return int
      */
     public function count(): int
     {
-        $resourcePath = $this->resourcePath . "/Count";
+        $resourcePath = $this->resourcePath.'/Count';
 
         $response = $this->httpClient->get($resourcePath);
 
