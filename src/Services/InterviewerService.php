@@ -2,12 +2,12 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Nikoleesg\NfieldAdmin\Data\InterviewerData;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\NewCapiInterviewerRequestData;
 use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1;
-use Nikoleesg\NfieldAdmin\Data\InterviewerData;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\CapiInterviewersEndpoint;
+use Nikoleesg\NfieldAdmin\Data\InterviewerDTO;
 
 class InterviewerService
 {
@@ -50,19 +50,19 @@ class InterviewerService
         return $this->capiInterviewerEndpoint->index();
     }
 
-    public function getCapiInterviewer(string $interviewerId): ?InterviewerData
+    public function getCapiInterviewer(string $interviewerId): ?InterviewerDTO
     {
         return $this->capiInterviewerEndpoint->show($interviewerId);
     }
 
-    public function createCapiInterviewers(NewCapiInterviewerRequestData $data): ?InterviewerData
+    public function createCapiInterviewers(NewCapiInterviewerRequestData $data): ?InterviewerDTO
     {
         return $this->capiInterviewerEndpoint->store($data);
     }
 
-    public function deleteCapiInterviewers(string|InterviewerData $interviewer): bool
+    public function deleteCapiInterviewers(string|InterviewerDTO $interviewer): bool
     {
-        if ($interviewer instanceof InterviewerData) {
+        if ($interviewer instanceof InterviewerDTO) {
             $interviewerId = $interviewer->interviewer_id;
         } else {
             $interviewerId = $interviewer;
@@ -71,9 +71,9 @@ class InterviewerService
         return $this->capiInterviewerEndpoint->destroy($interviewerId);
     }
 
-    public function resetPassword(string|InterviewerData $interviewer, string $password)
+    public function resetPassword(string|InterviewerDTO $interviewer, string $password)
     {
-        if ($interviewer instanceof InterviewerData) {
+        if ($interviewer instanceof InterviewerDTO) {
             $interviewerId = $interviewer->interviewer_id;
         } else {
             $interviewerId = $interviewer;
