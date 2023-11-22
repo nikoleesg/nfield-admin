@@ -2,7 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin;
 
-use Nikoleesg\NfieldAdmin\Commands\NfieldAdminCommand;
+use Nikoleesg\NfieldAdmin\Commands;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -19,7 +19,11 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
             ->name('nfield-admin')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_nfield-admin_table')
-            ->hasCommand(NfieldAdminCommand::class);
+            ->hasMigrations([
+                'create_interviewers_table'
+            ])
+            ->hasCommands([
+                Commands\SyncCapiInterviewerCommand::class
+            ]);
     }
 }

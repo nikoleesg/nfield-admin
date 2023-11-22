@@ -3,12 +3,12 @@
 namespace Nikoleesg\NfieldAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointsService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
 
-class SamplingPoints extends Facade
+class SamplingPoint extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return SamplingPointsService::class;
+        return SamplingPointService::class;
     }
 }
