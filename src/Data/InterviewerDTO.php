@@ -10,7 +10,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
-class InterviewerData extends Data
+class InterviewerDTO extends Data
 {
     public function __construct(
         public string $interviewer_id,
