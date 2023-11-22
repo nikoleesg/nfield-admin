@@ -10,7 +10,7 @@ use Nikoleesg\NfieldAdmin\Data\Casts\CarbonCast;
 use Carbon\Carbon;
 
 #[MapInputName(StudlyCaseMapper::class)]
-class InterviewerData extends Data
+class InterviewerDTO extends Data
 {
     public function __construct(
         public string $interviewer_id,
