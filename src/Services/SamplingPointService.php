@@ -172,9 +172,9 @@ class SamplingPointService
         return $this->interviewerAssignmentsEndpoint->index();
     }
 
-    public function assignInterviewer(string|Data\InterviewerData $interviewer): ?Data\SamplingPointInterviewerAssignmentsData
+    public function assignInterviewer(string|Data\InterviewerDTO $interviewer): ?Data\SamplingPointInterviewerAssignmentsData
     {
-        if ($interviewer instanceof Data\InterviewerData) {
+        if ($interviewer instanceof Data\InterviewerDTO) {
             $interviewerId = $interviewer->interviewer_id;
         } else {
             $interviewerId = $interviewer;
@@ -183,9 +183,9 @@ class SamplingPointService
         return $this->interviewerAssignmentsEndpoint->store($interviewerId);
     }
 
-    public function unassignInterviewer(string|Data\InterviewerData $interviewer): bool
+    public function unassignInterviewer(string|Data\InterviewerDTO $interviewer): bool
     {
-        if ($interviewer instanceof Data\InterviewerData) {
+        if ($interviewer instanceof Data\InterviewerDTO) {
             $interviewerId = $interviewer->interviewer_id;
         } else {
             $interviewerId = $interviewer;
