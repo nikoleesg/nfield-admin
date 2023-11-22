@@ -11,8 +11,8 @@ trait HasTablePrefix
      */
     public function getTable()
     {
-//        return $this->getPrefix() . parent::getTable();
-        return $this->getPrefix() . 'interviewers';
+        //        return $this->getPrefix() . parent::getTable();
+        return $this->getPrefix().'interviewers';
     }
 
     /**

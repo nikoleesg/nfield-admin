@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\HttpClient;
-use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointQuotaTargetData as QuotaTargetData;
+use Nikoleesg\NfieldAdmin\HttpClient;
+use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 class SamplingPointsQuotaTargetsEndpoint
 {
@@ -23,8 +22,6 @@ class SamplingPointsQuotaTargetsEndpoint
 
     /**
      * This method retrieves a list of quota level targets based on survey and sampling point.
-     *
-     * @return DataCollection
      */
     public function index(): DataCollection
     {
@@ -39,13 +36,10 @@ class SamplingPointsQuotaTargetsEndpoint
 
     /**
      * This method retrieves detail of quota level targets based on survey and sampling point.
-     *
-     * @param string $quotaLevelId
-     * @return QuotaTargetData|null
      */
     public function show(string $quotaLevelId): ?QuotaTargetData
     {
-        $resourcePath = $this->resourcePath . "/$quotaLevelId";
+        $resourcePath = $this->resourcePath."/$quotaLevelId";
 
         $response = $this->httpClient->get($resourcePath);
 
@@ -64,14 +58,10 @@ class SamplingPointsQuotaTargetsEndpoint
     /**
      * Update an sampling point's quota level with the specified fields.
      * Only the Target property can be supplied.
-     *
-     * @param string $quotaLevelId
-     * @param int $target
-     * @return QuotaTargetData|null
      */
     public function update(string $quotaLevelId, int $target): ?QuotaTargetData
     {
-        $resourcePath = $this->resourcePath . "/$quotaLevelId";
+        $resourcePath = $this->resourcePath."/$quotaLevelId";
 
         $response = $this->httpClient->patch($resourcePath, true, ['Target' => $target]);
 

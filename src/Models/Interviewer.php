@@ -3,9 +3,9 @@
 namespace Nikoleesg\NfieldAdmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\LaravelData\WithData;
-use Nikoleesg\NfieldAdmin\Traits\HasTablePrefix;
 use Nikoleesg\NfieldAdmin\Data\InterviewerDTO;
+use Nikoleesg\NfieldAdmin\Traits\HasTablePrefix;
+use Spatie\LaravelData\WithData;
 
 class Interviewer extends Model
 {
@@ -17,6 +17,6 @@ class Interviewer extends Model
 
     protected $casts = [
         'last_password_change_time' => 'datetime',
-        'last_sync_date' => 'datetime'
+        'last_sync_date' => 'datetime',
     ];
 }

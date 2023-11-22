@@ -3,8 +3,8 @@
 namespace Nikoleesg\NfieldAdmin\Commands;
 
 use Illuminate\Console\Command;
-use Nikoleesg\NfieldAdmin\Models\Interviewer as Model;
 use Nikoleesg\NfieldAdmin\Facades\Interviewer;
+use Nikoleesg\NfieldAdmin\Models\Interviewer as Model;
 
 class SyncCapiInterviewerCommand extends Command
 {
@@ -33,8 +33,7 @@ class SyncCapiInterviewerCommand extends Command
 
         if ($capiInterviewers->count() > 0) {
 
-            foreach ($capiInterviewers as $capiInterviewer)
-            {
+            foreach ($capiInterviewers as $capiInterviewer) {
                 Model::updateOrCreate($capiInterviewer->toArray());
             }
 

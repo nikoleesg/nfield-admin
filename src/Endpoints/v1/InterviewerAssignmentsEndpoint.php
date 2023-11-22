@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
 use Illuminate\Support\Str;
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\HttpClient;
 use Nikoleesg\NfieldAdmin\Data\InterviewerAssignmentResponseData;
+use Nikoleesg\NfieldAdmin\HttpClient;
+use Spatie\LaravelData\DataCollection;
 
 class InterviewerAssignmentsEndpoint
 {
@@ -31,5 +30,4 @@ class InterviewerAssignmentsEndpoint
 
         return InterviewerAssignmentResponseData::collection($interviewerAssignment);
     }
-
 }

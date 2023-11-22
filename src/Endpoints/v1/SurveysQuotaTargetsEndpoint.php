@@ -10,7 +10,7 @@ class SurveysQuotaTargetsEndpoint extends BaseEndpoint
 
     protected ?string $surveyId;
 
-    public function __construct(?string $surveyId = null)
+    public function __construct(string $surveyId = null)
     {
         $this->resourcePath = str_replace(['{surveyId}'], [$surveyId], $this->resourcePath);
 

@@ -2,12 +2,10 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Nikoleesg\NfieldAdmin\Data\NewCapiInterviewerRequestData;
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Nikoleesg\NfieldAdmin\Data\InterviewerDTO;
+use Nikoleesg\NfieldAdmin\Data\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Endpoints\v1;
+use Spatie\LaravelData\DataCollection;
 
 class InterviewerService
 {
@@ -86,5 +84,4 @@ class InterviewerService
     {
         return $this->interviewerAssignmentsEndpoint->index();
     }
-
 }

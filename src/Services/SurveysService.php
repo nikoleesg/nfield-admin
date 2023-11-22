@@ -23,7 +23,7 @@ class SurveysService
 
     protected ?DataCollection $surveyCollection;
 
-    public function __construct(?string $surveyId = null)
+    public function __construct(string $surveyId = null)
     {
         $this->surveyId = $surveyId;
 
@@ -58,8 +58,6 @@ class SurveysService
 
         return $this;
     }
-
-
 
     /**
      * Find Survey by survey_id
@@ -301,7 +299,7 @@ class SurveysService
             ->toArray();
     }
 
-    public function getSurveyQuotaLevelDefinitionModel(?string $quotaVariableId = null)
+    public function getSurveyQuotaLevelDefinitionModel(string $quotaVariableId = null)
     {
         $variableDefinitions = $this->getSurveyQuotaFrame()->variable_definitions;
 
@@ -310,9 +308,9 @@ class SurveysService
                 return is_null($quotaVariableId) || $item['id'] === $quotaVariableId;
             })
             ->mapWithKeys(function ($item, $key) {
-                return [$item['id'] => collect($item['levels'])->mapWithKeys(fn($item) => [$item['id'] => $item['name']])];
+                return [$item['id'] => collect($item['levels'])->mapWithKeys(fn ($item) => [$item['id'] => $item['name']])];
             })
-            ->when(!is_null($quotaVariableId), function (Collection $collection, int $value) {
+            ->when(! is_null($quotaVariableId), function (Collection $collection, int $value) {
                 return $collection->first();
             })
             ->toArray();
@@ -328,8 +326,6 @@ class SurveysService
             })
             ->toArray();
     }
-
-
 
     /**
      * |------------------------------------------------------------------------
@@ -356,5 +352,4 @@ class SurveysService
         return $this->quotaTargetsEndpoint->index();
 
     }
-
 }
