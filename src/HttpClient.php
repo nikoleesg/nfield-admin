@@ -41,10 +41,10 @@ class HttpClient
     /**
      * To make a DELETE request
      */
-    public function delete(string $endpoint, bool $authorized = true): Response
+    public function delete(string $endpoint, bool $authorized = true, array $data = []): Response
     {
         $this->httpResponse = $this->request($authorized)
-            ->delete($endpoint);
+            ->delete($endpoint, $data);
 
         return $this->response();
     }
@@ -75,7 +75,8 @@ class HttpClient
     {
         if ($authorized) {
             return Http::baseUrl($this->baseUrl)
-                ->withHeader('Authorization', 'Basic '.$this->getAuthenticationToken());
+                ->withHeader('Authorization', 'Basic '.$this->getAuthenticationToken())
+                ->withHeader('Content-Type', 'application/json');
         }
 
         return Http::baseUrl($this->baseUrl);

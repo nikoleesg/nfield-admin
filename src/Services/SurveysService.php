@@ -5,29 +5,29 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\QuotaVersionsEndpoint;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveyQuotaFrameEndpoint;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveysEndpoint;
+use Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Spatie\LaravelData\DataCollection;
 
 class SurveysService
 {
-    protected SurveysEndpoint $surveysEndpoint;
+    protected v1\SurveysEndpoint $surveysEndpoint;
 
-    protected QuotaVersionsEndpoint $quotaVersionsEndpoint;
+    protected v1\QuotaVersionsEndpoint $quotaVersionsEndpoint;
 
-    protected SurveyQuotaFrameEndpoint $surveyQuotaFrameEndpoint;
+    protected v1\SurveyQuotaFrameEndpoint $surveyQuotaFrameEndpoint;
+
+    protected v1\SurveysQuotaTargetsEndpoint $quotaTargetsEndpoint;
 
     protected ?string $surveyId;
 
     protected ?DataCollection $surveyCollection;
 
-    public function __construct(string $surveyId = null)
+    public function __construct(?string $surveyId = null)
     {
         $this->surveyId = $surveyId;
 
-        $this->surveysEndpoint = new SurveysEndpoint();
+        $this->surveysEndpoint = new v1\SurveysEndpoint();
 
         if ($this->isSurveyConfigured()) {
             $this->initEndpoints();
@@ -36,9 +36,11 @@ class SurveysService
 
     protected function initEndpoints(): self
     {
-        $this->quotaVersionsEndpoint = new QuotaVersionsEndpoint($this->surveyId);
+        $this->quotaVersionsEndpoint = new v1\QuotaVersionsEndpoint($this->surveyId);
 
-        $this->surveyQuotaFrameEndpoint = new SurveyQuotaFrameEndpoint($this->surveyId);
+        $this->surveyQuotaFrameEndpoint = new v1\SurveyQuotaFrameEndpoint($this->surveyId);
+
+        $this->quotaTargetsEndpoint = new v1\SurveysQuotaTargetsEndpoint($this->surveyId);
 
         return $this;
     }
@@ -286,6 +288,47 @@ class SurveysService
         return $this->surveyQuotaFrameEndpoint->index();
     }
 
+    public function getSurveyQuotaVariableDefinition()
+    {
+        $variableDefinitions = $this->getSurveyQuotaFrame()->variable_definitions;
+
+        return collect($variableDefinitions->toArray())
+            ->mapWithKeys(function ($item, $key) {
+                return [$item['id'] => $item['name']];
+            })
+            ->toArray();
+    }
+
+    public function getSurveyQuotaLevelDefinitionModel(?string $quotaVariableId = null)
+    {
+        $variableDefinitions = $this->getSurveyQuotaFrame()->variable_definitions;
+
+        return collect($variableDefinitions->toArray())
+            ->filter(function ($item) use ($quotaVariableId) {
+                return is_null($quotaVariableId) || $item['id'] === $quotaVariableId;
+            })
+            ->mapWithKeys(function ($item, $key) {
+                return [$item['id'] => collect($item['levels'])->mapWithKeys(fn($item) => [$item['id'] => $item['name']])];
+            })
+            ->when(!is_null($quotaVariableId), function (Collection $collection, int $value) {
+                return $collection->first();
+            })
+            ->toArray();
+    }
+
+    public function getSurveyQuotaFrameVariable()
+    {
+        $frameVariables = $this->getSurveyQuotaFrame()->frame_variables;
+
+        return collect($frameVariables)
+            ->mapWithKeys(function ($item, $key) {
+                return [$item['definition_id'] => $item['levels']];
+            })
+            ->toArray();
+    }
+
+
+
     /**
      * |------------------------------------------------------------------------
      * | Quota Versions
@@ -300,4 +343,16 @@ class SurveysService
     {
         return $this->quotaVersionsEndpoint->show($eTag);
     }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Quota Targets
+     * |------------------------------------------------------------------------
+     */
+    public function getQuotaTargets()
+    {
+        return $this->quotaTargetsEndpoint->index();
+
+    }
+
 }
