@@ -51,6 +51,18 @@ php artisan vendor:publish --tag="nfield-admin-views"
 
 ## Usage
 
+### Logging
+Add the logging channel to ``config/logging.php`` configuration file:
+````php
+        'nfield-api' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/nfield-api.log'),
+            'level' => env('NFIELD_LOG_LEVEL', 'info'),
+            'bubble' => false,
+            'replace_placeholders' => true,
+        ],
+````
+
 ```php
 $nfieldAdmin = new Nikoleesg\NfieldAdmin();
 echo $nfieldAdmin->echoPhrase('Hello, Nikoleesg!');
