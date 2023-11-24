@@ -30,7 +30,7 @@ class AddressDTO extends Data
             $address['AddressId'] ?? $address['address_id'] ?? null,
             $address['Details'] ?? $address['details'],
             ! is_null($address['AppointmentDate']) ? Carbon::parse($address['AppointmentDate']) : null,
-            ! empty($address['SampleData']) ? AddressSampleData::collection($address['SampleData']) : null
+            ! empty($address['SampleData']) ? AddressSampleDTO::collection($address['SampleData']) : null
         );
     }
 }
