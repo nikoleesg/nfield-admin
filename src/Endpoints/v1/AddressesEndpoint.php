@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Spatie\LaravelData\DataCollection;
+use Nikoleesg\NfieldAdmin\Data\AddressDTO;
 use Nikoleesg\NfieldAdmin\HttpClient;
+use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
-use Nikoleesg\NfieldAdmin\Data\AddressData;
 
 class AddressesEndpoint
 {
@@ -34,16 +33,16 @@ class AddressesEndpoint
 
         $addresses = json_decode($response->body(), true);
 
-        return AddressData::collection($addresses);
+        return AddressDTO::collection($addresses);
     }
 
     /**
      * Retrieve the details of a single address.
      *
      * @param string $addressId
-     * @return AddressData
+     * @return AddressDTO
      */
-    public function show(string $addressId): AddressData
+    public function show(string $addressId): AddressDTO
     {
         $resourcePath = $this->resourcePath . "/$addressId";
 
@@ -52,10 +51,10 @@ class AddressesEndpoint
         $address = json_decode($response->body(), true);
 
         try {
-            $addressData = AddressData::from($address);
+            $addressData = AddressDTO::from($address);
 
         } catch (CannotCreateData $exception) {
-            $addressData = AddressData::optional(null);
+            $addressData = AddressDTO::optional(null);
         }
 
         return $addressData;
@@ -75,7 +74,7 @@ class AddressesEndpoint
 
     }
 
-    public function store(AddressData $addressData): AddressData
+    public function store(AddressDTO $addressData): AddressDTO
     {
         $resourcePath = $this->resourcePath;
 
@@ -87,9 +86,9 @@ class AddressesEndpoint
         $address = json_decode($response->body(), true);
 
         try {
-            $addressData = AddressData::from($address);
+            $addressData = AddressDTO::from($address);
         } catch (CannotCreateData $exception) {
-            $addressData = AddressData::optional(null);
+            $addressData = AddressDTO::optional(null);
         }
 
         return $addressData;
