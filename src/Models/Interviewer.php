@@ -17,6 +17,7 @@ class Interviewer extends Model
 
     protected $casts = [
         'last_password_change_time' => 'datetime',
-        'last_sync_date' => 'datetime'
+        'last_sync_date'            => 'datetime',
+        'client_password'           => 'encrypted'
     ];
 }
