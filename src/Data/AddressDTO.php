@@ -12,14 +12,14 @@ use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
-class AddressData extends Data
+class AddressDTO extends Data
 {
     public function __construct(
         public ?string $address_id,
         public string $details,
         #[WithCast(DateTimeInterfaceCast::class)]
         public ?Carbon $appointment_date,
-        #[DataCollectionOf(AddressSampleData::class)]
+        #[DataCollectionOf(AddressSampleDTO::class)]
         public ?DataCollection $sample_data
     ) {
     }
