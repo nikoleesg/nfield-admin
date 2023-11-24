@@ -126,19 +126,19 @@ class SamplingPointService
         return $this->addressesEndpoint->index();
     }
 
-    public function getAddress(string $addressId): Data\AddressData
+    public function getAddress(string $addressId): Data\AddressDTO
     {
         return $this->addressesEndpoint->show($addressId);
     }
 
-    public function createAddress(Data\AddressData $addressData): Data\AddressData
+    public function createAddress(Data\AddressDTO $addressData): Data\AddressDTO
     {
         return $this->addressesEndpoint->store($addressData);
     }
 
-    public function addAddress(string $details, ?string $addressId = null): Data\AddressData
+    public function addAddress(string $details, ?string $addressId = null): Data\AddressDTO
     {
-        $addressData = Data\AddressData::from([
+        $addressData = Data\AddressDTO::from([
             'address_id' => $addressId,
             'details' => $details
         ]);
@@ -146,9 +146,9 @@ class SamplingPointService
         return $this->createAddress($addressData);
     }
 
-    public function deleteAddress(string|Data\AddressData $address): bool
+    public function deleteAddress(string|Data\AddressDTO $address): bool
     {
-        if ($address instanceof Data\AddressData) {
+        if ($address instanceof Data\AddressDTO) {
             $addressId = $address->address_id;
         } else {
             $addressId = $address;

@@ -2,10 +2,11 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Nikoleesg\NfieldAdmin\Data\AddressData;
+use Nikoleesg\NfieldAdmin\Data\AddressDTO;
 use Nikoleesg\NfieldAdmin\HttpClient;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
+use Nikoleesg\NfieldAdmin\Data\AddressData;
 
 class AddressesEndpoint
 {
@@ -22,6 +23,8 @@ class AddressesEndpoint
 
     /**
      * This method retrieves a list of Addresses.
+     *
+     * @return DataCollection
      */
     public function index(): DataCollection
     {
@@ -31,13 +34,16 @@ class AddressesEndpoint
 
         $addresses = json_decode($response->body(), true);
 
-        return AddressData::collection($addresses);
+        return AddressDTO::collection($addresses);
     }
 
     /**
      * Retrieve the details of a single address.
+     *
+     * @param string $addressId
+     * @return AddressDTO
      */
-    public function show(string $addressId): AddressData
+    public function show(string $addressId): AddressDTO
     {
         $resourcePath = $this->resourcePath."/$addressId";
 
@@ -46,10 +52,10 @@ class AddressesEndpoint
         $address = json_decode($response->body(), true);
 
         try {
-            $addressData = AddressData::from($address);
+            $addressData = AddressDTO::from($address);
 
         } catch (CannotCreateData $exception) {
-            $addressData = AddressData::optional(null);
+            $addressData = AddressDTO::optional(null);
         }
 
         return $addressData;
@@ -57,7 +63,7 @@ class AddressesEndpoint
 
     public function destroy(string $addressId): mixed
     {
-        $resourcePath = $this->resourcePath."/$addressId";
+        $resourcePath = $this->resourcePath . "/$addressId";
 
         $response = $this->httpClient->delete($resourcePath);
 
@@ -69,7 +75,7 @@ class AddressesEndpoint
 
     }
 
-    public function store(AddressData $addressData): AddressData
+    public function store(AddressDTO $addressData): AddressDTO
     {
         $resourcePath = $this->resourcePath;
 
@@ -81,9 +87,9 @@ class AddressesEndpoint
         $address = json_decode($response->body(), true);
 
         try {
-            $addressData = AddressData::from($address);
+            $addressData = AddressDTO::from($address);
         } catch (CannotCreateData $exception) {
-            $addressData = AddressData::optional(null);
+            $addressData = AddressDTO::optional(null);
         }
 
         return $addressData;
@@ -91,10 +97,12 @@ class AddressesEndpoint
 
     /**
      * Returns the number of addresses at the sampling point.
+     *
+     * @return int
      */
     public function count(): int
     {
-        $resourcePath = $this->resourcePath.'/Count';
+        $resourcePath = $this->resourcePath . "/Count";
 
         $response = $this->httpClient->get($resourcePath);
 
