@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
-class AddressSampleData extends Data
+class AddressSampleDTO extends Data
 {
     public function __construct(
         public string $name,
