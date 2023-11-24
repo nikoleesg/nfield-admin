@@ -1,14 +1,13 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Data;
 
-use Spatie\LaravelData\Data;
+use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
-use Carbon\Carbon;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class QuotaFrameVersionData extends Data
@@ -26,8 +25,7 @@ class QuotaFrameVersionData extends Data
         return new self(
             $data['Id'],
             $data['ETag'],
-            !is_null($data['PublishedDate']) ? Carbon::parse($data['PublishedDate']) : null
+            ! is_null($data['PublishedDate']) ? Carbon::parse($data['PublishedDate']) : null
         );
     }
-
 }

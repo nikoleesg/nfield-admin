@@ -22,8 +22,6 @@ class AddressesEndpoint
 
     /**
      * This method retrieves a list of Addresses.
-     *
-     * @return DataCollection
      */
     public function index(): DataCollection
     {
@@ -38,13 +36,10 @@ class AddressesEndpoint
 
     /**
      * Retrieve the details of a single address.
-     *
-     * @param string $addressId
-     * @return AddressDTO
      */
     public function show(string $addressId): AddressDTO
     {
-        $resourcePath = $this->resourcePath . "/$addressId";
+        $resourcePath = $this->resourcePath."/$addressId";
 
         $response = $this->httpClient->get($resourcePath);
 
@@ -62,7 +57,7 @@ class AddressesEndpoint
 
     public function destroy(string $addressId): mixed
     {
-        $resourcePath = $this->resourcePath . "/$addressId";
+        $resourcePath = $this->resourcePath."/$addressId";
 
         $response = $this->httpClient->delete($resourcePath);
 
@@ -96,12 +91,10 @@ class AddressesEndpoint
 
     /**
      * Returns the number of addresses at the sampling point.
-     *
-     * @return int
      */
     public function count(): int
     {
-        $resourcePath = $this->resourcePath . "/Count";
+        $resourcePath = $this->resourcePath.'/Count';
 
         $response = $this->httpClient->get($resourcePath);
 

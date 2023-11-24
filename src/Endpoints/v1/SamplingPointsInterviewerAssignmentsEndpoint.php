@@ -2,13 +2,11 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\Exceptions\CannotCreateData;
-use Nikoleesg\NfieldAdmin\HttpClient;
-use Nikoleesg\NfieldAdmin\Endpoints\BaseEndpoint;
 use Nikoleesg\NfieldAdmin\Data\InterviewerSamplingPointAssignmentData as InterviewerAssignmentData;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointInterviewerAssignmentsData as InterviewerAssignmentsData;
-
+use Nikoleesg\NfieldAdmin\Endpoints\BaseEndpoint;
+use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 class SamplingPointsInterviewerAssignmentsEndpoint extends BaseEndpoint
 {
@@ -18,7 +16,7 @@ class SamplingPointsInterviewerAssignmentsEndpoint extends BaseEndpoint
 
     protected ?string $samplingPointId;
 
-    public function __construct(?string $surveyId = null, ?string $samplingPointId = null)
+    public function __construct(string $surveyId = null, string $samplingPointId = null)
     {
         $this->resourcePath = str_replace(['{surveyId}', '{samplingPointId}'], [$surveyId, $samplingPointId], $this->resourcePath);
 
@@ -38,7 +36,7 @@ class SamplingPointsInterviewerAssignmentsEndpoint extends BaseEndpoint
 
     public function store(string $interviewerId): InterviewerAssignmentsData
     {
-        $resourcePath = $this->resourcePath . "/$interviewerId";
+        $resourcePath = $this->resourcePath."/$interviewerId";
 
         $response = $this->httpClient->post($resourcePath);
 
@@ -49,16 +47,16 @@ class SamplingPointsInterviewerAssignmentsEndpoint extends BaseEndpoint
         } catch (CannotCreateData $exception) {
             $interviewerAssignmentsData = InterviewerAssignmentsData::optional(null);
         }
+
         return $interviewerAssignmentsData;
     }
 
     public function destroy(string $interviewerId): bool
     {
-        $resourcePath = $this->resourcePath . "/$interviewerId";
+        $resourcePath = $this->resourcePath."/$interviewerId";
 
         $response = $this->httpClient->delete($resourcePath);
 
         return $response->noContent();
     }
-
 }

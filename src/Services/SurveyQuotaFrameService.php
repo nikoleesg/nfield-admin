@@ -2,10 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
-use Spatie\LaravelData\DataCollection;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveyQuotaFrameEndpoint;
 
 class SurveyQuotaFrameService
@@ -14,7 +11,7 @@ class SurveyQuotaFrameService
 
     protected ?string $surveyId;
 
-    public function __construct(?string $surveyId = null)
+    public function __construct(string $surveyId = null)
     {
         $this->surveyId = $surveyId;
 
@@ -46,7 +43,7 @@ class SurveyQuotaFrameService
 
     public function get(?string $samplingPointId)
     {
-        if (!is_null($samplingPointId)) {
+        if (! is_null($samplingPointId)) {
             return $this->getSamplingPoint($samplingPointId);
         }
 
@@ -67,7 +64,7 @@ class SurveyQuotaFrameService
     {
         $samplingPointData = SamplingPointData::from([
             'name' => $name,
-            'kind' => !$spare ? SamplingPointKindEnum::Regular : SamplingPointKindEnum::Spare
+            'kind' => ! $spare ? SamplingPointKindEnum::Regular : SamplingPointKindEnum::Spare,
         ]);
 
         return $this->create($samplingPointData);

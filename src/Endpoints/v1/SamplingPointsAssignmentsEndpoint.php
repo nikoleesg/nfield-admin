@@ -2,13 +2,9 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\Exceptions\CannotCreateData;
-use Nikoleesg\NfieldAdmin\HttpClient;
-use Nikoleesg\NfieldAdmin\Endpoints\BaseEndpoint;
-use Nikoleesg\NfieldAdmin\Data\InterviewerSamplingPointAssignmentData as InterviewerAssignmentData;
 use Nikoleesg\NfieldAdmin\Data\SamplingPointInterviewerAssignmentsData as InterviewerAssignmentsData;
-
+use Nikoleesg\NfieldAdmin\Endpoints\BaseEndpoint;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 class SamplingPointsAssignmentsEndpoint extends BaseEndpoint
 {
@@ -16,7 +12,7 @@ class SamplingPointsAssignmentsEndpoint extends BaseEndpoint
 
     protected ?string $surveyId;
 
-    public function __construct(?string $surveyId = null)
+    public function __construct(string $surveyId = null)
     {
         $this->resourcePath = str_replace(['{surveyId}'], [$surveyId], $this->resourcePath);
 

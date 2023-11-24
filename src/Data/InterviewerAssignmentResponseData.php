@@ -2,12 +2,12 @@
 
 namespace Nikoleesg\NfieldAdmin\Data;
 
-use Spatie\LaravelData\Data;
+use Carbon\Carbon;
+use Nikoleesg\NfieldAdmin\Data\Casts\CarbonCast;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
-use Nikoleesg\NfieldAdmin\Data\Casts\CarbonCast;
-use Carbon\Carbon;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class InterviewerAssignmentResponseData extends Data

@@ -2,25 +2,29 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
-use Spatie\LaravelData\DataCollection;
-use Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Nikoleesg\NfieldAdmin\Data;
+use Nikoleesg\NfieldAdmin\Data\SamplingPointData;
+use Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
+use Spatie\LaravelData\DataCollection;
 
 class SamplingPointService
 {
     protected v1\SamplingPointsEndpoint $samplingPointsEndpoint;
+
     protected v1\SamplingPointsQuotaTargetsEndpoint $quotaTargetsEndpoint;
+
     protected v1\AddressesEndpoint $addressesEndpoint;
+
     protected v1\SamplingPointsInterviewerAssignmentsEndpoint $interviewerAssignmentsEndpoint;
+
     protected v1\SamplingPointsAssignmentsEndpoint $assignmentsEndpoint;
 
     protected ?string $surveyId;
 
     protected ?string $samplingPointId;
 
-    public function __construct(?string $surveyId = null, ?string $samplingPointId = null)
+    public function __construct(string $surveyId = null, string $samplingPointId = null)
     {
         $this->surveyId = $surveyId;
 
@@ -70,9 +74,9 @@ class SamplingPointService
         return $this->initEndpoints();
     }
 
-    public function get(?string $samplingPointId = null)
+    public function get(string $samplingPointId = null)
     {
-        if (!is_null($samplingPointId)) {
+        if (! is_null($samplingPointId)) {
             return $this->getSamplingPoint($samplingPointId);
         }
 
@@ -93,7 +97,7 @@ class SamplingPointService
     {
         $samplingPointData = SamplingPointData::from([
             'name' => $name,
-            'kind' => !$spare ? SamplingPointKindEnum::Regular : SamplingPointKindEnum::Spare
+            'kind' => ! $spare ? SamplingPointKindEnum::Regular : SamplingPointKindEnum::Spare,
         ]);
 
         return $this->create($samplingPointData);
@@ -115,7 +119,6 @@ class SamplingPointService
         return $this->samplingPointsEndpoint->count();
     }
 
-
     /**
      * |------------------------------------------------------------------------
      * | Addresses
@@ -136,11 +139,11 @@ class SamplingPointService
         return $this->addressesEndpoint->store($addressData);
     }
 
-    public function addAddress(string $details, ?string $addressId = null): Data\AddressDTO
+    public function addAddress(string $details, string $addressId = null): Data\AddressDTO
     {
         $addressData = Data\AddressDTO::from([
             'address_id' => $addressId,
-            'details' => $details
+            'details' => $details,
         ]);
 
         return $this->createAddress($addressData);
@@ -206,7 +209,7 @@ class SamplingPointService
 
         $interviewerAssignmentsData = Data\SamplingPointInterviewerAssignmentsData::from([
             'sampling_point_ids' => $samplingPoint,
-            'interviewer_ids' => $interviewer
+            'interviewer_ids' => $interviewer,
         ]);
 
         return $this->assignmentsEndpoint->store($interviewerAssignmentsData);
@@ -224,7 +227,7 @@ class SamplingPointService
 
         $interviewerAssignmentsData = Data\SamplingPointInterviewerAssignmentsData::from([
             'sampling_point_ids' => $samplingPoint,
-            'interviewer_ids' => $interviewer
+            'interviewer_ids' => $interviewer,
         ]);
 
         return $this->assignmentsEndpoint->destroy($interviewerAssignmentsData);
@@ -234,7 +237,6 @@ class SamplingPointService
      * |------------------------------------------------------------------------
      * | Quota Targets
      * |------------------------------------------------------------------------
-     *
      */
     public function getQuotaTargets(): DataCollection
     {
