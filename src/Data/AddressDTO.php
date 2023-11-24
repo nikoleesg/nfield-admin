@@ -2,24 +2,24 @@
 
 namespace Nikoleesg\NfieldAdmin\Data;
 
-use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
+use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
-use Carbon\Carbon;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
-class AddressData extends Data
+class AddressDTO extends Data
 {
     public function __construct(
         public ?string $address_id,
         public string $details,
         #[WithCast(DateTimeInterfaceCast::class)]
         public ?Carbon $appointment_date,
-        #[DataCollectionOf(AddressSampleData::class)]
+        #[DataCollectionOf(AddressSampleDTO::class)]
         public ?DataCollection $sample_data
     ) {
     }

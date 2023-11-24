@@ -2,7 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
-use Nikoleesg\NfieldAdmin\Data\AddressData;
+use Nikoleesg\NfieldAdmin\Data\AddressDTO;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Nikoleesg\NfieldAdmin\HttpClient;
