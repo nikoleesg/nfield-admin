@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create(config('nfield-admin.table_prefix') . 'response_codes', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('survey_id')->nullable();
+            $table->unsignedSmallInteger('response_code');
+            $table->string('description')->nullable();
+            $table->text('relocation_url')->nullable();
+            $table->boolean('is_definite')->nullable();
+            $table->boolean('is_selectable')->nullable();
+            $table->boolean('allow_appointment')->nullable();
+            $table->boolean('channel_capi')->nullable();
+            $table->boolean('channel_cati')->nullable();
+            $table->boolean('channel_online')->nullable();
+            $table->text('remark')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists(config('nfield-admin.table_prefix') . 'response_codes');
+    }
+};

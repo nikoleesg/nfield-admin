@@ -57,5 +57,15 @@ return [
 
         'channel' => env('NFIELD_LOG_CHANNEL', 'stack')
 
-    ]
+    ],
+
+    /*
+    |-------------------------------------------------------------------------
+    | Survey Sample
+    |-------------------------------------------------------------------------
+    |
+    */
+    'sample_files_store_path' => 'nfield/surveys/{surveyId}/samples',
+
+    'sample_files_retention_days' => 30,
 ];
