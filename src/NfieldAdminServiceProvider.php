@@ -21,11 +21,13 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasMigrations([
                 'create_interviewers_table',
-                'create_response_codes_table'
+                'create_response_codes_table',
+                'create_background_activities_table'
             ])
             ->hasCommands([
                 Commands\SyncCapiInterviewerCommand::class,
-                Commands\SyncResponseCodesCommand::class
+                Commands\SyncResponseCodesCommand::class,
+                Commands\SyncBackgroundActivitiesDetailsCommand::class
             ]);
     }
 }
