@@ -26,6 +26,8 @@ class SurveysService
 
     protected v1\SurveyDataEndpoint $dataEndpoint;
 
+    protected v1\SurveySampleEndpoint $sampleEndpoint;
+
     protected ?string $surveyId;
 
     protected ?DataCollection $surveyCollection;
@@ -52,6 +54,8 @@ class SurveysService
         $this->responseCodesEndpoint = new v1\SurveyResponseCodesEndpoint($this->surveyId);
 
         $this->dataEndpoint = new v1\SurveyDataEndpoint($this->surveyId);
+
+        $this->sampleEndpoint = new v1\SurveySampleEndpoint($this->surveyId);
 
         return $this;
     }
@@ -415,6 +419,17 @@ class SurveysService
             'CustomColumnName' => null,
             'CustomColumnValue' => null
         ]);
+    }
+
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Survey Sample
+     * |------------------------------------------------------------------------
+     */
+    public function getSamples()
+    {
+        return $this->sampleEndpoint->index();
     }
 
 
