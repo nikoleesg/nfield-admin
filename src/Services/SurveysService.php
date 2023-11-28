@@ -4,9 +4,12 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
 use Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
+use Nikoleesg\NfieldAdmin\Models\BackgroundActivity;
+use Nikoleesg\NfieldAdmin\Data\SurveyDataRequestDTO;
 use Spatie\LaravelData\DataCollection;
 
 class SurveysService
@@ -20,6 +23,8 @@ class SurveysService
     protected v1\SurveysQuotaTargetsEndpoint $quotaTargetsEndpoint;
 
     protected v1\SurveyResponseCodesEndpoint $responseCodesEndpoint;
+
+    protected v1\SurveyDataEndpoint $dataEndpoint;
 
     protected ?string $surveyId;
 
@@ -45,6 +50,8 @@ class SurveysService
         $this->quotaTargetsEndpoint = new v1\SurveysQuotaTargetsEndpoint($this->surveyId);
 
         $this->responseCodesEndpoint = new v1\SurveyResponseCodesEndpoint($this->surveyId);
+
+        $this->dataEndpoint = new v1\SurveyDataEndpoint($this->surveyId);
 
         return $this;
     }
@@ -373,5 +380,42 @@ class SurveysService
     {
         return $this->responseCodesEndpoint->show($responseCode);
     }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Survey Data
+     * |------------------------------------------------------------------------
+     */
+    public function requestDataDownload(?SurveyDataRequestDTO $surveyDataRequestDTO = null)
+    {
+        $surveyDataRequest = !is_null($surveyDataRequestDTO) ? $surveyDataRequestDTO : $this->defaultSurveyDataRequestModel();
+
+        return $this->dataEndpoint->store($surveyDataRequest);
+    }
+
+    protected function defaultSurveyDataRequestModel(): SurveyDataRequestDTO
+    {
+        return SurveyDataRequestDTO::from([
+            'FileName' => 'PA_SurveyData_'.Carbon::now()->format('Ymd_His'),
+            'StartDate' => Carbon::parse('6 days ago', 'Asia/Singapore')->startOfDay()->tz('UTC'),
+            'EndDate' => Carbon::today('Asia/Singapore')->endOfDay()->tz('UTC'),
+            'SurveyVersion' => null,
+            'IncludeSuccessful' => true,
+            'IncludeScreenOut' => false,
+            'IncludeDroppedOut' => false,
+            'IncludeRejected' => false,
+            'IncludeTestData' => false,
+            'IncludeClosedAnswers' => true,
+            'IncludeOpenAnswers' => true,
+            'IncludeParaData' => true,
+            'IncludeCapturedMediaFiles' => false,
+            'IncludeVarFile' => false,
+            'IncludeQuestionnaireScript' => false,
+            'IncludeAuditLog' => false,
+            'CustomColumnName' => null,
+            'CustomColumnValue' => null
+        ]);
+    }
+
 
 }
