@@ -2,6 +2,8 @@
 
 namespace Nikoleesg\NfieldAdmin\Traits;
 
+use Illuminate\Support\Str;
+
 trait HasTablePrefix
 {
     /**
@@ -11,8 +13,7 @@ trait HasTablePrefix
      */
     public function getTable()
     {
-//        return $this->getPrefix() . parent::getTable();
-        return $this->getPrefix() . 'interviewers';
+        return Str::start(parent::getTable(), $this->getPrefix());
     }
 
     /**
@@ -24,4 +25,5 @@ trait HasTablePrefix
     {
         return config('nfield-admin.table_prefix') ?? $this->prefix ?? '';
     }
+
 }

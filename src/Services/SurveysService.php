@@ -19,6 +19,8 @@ class SurveysService
 
     protected v1\SurveysQuotaTargetsEndpoint $quotaTargetsEndpoint;
 
+    protected v1\SurveyResponseCodesEndpoint $responseCodesEndpoint;
+
     protected ?string $surveyId;
 
     protected ?DataCollection $surveyCollection;
@@ -41,6 +43,8 @@ class SurveysService
         $this->surveyQuotaFrameEndpoint = new v1\SurveyQuotaFrameEndpoint($this->surveyId);
 
         $this->quotaTargetsEndpoint = new v1\SurveysQuotaTargetsEndpoint($this->surveyId);
+
+        $this->responseCodesEndpoint = new v1\SurveyResponseCodesEndpoint($this->surveyId);
 
         return $this;
     }
@@ -353,6 +357,21 @@ class SurveysService
     {
         return $this->quotaTargetsEndpoint->index();
 
+    }
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Response Codes
+     * |------------------------------------------------------------------------
+     */
+    public function getResponseCodes()
+    {
+        return $this->responseCodesEndpoint->index();
+    }
+
+    public function getResponseCode(int $responseCode)
+    {
+        return $this->responseCodesEndpoint->show($responseCode);
     }
 
 }
