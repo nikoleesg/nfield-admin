@@ -390,7 +390,7 @@ class SurveysService
      * | Survey Data
      * |------------------------------------------------------------------------
      */
-    public function requestDataDownload(?SurveyDataRequestDTO $surveyDataRequestDTO = null)
+    public function requestDownloadData(?SurveyDataRequestDTO $surveyDataRequestDTO = null)
     {
         $surveyDataRequest = !is_null($surveyDataRequestDTO) ? $surveyDataRequestDTO : $this->defaultSurveyDataRequestModel();
 
@@ -427,7 +427,7 @@ class SurveysService
      * | Survey Sample
      * |------------------------------------------------------------------------
      */
-    public function getSamples()
+    public function getSurveySamples()
     {
         return $this->sampleEndpoint->index();
     }
