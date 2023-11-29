@@ -68,4 +68,17 @@ return [
     'sample_files_store_path' => 'nfield/surveys/{surveyId}/samples',
 
     'sample_files_retention_days' => 30,
+
+    /*
+    |-------------------------------------------------------------------------
+    | Background Activity
+    |-------------------------------------------------------------------------
+    |
+    */
+    'persist_activity_id' => true,
+
+    'persist_drive' => 'database',
+
+    'persist_model' => Nikoleesg\NfieldAdmin\Models\BackgroundActivity::class,
+
 ];
