@@ -25,13 +25,22 @@ class SurveyDataEndpoint extends BaseEndpoint
 
         $surveyDataRequestModel = array_change_key_casing($surveyDataRequest->toArray(), CASE_STUDLY);
 
-
         $response = $this->httpClient->post($resourcePath, true, $surveyDataRequestModel);
 
         $backgroundActivity = json_decode($response->body(), true);
 
-        return $backgroundActivity;
+        if (array_key_exists('ActivityId', $backgroundActivity)
+        && config('nfield-admin.persist_activity_id')
+        && config('nfield-admin.persist_drive') === 'database'
+        ) {
+            $model = config('nfield-admin.persist_model');
 
+            $backgroundActivityInstance = $model::create([
+                'activity_id' => $backgroundActivity['ActivityId']
+            ]);
+        }
+
+        return $backgroundActivity;
     }
 
 }
