@@ -28,7 +28,7 @@ class SurveyDataRequestDTO extends Data
         public ?bool $include_screen_out,
         public ?bool $include_dropped_out,
         public ?bool $include_rejected,
-        public ?bool $include_Test_data,
+        public ?bool $include_test_data,
         public ?bool $include_closed_answers,
         public ?bool $include_open_answers,
         public ?bool $include_para_data,
