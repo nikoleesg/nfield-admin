@@ -2,13 +2,12 @@
 
 namespace Nikoleesg\NfieldAdmin\Actions\SamplingPoint;
 
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\Concerns\AsJob;
 use Nikoleesg\NfieldAdmin\Facades\SamplingPoint;
 use Nikoleesg\NfieldAdmin\Data\AddressDTO;
 
-class AddNewAddressToSamplingPointAction implements ShouldBeUnique
+class AddNewAddressToSamplingPointAction
 {
     use AsAction, AsJob;
 
@@ -22,10 +21,5 @@ class AddNewAddressToSamplingPointAction implements ShouldBeUnique
     {
         SamplingPoint::setSurvey($surveyId)->setSamplingPoint($samplingPointId)->createAddress($addressDTO);
     }
-
-    public function getJobUniqueId(string $surveyId, string $samplingPointId, AddressDTO $addressDTO)
-    {
-        // Defines the unique key when using the ShouldBeUnique interface.
-        return $samplingPointId;
-    }
+    
 }
