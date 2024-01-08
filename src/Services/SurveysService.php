@@ -397,6 +397,15 @@ class SurveysService
         return $this->dataEndpoint->store($surveyDataRequest);
     }
 
+    public function requestDownloadInterviewData(int $interviewId)
+    {
+        $surveyDataRequest = SurveyDataRequestDTO::from([
+            'FileName' => 'PA_' . Str::padLeft($interviewId, 8, '0'),
+        ]);
+
+        return $this->dataEndpoint->store($surveyDataRequest, $interviewId);
+    }
+
     protected function defaultSurveyDataRequestModel(): SurveyDataRequestDTO
     {
         return SurveyDataRequestDTO::from([
