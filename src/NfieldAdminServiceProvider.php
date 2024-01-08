@@ -22,7 +22,8 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
             ->hasMigrations([
                 'create_interviewers_table',
                 'create_response_codes_table',
-                'create_background_activities_table'
+                'create_background_activities_table',
+                'add_unique_to_interviewer_id'
             ])
             ->hasCommands([
                 Commands\SyncCapiInterviewerCommand::class,

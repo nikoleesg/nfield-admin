@@ -33,10 +33,18 @@ class SyncCapiInterviewerCommand extends Command
 
         if ($capiInterviewers->count() > 0) {
 
-            foreach ($capiInterviewers as $capiInterviewer)
-            {
-                Model::updateOrCreate($capiInterviewer->toArray());
-            }
+            $interviewerCollectionData = $capiInterviewers->toArray();
+
+            Model::upsert(
+                $interviewerCollectionData,
+                ['interviewer_id'],
+                [
+                    'user_name', 'first_name', 'last_name', 'email_address', 'telephone_number',
+                    'last_password_change_time', 'client_interviewer_id', 'successful_count',
+                    'unsuccessful_count', 'dropped_out_count', 'rejected_count', 'last_sync_date',
+                    'is_full_synced', 'is_last_sync_successful', 'is_supervisor'
+                ]
+            );
 
             $this->info('Data synchronized successfully.');
         } else {
