@@ -19,9 +19,13 @@ class SurveyDataEndpoint extends BaseEndpoint
         parent::__construct();
     }
 
-    public function store(SurveyDataRequestDTO $surveyDataRequest)
+    public function store(SurveyDataRequestDTO $surveyDataRequest, ?int $interviewId = null)
     {
         $resourcePath = $this->resourcePath;
+
+        if (!is_null($interviewId)) {
+            $resourcePath .= '/' . $interviewId;
+        }
 
         $surveyDataRequestModel = array_change_key_casing($surveyDataRequest->toArray(), CASE_STUDLY);
 
