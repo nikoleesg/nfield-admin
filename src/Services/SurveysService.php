@@ -10,6 +10,7 @@ use Nikoleesg\NfieldAdmin\Endpoints\v1;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Nikoleesg\NfieldAdmin\Models\BackgroundActivity;
 use Nikoleesg\NfieldAdmin\Data\SurveyDataRequestDTO;
+use Nikoleesg\NfieldAdmin\Data\SurveyUpdateSampleRecordDTO;
 use Spatie\LaravelData\DataCollection;
 
 class SurveysService
@@ -441,5 +442,14 @@ class SurveysService
         return $this->sampleEndpoint->index();
     }
 
+    public function getSurveySample(int $interviewId)
+    {
+        return $this->sampleEndpoint->show($interviewId);
+    }
+
+    public function setSurveySample(SurveyUpdateSampleRecordDTO $sampleRecordData)
+    {
+        return $this->sampleEndpoint->update($sampleRecordData);
+    }
 
 }
