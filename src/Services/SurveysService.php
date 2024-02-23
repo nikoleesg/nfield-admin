@@ -391,6 +391,20 @@ class SurveysService
      * | Survey Data
      * |------------------------------------------------------------------------
      */
+
+    /**
+     * @param int|null $interviewId
+     * @param SurveyDataRequestDTO|null $surveyDataRequestDTO
+     */
+    public function requestDownloadSurveyData(?int $interviewId = null, ?SurveyDataRequestDTO $surveyDataRequestDTO = null)
+    {
+        if (is_null($interviewId)) {
+            return $this->requestDownloadData($surveyDataRequestDTO);
+        } else {
+            return $this->requestDownloadInterviewData($interviewId, $surveyDataRequestDTO);
+        }
+    }
+
     public function requestDownloadData(?SurveyDataRequestDTO $surveyDataRequestDTO = null)
     {
         $surveyDataRequest = !is_null($surveyDataRequestDTO) ? $surveyDataRequestDTO : $this->defaultSurveyDataRequestModel();
@@ -398,11 +412,9 @@ class SurveysService
         return $this->dataEndpoint->store($surveyDataRequest);
     }
 
-    public function requestDownloadInterviewData(int $interviewId)
+    public function requestDownloadInterviewData(int $interviewId, ?SurveyDataRequestDTO $surveyDataRequestDTO = null)
     {
-        $surveyDataRequest = SurveyDataRequestDTO::from([
-            'FileName' => 'PA_' . Str::padLeft($interviewId, 8, '0'),
-        ]);
+        $surveyDataRequest = !is_null($surveyDataRequestDTO) ? $surveyDataRequestDTO : SurveyDataRequestDTO::from(['FileName' => 'PA_' . Str::padLeft($interviewId, 8, '0')]);
 
         return $this->dataEndpoint->store($surveyDataRequest, $interviewId);
     }
