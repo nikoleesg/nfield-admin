@@ -398,9 +398,9 @@ class SurveysService
         return $this->responseCodesEndpoint->update($responseCode, $responseCodeForPatch);
     }
 
-    public function createResponseCode(int $responseCode, SurveyResponseCodeDTO $surveyResponseCodeDTO)
+    public function createResponseCode(SurveyResponseCodeDTO $surveyResponseCodeDTO)
     {
-        return $this->responseCodesEndpoint->create($responseCode, $surveyResponseCodeDTO);
+        return $this->responseCodesEndpoint->create($surveyResponseCodeDTO);
     }
 
     /**
