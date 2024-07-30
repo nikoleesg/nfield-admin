@@ -9,11 +9,9 @@ use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
 
 #[MapInputName(CamelCaseMapper::class)]
-class ResponseCodeDTO extends Data
+class DomainResponseCodeForPatch extends Data
 {
     public function __construct(
-        #[MapName('response_code')]
-        public int $id,
         public string $description,
         #[MapName('relocation_url')]
         public ?string $url,
