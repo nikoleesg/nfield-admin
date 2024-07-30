@@ -6,6 +6,7 @@ use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Nikoleesg\NfieldAdmin\Endpoints\BaseEndpoint;
 use Nikoleesg\NfieldAdmin\Data\SurveyResponseCodeDTO;
+use Nikoleesg\NfieldAdmin\Data\SurveyResponseCodeForPatch;
 
 class SurveyResponseCodesEndpoint extends BaseEndpoint
 {
@@ -57,5 +58,51 @@ class SurveyResponseCodesEndpoint extends BaseEndpoint
         }
 
         return $responseCodeData;
+    }
+
+    /**
+     * Deletes a specified response code. (Supports blueprint surveys)
+     *
+     * @param int $responseCode The response code that is to be deleted
+     * @return int
+     */
+    public function delete(int $responseCode): int
+    {
+        $resourcePath = $this->resourcePath . "/$responseCode";
+
+        $response = $this->httpClient->delete($resourcePath);
+
+        return $response->status();
+    }
+
+    /**
+     * Update a response code with the specified fields. (Supports blueprint surveys)
+     *
+     * @param int $responseCode The response code that is updated.
+     * @param SurveyResponseCodeForPatch $responseCodeForPatch
+     * @return int
+     */
+    public function update(int $responseCode, SurveyResponseCodeForPatch $responseCodeForPatch): int
+    {
+        $resourcePath = $this->resourcePath . "/$responseCode";
+
+        $response = $this->httpClient->patch($resourcePath, true, $responseCodeForPatch->toArray());
+
+        return $response->status();
+    }
+
+    /**
+     * This method creates a new response code. (Supports blueprint surveys)
+     *
+     * @param SurveyResponseCodeDTO $surveyResponseCode
+     * @return int
+     */
+    public function create(SurveyResponseCodeDTO $surveyResponseCode): int
+    {
+        $resourcePath = $this->resourcePath;
+
+        $response = $this->httpClient->post($resourcePath, true, $surveyResponseCode->toArray());
+
+        return $response->status();
     }
 }

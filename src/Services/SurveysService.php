@@ -11,6 +11,8 @@ use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Nikoleesg\NfieldAdmin\Models\BackgroundActivity;
 use Nikoleesg\NfieldAdmin\Data\SurveyDataRequestDTO;
 use Nikoleesg\NfieldAdmin\Data\SurveyUpdateSampleRecordDTO;
+use Nikoleesg\NfieldAdmin\Data\SurveyResponseCodeDTO;
+use Nikoleesg\NfieldAdmin\Data\SurveyResponseCodeForPatch;
 use Spatie\LaravelData\DataCollection;
 
 class SurveysService
@@ -384,6 +386,21 @@ class SurveysService
     public function getResponseCode(int $responseCode)
     {
         return $this->responseCodesEndpoint->show($responseCode);
+    }
+
+    public function deleteResponseCode(int $responseCode)
+    {
+        return $this->responseCodesEndpoint->delete($responseCode);
+    }
+
+    public function updateResponseCode(int $responseCode, SurveyResponseCodeForPatch $responseCodeForPatch)
+    {
+        return $this->responseCodesEndpoint->update($responseCode, $responseCodeForPatch);
+    }
+
+    public function createResponseCode(int $responseCode, SurveyResponseCodeDTO $surveyResponseCodeDTO)
+    {
+        return $this->responseCodesEndpoint->create($responseCode, $surveyResponseCodeDTO);
     }
 
     /**
