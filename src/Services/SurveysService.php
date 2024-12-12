@@ -31,6 +31,10 @@ class SurveysService
 
     protected v1\SurveySampleEndpoint $sampleEndpoint;
 
+    protected v1\SurveyBlueprintsEndpoint $surveyBlueprintsEndpoint;
+
+    protected v1\SamplingMethodEndpoint $samplingMethodEndpoint;
+
     protected ?string $surveyId;
 
     protected ?DataCollection $surveyCollection;
@@ -40,6 +44,8 @@ class SurveysService
         $this->surveyId = $surveyId;
 
         $this->surveysEndpoint = new v1\SurveysEndpoint();
+
+        $this->surveyBlueprintsEndpoint = new v1\SurveyBlueprintsEndpoint();
 
         if ($this->isSurveyConfigured()) {
             $this->initEndpoints();
@@ -59,6 +65,8 @@ class SurveysService
         $this->dataEndpoint = new v1\SurveyDataEndpoint($this->surveyId);
 
         $this->sampleEndpoint = new v1\SurveySampleEndpoint($this->surveyId);
+
+        $this->samplingMethodEndpoint = new v1\SamplingMethodEndpoint($this->surveyId);
 
         return $this;
     }
@@ -267,6 +275,14 @@ class SurveysService
     }
 
     /**
+     * Create Survey from a blueprint survey.
+     */
+    public function createSurveyFromBlueprint(string $surveyName, string $blueprintSurveyId): SurveyData
+    {
+        return $this->surveyBlueprintsEndpoint->store($surveyName, $blueprintSurveyId);
+    }
+
+    /**
      * Delete a Survey
      */
     public function deleteSurvey(SurveyData|string $survey): bool
@@ -294,6 +310,21 @@ class SurveysService
         unset($this->surveyCollection);
 
         return true;
+    }
+
+    public function getSurveyDetails(string $surveyId): ?SurveyData
+    {
+        return $this->surveysEndpoint->show($surveyId);
+    }
+
+    public function getSurveySamplingMethod(): ?string
+    {
+        return $this->samplingMethodEndpoint->show();
+    }
+
+    public function setSurveySamplingMethod(string $samplingMethod): bool
+    {
+        return $this->samplingMethodEndpoint->update($samplingMethod);
     }
 
     /**
