@@ -26,7 +26,6 @@ class ResponseCodesEndpoint extends BaseEndpoint
 
         $responseCodes = json_decode($response->body(), true);
 
-
         return ResponseCodeDTO::collection($responseCodes);
     }
 
