@@ -6,13 +6,20 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
+use Nikoleesg\NfieldAdmin\Data\SurveyPublishStateData;
 use Nikoleesg\NfieldAdmin\Endpoints\v1;
+use Nikoleesg\NfieldAdmin\Endpoints\v2;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
+use Nikoleesg\NfieldAdmin\Enums\SurveyPackageTypeEnum;
+use Nikoleesg\NfieldAdmin\Enums\SurveyPublishForceUpgradeEnum;
+use Nikoleesg\NfieldAdmin\Enums\SurveyFieldworkStatusEnum;
+use Nikoleesg\NfieldAdmin\Enums\InterviewingRestrictionTypeEnum;
 use Nikoleesg\NfieldAdmin\Models\BackgroundActivity;
 use Nikoleesg\NfieldAdmin\Data\SurveyDataRequestDTO;
 use Nikoleesg\NfieldAdmin\Data\SurveyUpdateSampleRecordDTO;
 use Nikoleesg\NfieldAdmin\Data\SurveyResponseCodeDTO;
 use Nikoleesg\NfieldAdmin\Data\SurveyResponseCodeForPatch;
+use Nikoleesg\NfieldAdmin\Data\SurveyFieldworkCountsDTO;
 use Spatie\LaravelData\DataCollection;
 
 class SurveysService
@@ -34,6 +41,12 @@ class SurveysService
     protected v1\SurveyBlueprintsEndpoint $surveyBlueprintsEndpoint;
 
     protected v1\SamplingMethodEndpoint $samplingMethodEndpoint;
+
+    protected v1\SurveyPublishEndpoint $surveyPublishEndpoint;
+
+    protected v1\SurveysFieldworkEndpoint $surveysFieldworkEndpoint;
+
+    protected v2\SurveysFieldworkEndpoint $surveyFieldworkEndpointV2;
 
     protected ?string $surveyId;
 
@@ -67,6 +80,12 @@ class SurveysService
         $this->sampleEndpoint = new v1\SurveySampleEndpoint($this->surveyId);
 
         $this->samplingMethodEndpoint = new v1\SamplingMethodEndpoint($this->surveyId);
+
+        $this->surveyPublishEndpoint = new v1\SurveyPublishEndpoint($this->surveyId);
+
+        $this->surveysFieldworkEndpoint = new v1\SurveysFieldworkEndpoint($this->surveyId);
+
+        $this->surveyFieldworkEndpointV2 = new v2\SurveysFieldworkEndpoint($this->surveyId);
 
         return $this;
     }
@@ -512,4 +531,57 @@ class SurveysService
         return $this->sampleEndpoint->update($sampleRecordData);
     }
 
+    /**
+     * |------------------------------------------------------------------------
+     * | Survey Publish
+     * |------------------------------------------------------------------------
+     */
+    public function getPublishState(): SurveyPublishStateData
+    {
+        return $this->surveyPublishEndpoint->show();
+    }
+
+    public function publish(SurveyPackageTypeEnum $packageType, SurveyPublishForceUpgradeEnum $forceUpgradeEnum): bool
+    {
+        return $this->surveyPublishEndpoint->update($packageType, $forceUpgradeEnum);
+    }
+
+    public function publishLiveSurvey(): bool
+    {
+        return $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
+    }
+
+    public function forcePublishLiveSurvey(): bool
+    {
+        return $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
+    }
+
+
+    /**
+     * |------------------------------------------------------------------------
+     * | Survey Fieldwork Start/Stop/Status
+     * |------------------------------------------------------------------------
+     */
+
+    public function startFieldwork(): bool
+    {
+        return $this->surveysFieldworkEndpoint->update();
+    }
+
+    public function stopFieldwork(?InterviewingRestrictionTypeEnum $restrictionType = null): bool
+    {
+        $restrictionType = $restrictionType ?? InterviewingRestrictionTypeEnum::BlockEverything;
+
+        return $this->surveyFieldworkEndpointV2->update($restrictionType);
+    }
+
+    public function getFieldworkStatus(): ?SurveyFieldworkStatusEnum
+    {
+        return $this->surveysFieldworkEndpoint->show();
+    }
+
+    public function getFieldworkCounts(): ?SurveyFieldworkCountsDTO
+    {
+        return $this->surveysFieldworkEndpoint->count();
+    }
 }
