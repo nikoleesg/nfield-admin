@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create(config('nfield-admin.table_prefix').'interviewers', function (Blueprint $table) {
             $table->id();
-            $table->uuid('interviewer_id');
+            $table->uuid('interviewer_id')->unique();
             $table->string('user_name');
             $table->string('first_name');
             $table->string('last_name')->nullable();
