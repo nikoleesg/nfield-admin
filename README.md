@@ -51,6 +51,42 @@ php artisan vendor:publish --tag="nfield-admin-views"
 
 ## Usage
 
+### Surveys
+
+```php
+use Nikoleesg\NfieldAdmin\Services\SurveyService;
+
+$svc = app(SurveyService::class);
+
+$surveys = $svc->getAllSurveys(); 
+$surveys = $svc->filter();
+$survey = $svc->create();
+$surveys = $svc->searchRespondents();
+
+$survey = $svc->for('{surveyId}');
+
+$survey->get();
+$survey->delete();
+$survey->update();
+$survey->counts();
+$urvey->getCustomColumns();
+$survey->requestDataDownload();
+
+
+// Fieldwork
+$fieldwork = $survey->fieldwork();
+
+$fieldwork->start();
+$fieldwork->stop();
+
+$fieldwork->status();
+$fieldwork->counts();
+
+// Sample
+$samples = $survey->sample();
+
+```
+
 ### Logging
 Add the logging channel to ``config/logging.php`` configuration file:
 ````php

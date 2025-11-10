@@ -4,7 +4,6 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
 
 use Nikoleesg\NfieldAdmin\Endpoints\BaseEndpoint;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Nikoleesg\NfieldAdmin\Data\SurveyUpdateSampleRecordDTO;
 
@@ -111,6 +110,43 @@ class SurveySampleEndpoint extends BaseEndpoint
 
         if ($response->ok()) {
             return json_decode($response->body(), true)['ResultStatus'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Retrieves the sample data for the specified survey.
+     * https://apiap.nfieldmr.com/help/api/get-v1-surveys-surveyid-sample
+     *
+     * @return false|string|string[]
+     */
+    public function get()
+    {
+        $resourcePath = $this->resourcePath;
+
+        $response = $this->httpClient->get($resourcePath);
+
+        if ($response->ok()) {
+            $utf8Content = mb_convert_encoding($response->body(), "UTF-8", "UTF-16LE");
+
+            $lines = preg_split('/\r\n|\r|\n/', $utf8Content);
+
+            $headerLine = array_shift($lines);
+            // Remove UTF-16 BOM
+            $headerLineRemoveBOM = preg_replace('/^\x{FEFF}/u', '', $headerLine);
+
+            $header = str_getcsv($headerLineRemoveBOM, "\t");
+
+            $rows = $lines;
+
+            return collect($rows)
+                ->reject(function ($item) {
+                    return trim($item) === '';
+                })
+                ->map(function ($item) use ($header) {
+                    return array_combine($header, str_getcsv($item, "\t"));
+                });
         }
 
         return false;

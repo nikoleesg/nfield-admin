@@ -11,10 +11,13 @@ use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
+use Spatie\LaravelData\Concerns\WithDeprecatedCollectionMethod;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class SurveyData extends Data
 {
+    use WithDeprecatedCollectionMethod;
+
     public function __construct(
         public ?string $client_name,
         #[WithCast(EnumCast::class)]

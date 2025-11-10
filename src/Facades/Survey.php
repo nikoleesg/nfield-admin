@@ -3,7 +3,7 @@
 namespace Nikoleesg\NfieldAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Nikoleesg\NfieldAdmin\Services\SurveysService;
+use Nikoleesg\NfieldAdmin\Services\v1\SurveysService;
 
 class Survey extends Facade
 {
