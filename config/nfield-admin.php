@@ -14,6 +14,8 @@ return [
 
     'Password' => env('NFIELD_PASSWORD', 'password'),
 
+    'base_url' => env('NFIELD_BASE_URL', 'https://apiap.nfieldmr.com'),
+
     /*
     |-------------------------------------------------------------------------
     | Cache Authentication Key return /v1/SignIn

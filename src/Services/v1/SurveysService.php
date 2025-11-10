@@ -1,6 +1,6 @@
 <?php
 
-namespace Nikoleesg\NfieldAdmin\Services;
+namespace Nikoleesg\NfieldAdmin\Services\v1;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
