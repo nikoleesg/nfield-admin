@@ -2,6 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin\Resources;
 
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpoint as SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
@@ -66,14 +67,19 @@ final class SurveySampleCollectionResource
         return new SurveySampleResource($this->endpoint, $this->surveyId, $interviewId);
     }
 
+    public function update(array $surveyUpdateSampleRecordModel)
+    {
+        return $this->endpoint->update($this->surveyId, $surveyUpdateSampleRecordModel);
+    }
+
     public function block(SampleFilterModel $sampleFilterModel): BackgroundActivityStatus
     {
         return new BackgroundActivityStatus();
     }
 
-    public function create(SurveyCreateSampleColumnModel $surveyCreateSampleColumnModel)
+    public function create(Collection $surveyCreateSampleColumnModelCollection)
     {
-        return [];
+        return $this->endpoint->create($this->surveyId, $surveyCreateSampleColumnModelCollection->toArray());
     }
 
     public function reset(SampleFilterModel $sampleFilterModel): BackgroundActivityStatus
