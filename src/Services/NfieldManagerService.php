@@ -4,6 +4,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use BadMethodCallException;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
+use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Spatie\LaravelData\DataCollection;
 
 /**
@@ -11,9 +12,9 @@ use Spatie\LaravelData\DataCollection;
  */
 class NfieldManagerService
 {
-    public function __construct()
-    {
-    }
+    public function __construct(
+        protected SurveyService $surveyService,
+    ) {}
 
     public function __call(string $name, array $arguments)
     {
@@ -27,15 +28,15 @@ class NfieldManagerService
     protected function domainMethodReflection(): array
     {
         return [
-            'find' => SurveysService::class,
-            'search' => SurveysService::class,
+            'find' => SurveyService::class,
+            'search' => SurveyService::class,
         ];
     }
 
 
-    public function withSurvey(string $surveyId): SurveysService
+    public function withSurvey(string $surveyId): SurveyResource
     {
-        return new SurveysService($surveyId);
+        return $this->surveyService->for($surveyId);
     }
 
     public function withSurveySamplingPoint(string $surveyId, string $samplingPoint): SamplingPointService
