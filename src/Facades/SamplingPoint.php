@@ -3,7 +3,7 @@
 namespace Nikoleesg\NfieldAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
+use Nikoleesg\NfieldAdmin\Services\v1\SamplingPointService;
 
 class SamplingPoint extends Facade
 {

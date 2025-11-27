@@ -10,11 +10,13 @@ use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
 #[MapOutputName(CamelCaseMapper::class)]
-final class SurveysQuotaLevelDefinitionModel extends Data
+class SurveyQuotaFrameEtagLevelTargetModel extends Data
 {
     public function __construct(
-        public string  $id,
-        public ?string $name,
+        public ?string $id,
+        public ?int $target,
+        public ?int $maxTarget,
+        public ?int $maxOvershoot
     ) {}
 
 }

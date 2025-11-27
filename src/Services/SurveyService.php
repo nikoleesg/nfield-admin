@@ -3,10 +3,8 @@
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpoint as SurveyEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\FieldworkEndpoint as FieldworkEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpoint as SurveySampleEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints as EndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
@@ -14,42 +12,34 @@ use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 class SurveyService
 {
     public function __construct(
-        private SurveyEndpointInterface                               $surveyEndpoint,
-        private FieldworkEndpointInterface                            $fieldworkEndpoint,
-        private SurveySampleEndpointInterface                         $surveySampleEndpoint,
-        private EndpointInterface\SurveyQuotaFrameEndpointInterface   $surveyQuotaFrameEndpoint,
-        private EndpointInterface\SurveyQuotaTargetsEndpointInterface $surveyQuotaTargetsEndpoint,
+        private readonly SurveyCollectionEndpointInterface $surveyCollectionEndpoint,
+        private readonly SurveyEndpointInterface $surveyEndpoint,
     ) {}
 
-    public function for(string $surveyId): SurveyResource
+    public function listSurveys(): Collection
     {
-        return new SurveyResource(
-            $this->surveyEndpoint,
-            $this->fieldworkEndpoint,
-            $this->surveySampleEndpoint,
-            $this->surveyQuotaFrameEndpoint,
-            $this->surveyQuotaTargetsEndpoint,
-            $surveyId
-        );
+        return SurveyModel::collect($this->surveyCollectionEndpoint->list(), Collection::class);
     }
 
-    public function getSurveys(): Collection
+    public function findSurveys(array $filter): Collection
     {
-        return SurveyModel::collect($this->surveyEndpoint->all(), Collection::class);
-    }
-
-    public function querySurveys(array $filter): Collection
-    {
-        return SurveyModel::collect($this->surveyEndpoint->filter($filter), Collection::class);
+        return SurveyModel::collect($this->surveyCollectionEndpoint->find($filter), Collection::class);
     }
 
     public function createSurvey(SurveyModel $surveyModel): SurveyModel
     {
-        return SurveyModel::from($this->surveyEndpoint->create($surveyModel->toArray()));
+        return SurveyModel::from($this->surveyCollectionEndpoint->create($surveyModel->toArray()));
     }
 
     public function findSurveysByRespondent(string $value): Collection
     {
-        return SurveyBaseModel::collect($this->surveyEndpoint->search($value), Collection::class);
+        return SurveyBaseModel::collect($this->surveyCollectionEndpoint->search($value), Collection::class);
+    }
+
+    public function for(string $surveyId): SurveyResource
+    {
+        $surveyResource = new SurveyResource($this->surveyEndpoint);
+
+        return $surveyResource->setSurveyId($surveyId);
     }
 }
