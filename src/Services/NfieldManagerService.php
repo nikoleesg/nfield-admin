@@ -4,8 +4,8 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use BadMethodCallException;
 use Nikoleesg\NfieldAdmin\Data\SurveyData;
+use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
-use Nikoleesg\NfieldAdmin\Services\v1\SamplingPointService;
 use Spatie\LaravelData\DataCollection;
 
 /**
@@ -56,18 +56,16 @@ class NfieldManagerService
 
     public function withSurvey(string $surveyId): SurveyResource
     {
-        return $this->surveyService->for($surveyId);
+        return $this->surveyService
+            ->forSurvey($surveyId);
     }
 
-    /**
-     * @deprecated
-     * @param string $surveyId
-     * @param string $samplingPoint
-     * @return SamplingPointService
-     */
-    public function withSurveySamplingPoint(string $surveyId, string $samplingPoint): SamplingPointService
+    public function withSurveySamplingPoint(string $surveyId, string $samplingPoint): SamplingPointResource
     {
-        return new SamplingPointService($surveyId, $samplingPoint);
+        return $this
+            ->surveyService
+            ->forSurvey($surveyId)
+            ->samplingPoints()
+            ->forSamplingPoint($samplingPoint);
     }
-
 }
