@@ -42,4 +42,9 @@ class SurveyService
 
         return $surveyResource->setSurveyId($surveyId);
     }
+
+    public function forSurvey(string $surveyId): SurveyResource
+    {
+        return $this->for($surveyId);
+    }
 }

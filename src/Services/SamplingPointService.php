@@ -13,9 +13,6 @@ class SamplingPointService
     public function __construct(
         protected SamplingPointCollectionEndpointInterface $samplingPointCollectionEndpoint,
         protected SamplingPointEndpointInterface $samplingPointEndpoint
-        // SamplingPointEndpoint
-        // SamplingPointAddressCollectionEndpoint
-        // SamplingPointAddressEndpoint
     ) {}
 
     public function setSurveyId(string $surveyId): self
@@ -59,5 +56,10 @@ class SamplingPointService
         }
 
         return $samplingPointResource->setSamplingPointId($samplingPointId);
+    }
+
+    public function forSamplingPoint(string $samplingPointId): SamplingPointResource
+    {
+        return $this->for($samplingPointId);
     }
 }
