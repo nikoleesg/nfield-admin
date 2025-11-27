@@ -2,9 +2,10 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\FieldworkEndpoint as FieldworkEndpointInterface;
 
-final class FieldworkEndpoint extends BaseEndpoint implements FieldworkEndpointInterface
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
+
+final class SurveyFieldworkEndpoint extends BaseEndpoint implements SurveyFieldworkEndpointInterface
 {
     protected string $version = 'v2';
 
@@ -13,11 +14,11 @@ final class FieldworkEndpoint extends BaseEndpoint implements FieldworkEndpointI
         return "/{$this->version}/surveys";
     }
 
-    public function start(string $surveyId): void
+    public function start(string $surveyId): bool
     {
         $uri = $this->subResourceActionPath($surveyId, 'fieldwork', 'start');
 
-        $this->httpClient->put($uri);
+        return $this->httpClient->put($uri)->getStatusCode() === 200;
     }
 
     public function status(string $surveyId): int
@@ -34,10 +35,10 @@ final class FieldworkEndpoint extends BaseEndpoint implements FieldworkEndpointI
         return $this->httpClient->get($uri)->json();
     }
 
-    public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): void
+    public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): bool
     {
         $uri  = $this->subResourceActionPath($surveyId, 'fieldwork', 'stop');
 
-        $this->httpClient->put($uri, $surveysFieldworkStopRequestModel);
+        return $this->httpClient->put($uri, $surveysFieldworkStopRequestModel)->getStatusCode() === 204;
     }
 }

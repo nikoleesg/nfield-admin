@@ -46,9 +46,9 @@ class HttpClient implements HttpClientInterface
         return $this->request(fn() => $this->http->put($uri, $data), $uri);
     }
 
-    public function delete(string $uri): Response
+    public function delete(string $uri, array $data = []): Response
     {
-        return $this->request(fn() => $this->http->delete($uri), $uri);
+        return $this->request(fn() => $this->http->delete($uri, $data), $uri);
     }
 
     public function postRaw(string $uri, string $body, string $contentType): Response

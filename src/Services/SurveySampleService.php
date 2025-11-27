@@ -1,51 +1,94 @@
 <?php
 
-namespace Nikoleesg\NfieldAdmin\Resources;
+namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Collection;
+use Log;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
+use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
 use RuntimeException;
 
-final class SurveySampleResource
+class SurveySampleService
 {
     protected ?string $surveyId = null;
-    protected ?int $interviewId = null;
 
     public function __construct(
+        protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
     ) {}
 
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
-
         return $this;
     }
 
-    public function setInterviewId(int $interviewId): self
-    {
-        $this->interviewId = $interviewId;
-        return $this;
-    }
-
-    public function getSampleRecord(): array
+    /**
+     * Download and parse sample data from the survey
+     *
+     * @return array Array of sample records with headers as keys
+     * @throws RuntimeException If CSV parsing fails
+     */
+    public function downloadSampleData(): array
     {
         // Get raw CSV data from endpoint
-        $rawCsvData = $this->surveySampleEndpoint->get($this->surveyId, $this->interviewId);
+        $rawCsvData = $this->surveySampleCollectionEndpoint->download($this->surveyId);
 
         // Parse CSV into array
-        return $this->parseCsvData($rawCsvData)[0];
+        return $this->parseCsvData($rawCsvData);
     }
 
-    public function deleteSampleData(array $sampleFilterModel): array
+    // TODO
+    public function uploadSampleData() {}
+    public function blockSampleData() {}
+
+    /**
+     * Create a survey sample (Online)
+     * @param Collection $surveyCreateSampleColumnModelCollection
+     * @return Collection
+     */
+    public function createSampleData(Collection $surveyCreateSampleColumnModelCollection): Collection
     {
-        return $this->surveySampleEndpoint->destroy($this->surveyId, $sampleFilterModel);
+        $response = $this->surveySampleCollectionEndpoint->create($this->surveyId, $surveyCreateSampleColumnModelCollection->toArray());
+
+        return collect($response);
     }
 
-    public function updateSampleRecord(array $surveyUpdateSampleRecordModel): array
+    // TODO:
+    public function resetSampleData() {}
+    public function clearSampleDataColumns() {}
+
+    /**
+     * @param string|null $fileName
+     * @return array
+     */
+    public function requestSampleDownload(?string $fileName = null): array
     {
-        return $this->surveySampleEndpoint->update($this->surveyId, $surveyUpdateSampleRecordModel);
+        $fileName = $fileName ?? $this->generateSampleFileName();
+
+        return $this->surveySampleCollectionEndpoint->requestDownload($this->surveyId, $fileName);
     }
+
+    /**
+     * Return SurveySampleResource for the specified survey
+     * @param int $interviewId
+     * @return SurveySampleResource
+     */
+    public function for(int $interviewId): SurveySampleResource
+    {
+        $surveySampleResource = new SurveySampleResource($this->surveySampleEndpoint);
+
+        if ($this->surveyId !== null) {
+            $surveySampleResource->setSurveyId($this->surveyId);
+        }
+
+        $surveySampleResource->setInterviewId($interviewId);
+
+        return $surveySampleResource;
+    }
+
 
     /**
      * Parse CSV string data into an associative array
@@ -136,4 +179,17 @@ final class SurveySampleResource
         return $results;
     }
 
+    /**
+     * Generate a default filename for sample download
+     *
+     * @return string Generated filename with survey ID and timestamp
+     */
+    protected function generateSampleFileName(): string
+    {
+        return sprintf(
+            'Survey_%s_Samples_%s',
+            $this->surveyId,
+            now('Asia/Singapore')->format('Ymd_His')
+        );
+    }
 }
