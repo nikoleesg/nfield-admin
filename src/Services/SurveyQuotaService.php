@@ -5,7 +5,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveyQuotaFrameEtagRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveyQuotaFrameEtagResponseModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveysQuotaFrameRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveyQuotaFrameRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveysQuotaFrameResponseModel;
 
 class SurveyQuotaService
@@ -30,7 +30,7 @@ class SurveyQuotaService
         return SurveysQuotaFrameResponseModel::from($this->surveyQuotaEndpoint->getQuotaFrame($this->surveyId));
     }
 
-    public function setQuotaFrame(SurveysQuotaFrameRequestModel $quotaFrameRequestModel): SurveysQuotaFrameResponseModel
+    public function setQuotaFrame(SurveyQuotaFrameRequestModel $quotaFrameRequestModel): SurveysQuotaFrameResponseModel
     {
         return SurveysQuotaFrameResponseModel::from(
             $this->surveyQuotaEndpoint->setQuotaFrame($this->surveyId, $quotaFrameRequestModel->toArray())

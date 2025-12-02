@@ -10,7 +10,7 @@ use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(SnakeCaseMapper::class)]
 #[MapOutputName(StudlyCaseMapper::class)]
-final class SurveysQuotaFrameRequestModel extends Data
+final class SurveyQuotaFrameRequestModel extends Data
 {
     public function __construct(
         public ?int $target,
