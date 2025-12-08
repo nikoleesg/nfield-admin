@@ -11,6 +11,9 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
+/**
+ * @deprecated
+ */
 #[MapInputName(StudlyCaseMapper::class)]
 class AddressDTO extends Data
 {

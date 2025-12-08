@@ -3,6 +3,8 @@
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyDataEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 
 class SurveyDataService
 {
@@ -27,9 +29,14 @@ class SurveyDataService
         return $this->surveyDataEndpoint->downloadInterviewData($this->surveyId, $interviewId, $data);
     }
 
-    public function downloadData(array $surveyDataRequestModel): array
+    public function downloadData(SurveyDataRequestModel $surveyDataRequestModel): BackgroundActivityStatus
     {
-        return $this->surveyDataEndpoint->downloadData($this->surveyId, $surveyDataRequestModel);
+        return BackgroundActivityStatus::from(
+            $this->surveyDataEndpoint->downloadData(
+                $this->surveyId,
+                $surveyDataRequestModel->toArray()
+            )
+        );
     }
 
     public function deleteInterviewData(string $interviewId): array

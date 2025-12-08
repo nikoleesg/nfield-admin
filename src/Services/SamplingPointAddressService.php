@@ -4,6 +4,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
 
 class SamplingPointAddressService
@@ -38,9 +39,11 @@ class SamplingPointAddressService
         return $this->samplingPointCollectionEndpoint->find($this->surveyId, $this->samplingPointId, $data);
     }
 
-    public function createAddress(array $data = []): array
+    public function createAddress(AddressModel $data): AddressModel
     {
-        return $this->samplingPointCollectionEndpoint->create($this->surveyId, $this->samplingPointId, $data);
+        $createdAddress = $this->samplingPointCollectionEndpoint->create($this->surveyId, $this->samplingPointId, $data->toArray());
+
+        return AddressModel::from($createdAddress);
     }
 
     /**
