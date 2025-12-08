@@ -46,11 +46,11 @@ class NfieldManagerService
     protected function serviceRegistry(): array
     {
         return [
-            'listSurveys'      => [SurveyService::class, 'listSurveys'],
-            'findSurveys'      => [SurveyService::class, 'findSurveys'],
-            'createSurvey'     => [SurveyService::class, 'createSurvey'],
-            'searchRespondent' => [SurveyService::class, 'findSurveysByRespondent'],
-
+            'listSurveys'           => [SurveyService::class, 'listSurveys'],
+            'findSurveys'           => [SurveyService::class, 'findSurveys'],
+            'createSurvey'          => [SurveyService::class, 'createSurvey'],
+            'searchRespondent'      => [SurveyService::class, 'findSurveysByRespondent'],
+            'getBackgroundActivity' => [BackgroundActivitiesService::class, 'getBackgroundActivity'],
         ];
     }
 
