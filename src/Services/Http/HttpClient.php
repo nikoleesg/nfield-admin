@@ -107,19 +107,35 @@ class HttpClient implements HttpClientInterface
         }
     }
 
+    /**
+     * Retrieve authentication token with intelligent caching.
+     *
+     * When caching is enabled, fetches token from cache or retrieves new one via API.
+     * When caching is disabled, always fetches fresh token from API.
+     *
+     * @return string Bearer token for API requests
+     */
     private function token(): string
     {
-        $accessToken = $this->getAccessToken();
+        // Check if token caching is enabled
+        $shouldCache = config('nfield-admin.cache_key', true);
 
-        $shouldCacheKey = config('nfield-admin.cache_key');
-
-        if (!$shouldCacheKey) {
-            return $accessToken['AccessToken'];
+        // If caching disabled, always fetch fresh token
+        if (!$shouldCache) {
+            return $this->getAccessToken()['AccessToken'];
         }
 
-        $cacheKey = config('nfield-admin.cache_key_prefix'. 'nfield_') . 'access_token';
+        // Build cache key with prefix
+        $cacheKeyPrefix = config('nfield-admin.cache_key_prefix', 'nfield_');
+        $cacheKey = $cacheKeyPrefix . 'access_token';
 
-        return Cache::remember($cacheKey, $accessToken['ExpiresIn'] - 5, function () use ($accessToken) {
+        // Get TTL from config (in seconds)
+        $ttl = config('nfield-admin.expire_seconds', 600);
+
+        // Use Cache::remember() - automatically manages cache hits/misses
+        // Only calls closure if cache miss, reducing unnecessary API calls
+        return Cache::remember($cacheKey, $ttl, function () {
+            $accessToken = $this->getAccessToken();
             return $accessToken['AccessToken'];
         });
     }

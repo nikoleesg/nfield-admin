@@ -22,11 +22,19 @@ return [
     |-------------------------------------------------------------------------
     |
     */
-    'cache_key' => true,
+    'cache_key' => env('NFIELD_CACHE_KEY', true),
 
     /*
     |-------------------------------------------------------------------------
-    | Key to store the token in Cache
+    | Cache Key Prefix for authentication tokens
+    |-------------------------------------------------------------------------
+    |
+    */
+    'cache_key_prefix' => env('NFIELD_CACHE_KEY_PREFIX', 'nfield_'),
+
+    /*
+    |-------------------------------------------------------------------------
+    | Key to store the token in Cache (Deprecated - use cache_key_prefix)
     |-------------------------------------------------------------------------
     |
     */
