@@ -536,21 +536,25 @@ class SurveysService
      * | Survey Publish
      * |------------------------------------------------------------------------
      */
+    /** @deprecated Use SurveyPublishService::getState() via NfieldManager::withSurvey()->publish()->getState() */
     public function getPublishState(): SurveyPublishStateData
     {
         return $this->surveyPublishEndpoint->show();
     }
 
+    /** @deprecated Use SurveyPublishService::publish() via NfieldManager::withSurvey()->publish()->publish() */
     public function publish(SurveyPackageTypeEnum $packageType, SurveyPublishForceUpgradeEnum $forceUpgradeEnum): bool
     {
         return $this->surveyPublishEndpoint->update($packageType, $forceUpgradeEnum);
     }
 
+    /** @deprecated Use SurveyPublishService::publishLive() via NfieldManager::withSurvey()->publish()->publishLive() */
     public function publishLiveSurvey(): bool
     {
         return $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
     }
 
+    /** @deprecated Use SurveyPublishService::forcePublishLive() via NfieldManager::withSurvey()->publish()->forcePublishLive() */
     public function forcePublishLiveSurvey(): bool
     {
         return $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
