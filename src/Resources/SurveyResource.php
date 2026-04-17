@@ -16,6 +16,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyQuotaService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
+use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 
 class SurveyResource
 {
@@ -27,6 +28,7 @@ class SurveyResource
     protected ?SurveySampleService $surveySampleService = null;
     protected ?SurveySamplingMethodService $surveySamplingMethodService = null;
     protected ?SurveyQuotaService $surveyQuotaService = null;
+    protected ?SurveySettingsService $surveySettingsService = null;
 
     public function __construct(
         private readonly SurveyEndpointInterface $surveyEndpoint
@@ -125,6 +127,14 @@ class SurveyResource
     public function quota(): SurveyQuotaService
     {
         return $this->resolveService(SurveyQuotaService::class);
+    }
+
+    /**
+     * @return SurveySettingsService
+     */
+    public function settings(): SurveySettingsService
+    {
+        return $this->resolveService(SurveySettingsService::class);
     }
 
     /**
