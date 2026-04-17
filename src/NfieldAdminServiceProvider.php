@@ -8,6 +8,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints as Contracts;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
 use Nikoleesg\NfieldAdmin\Endpoints\v2 as Endpoints;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveySettingsEndpoint;
 
 class NfieldAdminServiceProvider extends PackageServiceProvider
 {
@@ -61,5 +62,7 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
         $this->app->singleton(Contracts\SamplingPointAddressEndpointInterface::class, Endpoints\SamplingPointAddressEndpoint::class);
         $this->app->singleton(Contracts\SamplingPointAssignmentEndpointInterface::class, Endpoints\SamplingPointAssignmentEndpoint::class);
         $this->app->singleton(Contracts\SamplingPointQuotaTargetsEndpointInterface::class, Endpoints\SamplingPointQuotaTargetsEndpoint::class);
+
+        $this->app->singleton(Contracts\SurveySettingsEndpointInterface::class, SurveySettingsEndpoint::class);
     }
 }
