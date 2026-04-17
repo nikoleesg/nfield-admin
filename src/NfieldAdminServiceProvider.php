@@ -66,5 +66,8 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
         $this->app->singleton(Contracts\SurveySettingsEndpointInterface::class, SurveySettingsEndpoint::class);
 
         $this->app->singleton(Contracts\SurveyBlueprintsEndpointInterface::class, Endpoints\SurveyBlueprintsEndpoint::class);
+
+        $this->app->singleton(Contracts\SurveyPublishEndpointInterface::class, Endpoints\SurveyPublishEndpoint::class);
+        $this->app->singleton(Contracts\SurveyPublicIdsEndpointInterface::class, Endpoints\SurveyPublicIdsEndpoint::class);
     }
 }
