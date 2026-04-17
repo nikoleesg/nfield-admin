@@ -29,7 +29,7 @@ interface SurveyCollectionEndpointInterface
      * @param array $surveyFromBlueprintModel
      * @return array
      */
-    public function clone(array $surveyFromBlueprintModel): array;
+    public function createFromBlueprint(array $surveyFromBlueprintModel): array;
 
     /**
      * Search respondent across surveys.

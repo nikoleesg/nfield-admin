@@ -34,10 +34,11 @@ final class SurveyCollectionEndpoint extends BaseEndpoint implements SurveyColle
         return $this->httpClient->post($url, $surveyModel)->json();
     }
 
-    public function clone(array $surveyFromBlueprintModel): array
+    public function createFromBlueprint(array $surveyFromBlueprintModel): array
     {
-        // TODO: Implement clone() method.
-        return [];
+        $url = $this->actionPath('createSurveyFromBlueprint');
+
+        return $this->httpClient->post($url, $surveyFromBlueprintModel)->json();
     }
 
     public function search(string $value): array

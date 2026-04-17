@@ -7,8 +7,10 @@ use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseMo
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
+use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
@@ -71,6 +73,17 @@ class NfieldManagerService
     public function createSurvey(SurveyModel $surveyModel): SurveyModel
     {
         return $this->surveyService->createSurvey($surveyModel);
+    }
+
+    /**
+     * Create a new survey from a blueprint survey.
+     *
+     * @param SurveyFromBlueprintModel $model Blueprint model with survey name and blueprint ID
+     * @return SurveyModel Created survey with all blueprint configurations copied
+     */
+    public function createSurveyFromBlueprint(SurveyFromBlueprintModel $model): SurveyModel
+    {
+        return $this->surveyService->createSurveyFromBlueprint($model);
     }
 
     /**
@@ -157,8 +170,12 @@ class NfieldManagerService
 
     public function withSurvey(string $surveyId): SurveyResource
     {
-        return $this->surveyService
-            ->forSurvey($surveyId);
+        return $this->surveyService->forSurvey($surveyId);
+    }
+
+    public function withBlueprintSurvey(string $blueprintId): BlueprintSurveyResource
+    {
+        return $this->surveyService->forBlueprintSurvey($blueprintId);
     }
 
     public function withSurveySamplingPoint(string $surveyId, string $samplingPoint): SamplingPointResource
