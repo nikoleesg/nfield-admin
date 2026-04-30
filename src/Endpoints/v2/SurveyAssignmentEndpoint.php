@@ -34,6 +34,6 @@ class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentE
     {
         $url = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
 
-        return $this->httpClient->delete($url, $data)->json();
+        return $this->httpClient->delete($url, $data)->json() ?? [];
     }
 }
