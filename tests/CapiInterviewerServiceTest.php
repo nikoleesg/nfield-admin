@@ -14,7 +14,7 @@ use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 
 afterEach(function () {
-    \Mockery::close();
+    Mockery::close();
 });
 
 function capiInterviewerPayload(array $overrides = []): array

@@ -14,9 +14,7 @@ interface HttpClientInterface
 
     public function put(string $uri, array $data = []): Response;
 
-    public function delete(string $uri): Response;
+    public function delete(string $uri, array $data = []): Response;
 
     public function postRaw(string $uri, string $body, string $contentType): Response;
-
-    public function destroy(string $uri, array $data): Response;
 }

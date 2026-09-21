@@ -17,7 +17,7 @@ final class SurveySampleEndpoint extends BaseEndpoint implements SurveySampleEnd
     {
         $uri = $this->subResourcePath($surveyId, 'sample');
 
-        return $this->httpClient->destroy($uri, $sampleFilterModel)->json();
+        return $this->httpClient->delete($uri, $sampleFilterModel)->json();
     }
 
     public function get(string $surveyId, int $interviewId): string

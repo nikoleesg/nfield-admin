@@ -9,6 +9,7 @@ use RuntimeException;
 final class SurveySampleResource
 {
     protected ?string $surveyId = null;
+
     protected ?int $interviewId = null;
 
     public function __construct(
@@ -25,6 +26,7 @@ final class SurveySampleResource
     public function setInterviewId(int $interviewId): self
     {
         $this->interviewId = $interviewId;
+
         return $this;
     }
 
@@ -50,8 +52,9 @@ final class SurveySampleResource
     /**
      * Parse CSV string data into an associative array
      *
-     * @param string $csvData Raw CSV data (potentially UTF-16LE with BOM)
+     * @param  string  $csvData  Raw CSV data (potentially UTF-16LE with BOM)
      * @return array Parsed data with headers as keys
+     *
      * @throws RuntimeException If CSV structure is invalid
      */
     protected function parseCsvData(string $csvData): array
@@ -98,7 +101,7 @@ final class SurveySampleResource
         $lines = preg_split('/\r\n|\n|\r/', $data);
 
         // Remove empty lines
-        return array_values(array_filter($lines, fn($line) => trim($line) !== ''));
+        return array_values(array_filter($lines, fn ($line) => trim($line) !== ''));
     }
 
     /**
@@ -124,8 +127,9 @@ final class SurveySampleResource
                 Log::warning("CSV row {$lineNumber} has mismatched columns", [
                     'expected' => $headerCount,
                     'actual' => count($row),
-                    'line' => $line
+                    'line' => $line,
                 ]);
+
                 continue; // Skip malformed rows
             }
 
@@ -135,5 +139,4 @@ final class SurveySampleResource
 
         return $results;
     }
-
 }

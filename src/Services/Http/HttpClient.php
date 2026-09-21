@@ -2,6 +2,7 @@
 
 namespace Nikoleesg\NfieldAdmin\Services\Http;
 
+use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
@@ -17,81 +18,67 @@ class HttpClient implements HttpClientInterface
         '/v2/token',
     ];
 
-    private PendingRequest $http;
-
-    public function __construct(private PendingRequest $httpClient)
+    public function __construct(private Factory $factory)
     {
-        $this->http = $httpClient;
-
         $this->baseUrl = config('nfield-admin.base_url');
+    }
+
+    private function getPendingRequest(string $uri): PendingRequest
+    {
+        $request = $this->factory
+            ->baseUrl($this->baseUrl)
+            ->withHeader('Content-Type', 'application/json');
+
+        if (! in_array($uri, $this->skipAuth)) {
+            $request->withToken($this->token());
+        }
+
+        return $request;
     }
 
     public function get(string $uri, array $query = []): Response
     {
-        return $this->request(fn () => $this->http->get($uri, $query), $uri);
+        return $this->request(fn () => $this->getPendingRequest($uri)->get($uri, $query));
     }
 
     public function post(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->http->post($uri, $data), $uri);
+        return $this->request(fn () => $this->getPendingRequest($uri)->post($uri, $data));
     }
 
     public function patch(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->http->patch($uri, $data), $uri);
+        return $this->request(fn () => $this->getPendingRequest($uri)->patch($uri, $data));
     }
 
     public function put(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->http->put($uri, $data), $uri);
+        return $this->request(fn () => $this->getPendingRequest($uri)->put($uri, $data));
     }
 
     public function delete(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->http->delete($uri, $data), $uri);
+        return $this->request(fn () => $this->getPendingRequest($uri)->delete($uri, $data));
     }
 
     public function postRaw(string $uri, string $body, string $contentType): Response
     {
-        try {
-            $this->http
+        return $this->request(function () use ($uri, $body, $contentType) {
+            $request = $this->factory
                 ->baseUrl($this->baseUrl)
-                ->when(! in_array($uri, $this->skipAuth), function ($request) {
-                    $request->withToken($this->token());
-                });
+                ->withBody($body, $contentType);
 
-            $response = $this->http
-                ->withBody($body, $contentType)
-                ->post($uri);
+            if (! in_array($uri, $this->skipAuth)) {
+                $request->withToken($this->token());
+            }
 
-            $response->throw();
-
-            return $response;
-
-        } catch (RequestException $exception) {
-            throw new ApiRequestException(
-                $exception->getMessage(),
-                $exception->response?->status(),
-                $exception
-            );
-        }
+            return $request->post($uri);
+        });
     }
 
-    public function destroy(string $uri, array $data): Response
-    {
-        return $this->request(fn () => $this->http->delete($uri, $data), $uri);
-    }
-
-    private function request(callable $call, string $uri): Response
+    private function request(callable $call): Response
     {
         try {
-            $this->http
-                ->baseUrl($this->baseUrl)
-                ->when(! in_array($uri, $this->skipAuth), function ($request) {
-                    $request->withToken($this->token());
-                })
-                ->withHeader('Content-Type', 'application/json');
-
             $response = $call();
 
             $response->throw();
@@ -101,39 +88,25 @@ class HttpClient implements HttpClientInterface
         } catch (RequestException $exception) {
             throw new ApiRequestException(
                 $exception->getMessage(),
-                $exception->response?->status(),
+                $exception->response->status(),
                 $exception
             );
         }
     }
 
-    /**
-     * Retrieve authentication token with intelligent caching.
-     *
-     * When caching is enabled, fetches token from cache or retrieves new one via API.
-     * When caching is disabled, always fetches fresh token from API.
-     *
-     * @return string Bearer token for API requests
-     */
     private function token(): string
     {
-        // Check if token caching is enabled
         $shouldCache = config('nfield-admin.cache_key', true);
 
-        // If caching disabled, always fetch fresh token
         if (! $shouldCache) {
             return $this->getAccessToken()['AccessToken'];
         }
 
-        // Build cache key with prefix
         $cacheKeyPrefix = config('nfield-admin.cache_key_prefix', 'nfield_');
         $cacheKey = $cacheKeyPrefix.'access_token';
 
-        // Get TTL from config (in seconds)
         $ttl = config('nfield-admin.expire_seconds', 600);
 
-        // Use Cache::remember() - automatically manages cache hits/misses
-        // Only calls closure if cache miss, reducing unnecessary API calls
         return Cache::remember($cacheKey, $ttl, function () {
             $accessToken = $this->getAccessToken();
 
