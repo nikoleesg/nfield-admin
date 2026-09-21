@@ -13,25 +13,35 @@ use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
 use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
+use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
+use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveyQuotaService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
-use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
-use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 
 class SurveyResource
 {
     protected ?string $surveyId = null;
+
     protected ?SamplingPointService $samplingPointService = null;
+
     protected ?SurveyAssignmentService $surveyAssignmentService = null;
+
     protected ?SurveyFieldworkService $surveyFieldworkService = null;
+
     protected ?SurveyDataService $surveyDataService = null;
+
     protected ?SurveySampleService $surveySampleService = null;
+
     protected ?SurveySamplingMethodService $surveySamplingMethodService = null;
+
     protected ?SurveyQuotaService $surveyQuotaService = null;
+
     protected ?SurveySettingsService $surveySettingsService = null;
+
     protected ?SurveyPublishService $surveyPublishService = null;
+
     protected ?SurveyPublicIdsService $surveyPublicIdsService = null;
 
     public function __construct(
@@ -72,86 +82,54 @@ class SurveyResource
 
     public function requestDataDownload(SurveyDataRequestModel $surveyDataRequestModel): BackgroundActivityStatus
     {
-        $surveyDataService = $this->resolveService(SurveyDataService::class);
-
-        return BackgroundActivityStatus::from($surveyDataService->requestDataDownload($this->surveyId, $surveyDataRequestModel->toArray()));
+        return $this->data()->downloadData($surveyDataRequestModel);
     }
 
-    /**
-     * @return SamplingPointService
-     */
     public function samplingPoints(): SamplingPointService
     {
         return $this->resolveService(SamplingPointService::class);
     }
 
-    /**
-     * @return SurveyAssignmentService
-     */
     public function assignments(): SurveyAssignmentService
     {
         return $this->resolveService(SurveyAssignmentService::class);
     }
 
-    /**
-     * @return SurveyFieldworkService
-     */
     public function fieldwork(): SurveyFieldworkService
     {
         return $this->resolveService(SurveyFieldworkService::class);
     }
 
-    /**
-     * @return SurveyDataService
-     */
     public function data(): SurveyDataService
     {
         return $this->resolveService(SurveyDataService::class);
     }
 
-    /**
-     * @return SurveySampleService
-     */
     public function samples(): SurveySampleService
     {
         return $this->resolveService(SurveySampleService::class);
     }
 
-    /**
-     * @return SurveySamplingMethodService
-     */
     public function samplingMethod(): SurveySamplingMethodService
     {
         return $this->resolveService(SurveySamplingMethodService::class);
     }
 
-    /**
-     * @return SurveyQuotaService
-     */
     public function quota(): SurveyQuotaService
     {
         return $this->resolveService(SurveyQuotaService::class);
     }
 
-    /**
-     * @return SurveySettingsService
-     */
     public function settings(): SurveySettingsService
     {
         return $this->resolveService(SurveySettingsService::class);
     }
 
-    /**
-     * @return SurveyPublishService
-     */
     public function publish(): SurveyPublishService
     {
         return $this->resolveService(SurveyPublishService::class);
     }
 
-    /**
-     * @return SurveyPublicIdsService
-     */
     public function publicIds(): SurveyPublicIdsService
     {
         return $this->resolveService(SurveyPublicIdsService::class);
@@ -159,7 +137,7 @@ class SurveyResource
 
     /**
      * Helper function to resolve service
-     * @param string $serviceClass
+     *
      * @return Application|mixed|object|string
      */
     protected function resolveService(string $serviceClass): mixed
@@ -176,16 +154,16 @@ class SurveyResource
         return $service;
     }
 
-//
-//    public function quotaFrame(): SurveyQuotaFrameResource
-//    {
-//        return new SurveyQuotaFrameResource($this->surveyQuotaFrameEndpoint, $this->surveyId);
-//    }
-//
-//    public function quotaTargets(): SurveyQuotaTargetsResource
-//    {
-//        return new SurveyQuotaTargetsResource($this->surveyQuotaTargetsEndpoint, $this->surveyId);
-//    }
-//
+    //
+    //    public function quotaFrame(): SurveyQuotaFrameResource
+    //    {
+    //        return new SurveyQuotaFrameResource($this->surveyQuotaFrameEndpoint, $this->surveyId);
+    //    }
+    //
+    //    public function quotaTargets(): SurveyQuotaTargetsResource
+    //    {
+    //        return new SurveyQuotaTargetsResource($this->surveyQuotaTargetsEndpoint, $this->surveyId);
+    //    }
+    //
 
 }
