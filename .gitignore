@@ -11,6 +11,7 @@ vendor
 node_modules
 
 # AI/Agent config
+.agents/
 .claude/
 .gemini/
 .mcp.json
