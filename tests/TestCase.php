@@ -5,6 +5,7 @@ namespace Nikoleesg\NfieldAdmin\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Nikoleesg\NfieldAdmin\NfieldAdminServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\LaravelData\LaravelDataServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -20,6 +21,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            LaravelDataServiceProvider::class,
             NfieldAdminServiceProvider::class,
         ];
     }

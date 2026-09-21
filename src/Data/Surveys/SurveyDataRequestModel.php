@@ -11,63 +11,48 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
+/**
+ * Request body for POST /v2/surveys/{surveyId}/data/download.
+ *
+ * Mirrors the API schema NfieldPublicApi.Models.Surveys.SurveyDataRequestModel:
+ * property names are camelCase on the wire; snake_case input keys are also accepted.
+ */
 #[MapInputName(SnakeCaseMapper::class)]
 final class SurveyDataRequestModel extends Data
 {
+    private const DATE_FORMATS = [DATE_ATOM, 'Y-m-d\TH:i:s', 'Y-m-d H:i:s', '!Y-m-d'];
+
     public function __construct(
-        public string $fileName,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i:s')]
-        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d H:i:s')]
-        public Carbon $startDate,
-        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d H:i:s')]
-        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d H:i:s')]
-        public ?Carbon $endDate,
-        public ?string $surveyVersion,
-        public ?bool $includeSuccessful = true,
-        public ?bool $includeScreenOut = true,
-        public ?bool $includeDroppedOut = true,
-        public ?bool $includeRejected = false,
-        public ?bool $includeTestData = false,
-        public ?bool $includeClosedAnswers = true,
-        public ?bool $includeOpenAnswers = true,
-        public ?bool $includeParaData = true,
-        public ?bool $includeCapturedMediaFiles = false,
-        public ?bool $includeCapturedAudioSilentRecordingFiles = false,
-        public ?bool $includeCapturedAudioQuestionFiles = false,
-        public ?bool $includeCapturedVideoQuestionFiles = false,
-        public ?bool $includeCapturedPhotoQuestionFiles = false,
-        public ?bool $includeVarFile = false,
-        public ?bool $includeQuestionnaireScript = false,
-        public ?bool $includeAuditLog = false,
-        public ?string $customColumnName,
-        public ?string $customColumnValue
+        public ?string $fileName = null,
+        #[WithCast(DateTimeInterfaceCast::class, format: self::DATE_FORMATS)]
+        #[WithTransformer(DateTimeInterfaceTransformer::class, format: DATE_ATOM)]
+        public ?Carbon $startDate = null,
+        #[WithCast(DateTimeInterfaceCast::class, format: self::DATE_FORMATS)]
+        #[WithTransformer(DateTimeInterfaceTransformer::class, format: DATE_ATOM)]
+        public ?Carbon $endDate = null,
+        public ?string $surveyVersion = null,
+        public bool $includeSuccessful = true,
+        public bool $includeScreenOut = false,
+        public bool $includeDroppedOut = false,
+        public bool $includeRejected = false,
+        public bool $includeTestData = false,
+        public bool $includeClosedAnswers = true,
+        public bool $includeOpenAnswers = true,
+        public bool $includeParaData = true,
+        public bool $includeCapturedMediaFiles = false,
+        public bool $includeCapturedAudioSilentRecordingFiles = false,
+        public bool $includeCapturedAudioQuestionFiles = false,
+        public bool $includeCapturedVideoQuestionFiles = false,
+        public bool $includeCapturedPhotoQuestionFiles = false,
+        public bool $includeVarFile = false,
+        public bool $includeQuestionnaireScript = false,
+        public bool $includeAuditLog = false,
+        public ?string $customColumnName = null,
+        public ?string $customColumnValue = null,
     ) {}
 
     public static function default(): self
     {
-        return new self(
-            fileName: null,
-            startDate: null,
-            endDate: null,
-            surveyVersion: null,
-            includeSuccessful: true,
-            includeScreenOut: false,
-            includeDroppedOut: false,
-            includeRejected: false,
-            includeTestData: false,
-            includeClosedAnswers: true,
-            includeOpenAnswers: true,
-            includeParaData: true,
-            includeCapturedMediaFiles: true,
-            includeCapturedAudioSilentRecordingFiles: false,
-            includeCapturedAudioQuestionFiles: false,
-            includeCapturedVideoQuestionFiles: false,
-            includeCapturedPhotoQuestionFiles: false,
-            includeVarFile: false,
-            includeQuestionnaireScript: false,
-            includeAuditLog: false,
-            customColumnName: null,
-            customColumnValue: null,
-        );
+        return new self;
     }
 }

@@ -9,3 +9,10 @@ phpstan.neon
 testbench.yaml
 vendor
 node_modules
+
+# AI/Agent config
+.claude/
+.gemini/
+.mcp.json
+CLAUDE.md
+memory/
