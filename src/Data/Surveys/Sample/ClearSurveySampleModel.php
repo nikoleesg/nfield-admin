@@ -2,7 +2,4 @@
 
 namespace Nikoleesg\NfieldAdmin\Data\Surveys\Sample;
 
-class ClearSurveySampleModel
-{
-
-}
+class ClearSurveySampleModel {}

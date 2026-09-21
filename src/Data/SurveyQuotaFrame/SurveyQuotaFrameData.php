@@ -7,6 +7,4 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
 #[MapInputName(StudlyCaseMapper::class)]
-class SurveyQuotaFrameData extends Data
-{
-}
+class SurveyQuotaFrameData extends Data {}

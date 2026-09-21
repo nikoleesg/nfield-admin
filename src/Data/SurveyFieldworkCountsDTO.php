@@ -2,7 +2,6 @@
 
 namespace Nikoleesg\NfieldAdmin\Data;
 
-use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
@@ -26,7 +25,6 @@ class SurveyFieldworkCountsDTO extends Data
         public int $active_interviews,
         #[DataCollectionOf(ScreenedOutOverviewDTO::class)]
         public ?DataCollection $screened_out_overview
-    ) {
-    }
+    ) {}
 
 }

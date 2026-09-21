@@ -12,6 +12,5 @@ class ScreenedOutOverviewDTO extends Data
     public function __construct(
         public string $response_code,
         public string $count
-    ) {
-    }
+    ) {}
 }

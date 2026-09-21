@@ -16,6 +16,5 @@ class SamplingPointQuotaTargetData extends Data
         public int $unsuccessful_count,
         public int $dropped_out_count,
         public int $rejected_count,
-    ) {
-    }
+    ) {}
 }

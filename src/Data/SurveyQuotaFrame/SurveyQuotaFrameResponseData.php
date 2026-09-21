@@ -19,6 +19,5 @@ class SurveyQuotaFrameResponseData extends Data
         public DataCollection $variable_definitions,
         #[DataCollectionOf(SurveyQuotaFrameVariableData::class)]
         public DataCollection $frame_variables,
-    ) {
-    }
+    ) {}
 }

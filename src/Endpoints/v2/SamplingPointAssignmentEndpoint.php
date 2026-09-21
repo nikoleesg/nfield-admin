@@ -13,11 +13,6 @@ class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPo
         return "/$this->version/surveys";
     }
 
-    /**
-     * @param string $surveyId
-     * @param string $samplingPointId
-     * @return array
-     */
     public function list(string $surveyId, string $samplingPointId): array
     {
         $url = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'assignments');
@@ -25,12 +20,6 @@ class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPo
         return $this->httpClient->get($url)->json();
     }
 
-    /**
-     * @param string $surveyId
-     * @param string $samplingPointId
-     * @param string $interviewerId
-     * @return array
-     */
     public function assign(string $surveyId, string $samplingPointId, string $interviewerId): array
     {
         $url = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'assignments', $interviewerId);
@@ -38,12 +27,6 @@ class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPo
         return $this->httpClient->post($url)->json();
     }
 
-    /**
-     * @param string $surveyId
-     * @param string $samplingPointId
-     * @param string $interviewerId
-     * @return bool
-     */
     public function unassign(string $surveyId, string $samplingPointId, string $interviewerId): bool
     {
         $url = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'assignments', $interviewerId);

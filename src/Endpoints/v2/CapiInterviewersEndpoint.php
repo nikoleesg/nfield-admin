@@ -17,9 +17,6 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     /**
      * Get a specific CAPI interviewer
-     *
-     * @param string $interviewerId
-     * @return array
      */
     public function get(string $interviewerId): array
     {
@@ -30,9 +27,6 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     /**
      * Delete a CAPI interviewer
-     *
-     * @param string $interviewerId
-     * @return bool
      */
     public function delete(string $interviewerId): bool
     {
@@ -68,9 +62,6 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     /**
      * Get assignments for a CAPI interviewer
-     *
-     * @param string $interviewerId
-     * @return array
      */
     public function getAssignments(string $interviewerId): array
     {
@@ -81,9 +72,6 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     /**
      * Get offices for a CAPI interviewer
-     *
-     * @param string $interviewerId
-     * @return array
      */
     public function getOffices(string $interviewerId): array
     {
@@ -94,15 +82,15 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     private function normalizeListResponse(mixed $json): array
     {
-        if (!is_array($json)) {
+        if (! is_array($json)) {
             return [];
         }
 
-        if (!array_is_list($json) && isset($json['value']) && is_array($json['value'])) {
+        if (! array_is_list($json) && isset($json['value']) && is_array($json['value'])) {
             $json = $json['value'];
         }
 
-        if (!array_is_list($json)) {
+        if (! array_is_list($json)) {
             return [];
         }
 
@@ -111,7 +99,7 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     private function normalizeItemResponse(mixed $json): array
     {
-        if (!is_array($json)) {
+        if (! is_array($json)) {
             return [];
         }
 
@@ -138,10 +126,6 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
 
     /**
      * Delete an office assignment
-     *
-     * @param string $interviewerId
-     * @param string $officeId
-     * @return bool
      */
     public function deleteOffice(string $interviewerId, string $officeId): bool
     {

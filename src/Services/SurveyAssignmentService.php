@@ -15,6 +15,7 @@ class SurveyAssignmentService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
@@ -22,7 +23,7 @@ class SurveyAssignmentService
     {
         $data = [
             'samplingPointIds' => $samplingPointIds,
-            'interviewerIds'   => $interviewerIds
+            'interviewerIds' => $interviewerIds,
         ];
 
         return $this->surveyAssignmentEndpoint->massAssign($this->surveyId, $data);
@@ -32,7 +33,7 @@ class SurveyAssignmentService
     {
         $data = [
             'samplingPointIds' => $samplingPointIds,
-            'interviewerIds'   => $interviewerIds
+            'interviewerIds' => $interviewerIds,
         ];
 
         return $this->surveyAssignmentEndpoint->massUnassign($this->surveyId, $data);

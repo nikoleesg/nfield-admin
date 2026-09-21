@@ -2,7 +2,6 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
-
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
 
 final class SurveyFieldworkEndpoint extends BaseEndpoint implements SurveyFieldworkEndpointInterface
@@ -23,21 +22,21 @@ final class SurveyFieldworkEndpoint extends BaseEndpoint implements SurveyFieldw
 
     public function status(string $surveyId): int
     {
-        $uri  = $this->subResourceActionPath($surveyId, 'fieldwork', 'status');
+        $uri = $this->subResourceActionPath($surveyId, 'fieldwork', 'status');
 
         return $this->httpClient->get($uri)->json();
     }
 
     public function counts(string $surveyId): array
     {
-        $uri  = $this->subResourceActionPath($surveyId, 'fieldwork', 'counts');
+        $uri = $this->subResourceActionPath($surveyId, 'fieldwork', 'counts');
 
         return $this->httpClient->get($uri)->json();
     }
 
     public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): bool
     {
-        $uri  = $this->subResourceActionPath($surveyId, 'fieldwork', 'stop');
+        $uri = $this->subResourceActionPath($surveyId, 'fieldwork', 'stop');
 
         return $this->httpClient->put($uri, $surveysFieldworkStopRequestModel)->getStatusCode() === 204;
     }

@@ -13,11 +13,6 @@ class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentE
         return "/$this->version/surveys";
     }
 
-    /**
-     * @param string $surveyId
-     * @param array $data
-     * @return array
-     */
     public function massAssign(string $surveyId, array $data): array
     {
         $url = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
@@ -25,11 +20,6 @@ class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentE
         return $this->httpClient->post($url, $data)->json();
     }
 
-    /**
-     * @param string $surveyId
-     * @param array $data
-     * @return array
-     */
     public function massUnassign(string $surveyId, array $data): array
     {
         $url = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');

@@ -2,13 +2,13 @@
 
 namespace Nikoleesg\NfieldAdmin;
 
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints as Contracts;
+use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
+use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveySettingsEndpoint;
+use Nikoleesg\NfieldAdmin\Endpoints\v2 as Endpoints;
+use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints as Contracts;
-use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
-use Nikoleesg\NfieldAdmin\Endpoints\v2 as Endpoints;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveySettingsEndpoint;
 
 class NfieldAdminServiceProvider extends PackageServiceProvider
 {
@@ -22,17 +22,7 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
         $package
             ->name('nfield-admin')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigrations([
-                'create_interviewers_table',
-                'create_response_codes_table',
-                'create_background_activities_table'
-            ])
-            ->hasCommands([
-                Commands\SyncCapiInterviewerCommand::class,
-                Commands\SyncResponseCodesCommand::class,
-                Commands\SyncBackgroundActivitiesDetailsCommand::class
-            ]);
+            ->hasViews();
     }
 
     public function registeringPackage()

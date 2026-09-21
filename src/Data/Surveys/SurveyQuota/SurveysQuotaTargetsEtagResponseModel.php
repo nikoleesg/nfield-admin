@@ -12,10 +12,10 @@ final class SurveysQuotaTargetsEtagResponseModel extends Data
 {
     public function __construct(
         public ?string $id,
-        public ?int    $target,
+        public ?int $target,
         /** @var Collection<int, SurveysQuotaTargetsEtagVariableModel> */
-        public Collection  $variables,
-        public int     $successful
+        public Collection $variables,
+        public int $successful
     ) {}
 
 }

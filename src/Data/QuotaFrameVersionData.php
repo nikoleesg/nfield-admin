@@ -17,8 +17,7 @@ class QuotaFrameVersionData extends Data
         public string $e_tag,
         #[WithCast(DateTimeInterfaceCast::class)]
         public ?Carbon $published_date,
-    ) {
-    }
+    ) {}
 
     public static function fromResponse(array $data): self
     {

@@ -65,7 +65,7 @@ return [
     'logging' => [
         'enable' => true,
 
-        'channel' => env('NFIELD_LOG_CHANNEL', 'stack')
+        'channel' => env('NFIELD_LOG_CHANNEL', 'stack'),
 
     ],
 
@@ -88,7 +88,5 @@ return [
     'persist_activity_id' => true,
 
     'persist_drive' => 'database',
-
-    'persist_model' => Nikoleesg\NfieldAdmin\Models\BackgroundActivity::class,
 
 ];

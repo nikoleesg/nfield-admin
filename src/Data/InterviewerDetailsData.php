@@ -18,6 +18,5 @@ class InterviewerDetailsData extends Data
         public ?string $email_address,
         public ?string $telephone_number,
         public bool $is_supervisor,
-    ) {
-    }
+    ) {}
 }

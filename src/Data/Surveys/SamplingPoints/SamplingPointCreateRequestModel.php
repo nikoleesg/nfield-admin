@@ -25,6 +25,5 @@ class SamplingPointCreateRequestModel extends Data
         #[WithCast(EnumCast::class)]
         public ?SamplingPointKindEnum $kind,
         public ?string $samplingPointId,
-    ) {
-    }
+    ) {}
 }

@@ -32,7 +32,7 @@ class SurveyPublicIdsService
     public function update(array $models): void
     {
         $payload = array_map(
-            fn(SurveyPublicIdModel $model) => $model->toArray(),
+            fn (SurveyPublicIdModel $model) => $model->toArray(),
             $models
         );
 

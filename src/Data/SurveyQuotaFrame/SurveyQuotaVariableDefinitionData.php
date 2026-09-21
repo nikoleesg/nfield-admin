@@ -19,6 +19,5 @@ class SurveyQuotaVariableDefinitionData extends Data
         public bool $is_multi,
         #[DataCollectionOf(SurveyQuotaLevelDefinitionData::class)]
         public DataCollection $levels,
-    ) {
-    }
+    ) {}
 }

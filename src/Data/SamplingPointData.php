@@ -22,6 +22,5 @@ class SamplingPointData extends Data
         public ?string $stratum,
         #[WithCast(EnumCast::class)]
         public ?SamplingPointKindEnum $kind
-    ) {
-    }
+    ) {}
 }

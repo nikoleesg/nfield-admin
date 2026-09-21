@@ -17,6 +17,5 @@ class SurveyPublishStateData extends Data
         public SurveyPublishStateEnum $live,
         #[WithCast(EnumCast::class)]
         public SurveyPublishStateEnum $test
-    ) {
-    }
+    ) {}
 }

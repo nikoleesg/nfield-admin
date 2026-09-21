@@ -24,8 +24,7 @@ class AddressDTO extends Data
         public ?Carbon $appointment_date,
         #[DataCollectionOf(AddressSampleDTO::class)]
         public ?DataCollection $sample_data
-    ) {
-    }
+    ) {}
 
     public static function fromResponse(array $address): self
     {
@@ -33,7 +32,7 @@ class AddressDTO extends Data
             $address['AddressId'] ?? $address['address_id'] ?? null,
             $address['Details'] ?? $address['details'],
             ! is_null($address['AppointmentDate']) ? Carbon::parse($address['AppointmentDate']) : null,
-            ! empty($address['SampleData']) ? AddressSampleDTO::collection($address['SampleData']) : null
+            ! empty($address['SampleData']) ? AddressSampleDTO::collect($address['SampleData']) : null
         );
     }
 }

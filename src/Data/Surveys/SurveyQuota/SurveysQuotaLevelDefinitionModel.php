@@ -13,7 +13,7 @@ use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 final class SurveysQuotaLevelDefinitionModel extends Data
 {
     public function __construct(
-        public string  $id,
+        public string $id,
         public ?string $name,
     ) {}
 

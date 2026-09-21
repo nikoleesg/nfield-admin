@@ -7,6 +7,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointI
 class SamplingPointQuotaTargetsService
 {
     protected ?string $surveyId = null;
+
     protected ?string $samplingPointId = null;
 
     public function __construct(
@@ -16,12 +17,14 @@ class SamplingPointQuotaTargetsService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
     public function setSamplingPointId(string $samplingPointId): self
     {
         $this->samplingPointId = $samplingPointId;
+
         return $this;
     }
 

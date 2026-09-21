@@ -1,11 +1,10 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Data;
 
-use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\CamelCaseMapper;
 
 #[MapInputName(CamelCaseMapper::class)]
@@ -21,7 +20,6 @@ class DomainResponseCodeForPatch extends Data
         public ?bool $channel_capi,
         public ?bool $channel_cati,
         public ?bool $channel_online
-    ) {
-    }
+    ) {}
 
 }

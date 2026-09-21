@@ -2,7 +2,4 @@
 
 namespace Nikoleesg\NfieldAdmin\Data\Surveys\Sample;
 
-class SurveyCreateSampleColumnModel
-{
-
-}
+class SurveyCreateSampleColumnModel {}

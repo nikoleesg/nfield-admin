@@ -7,9 +7,9 @@ use Nikoleesg\NfieldAdmin\Data\Casts\CarbonCast;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
-use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
+use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class InterviewerDTO extends Data
@@ -35,6 +35,5 @@ class InterviewerDTO extends Data
         public ?bool $is_full_synced,
         public ?bool $is_last_sync_successful,
         public bool $is_supervisor,
-    ) {
-    }
+    ) {}
 }

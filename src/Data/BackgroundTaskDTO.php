@@ -1,18 +1,17 @@
 <?php
 
-
 namespace Nikoleesg\NfieldAdmin\Data;
 
 use Carbon\Carbon;
-use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
-use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
-use Spatie\LaravelData\Attributes\MapInputName;
-use Spatie\LaravelData\Attributes\WithTransformer;
-use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 use Nikoleesg\NfieldAdmin\Enums\BackgroundTaskStatusEnum;
+use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\WithTransformer;
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
+use Spatie\LaravelData\Casts\EnumCast;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Mappers\StudlyCaseMapper;
+use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class BackgroundTaskDTO extends Data
@@ -30,6 +29,5 @@ class BackgroundTaskDTO extends Data
         #[WithCast(EnumCast::class)]
         public ?BackgroundTaskStatusEnum $status,
         public ?int $task_type
-    ) {
-    }
+    ) {}
 }

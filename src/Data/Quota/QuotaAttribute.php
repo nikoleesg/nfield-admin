@@ -21,5 +21,4 @@ class QuotaAttribute extends Data
         public ?DataCollection $levels
     ) {}
 
-
 }

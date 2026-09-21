@@ -24,6 +24,5 @@ class SamplingPointResponseModel extends Data
         #[WithCast(EnumCast::class)]
         public ?SamplingPointKindEnum $kind,
         public ?string $samplingPointId,
-    ) {
-    }
+    ) {}
 }

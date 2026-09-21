@@ -17,6 +17,7 @@ class SurveyDataService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
@@ -43,5 +44,4 @@ class SurveyDataService
     {
         return $this->surveyDataEndpoint->deleteInterviewData($this->surveyId, $interviewId);
     }
-
 }

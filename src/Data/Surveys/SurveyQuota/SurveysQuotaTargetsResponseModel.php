@@ -11,9 +11,9 @@ final class SurveysQuotaTargetsResponseModel extends Data
 {
     public function __construct(
         public ?string $id,
-        public ?int    $target,
+        public ?int $target,
         /** @var SurveysQuotaTargetsVariableModel[] */
-        public ?array  $variables,
+        public ?array $variables,
     ) {}
 
 }

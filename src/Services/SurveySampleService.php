@@ -2,7 +2,6 @@
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-
 use Illuminate\Support\Collection;
 use Log;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
@@ -22,6 +21,7 @@ class SurveySampleService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
@@ -29,6 +29,7 @@ class SurveySampleService
      * Download and parse sample data from the survey
      *
      * @return array Array of sample records with headers as keys
+     *
      * @throws RuntimeException If CSV parsing fails
      */
     public function downloadSampleData(): array
@@ -42,12 +43,11 @@ class SurveySampleService
 
     // TODO
     public function uploadSampleData() {}
+
     public function blockSampleData() {}
 
     /**
      * Create a survey sample (Online)
-     * @param Collection $surveyCreateSampleColumnModelCollection
-     * @return Collection
      */
     public function createSampleData(Collection $surveyCreateSampleColumnModelCollection): Collection
     {
@@ -58,12 +58,9 @@ class SurveySampleService
 
     // TODO:
     public function resetSampleData() {}
+
     public function clearSampleDataColumns() {}
 
-    /**
-     * @param string|null $fileName
-     * @return array
-     */
     public function requestSampleDownload(?string $fileName = null): array
     {
         $fileName = $fileName ?? $this->generateSampleFileName();
@@ -73,8 +70,6 @@ class SurveySampleService
 
     /**
      * Return SurveySampleResource for the specified survey
-     * @param int $interviewId
-     * @return SurveySampleResource
      */
     public function for(int $interviewId): SurveySampleResource
     {
@@ -89,12 +84,12 @@ class SurveySampleService
         return $surveySampleResource;
     }
 
-
     /**
      * Parse CSV string data into an associative array
      *
-     * @param string $csvData Raw CSV data (potentially UTF-16LE with BOM)
+     * @param  string  $csvData  Raw CSV data (potentially UTF-16LE with BOM)
      * @return array Parsed data with headers as keys
+     *
      * @throws RuntimeException If CSV structure is invalid
      */
     protected function parseCsvData(string $csvData): array
@@ -141,7 +136,7 @@ class SurveySampleService
         $lines = preg_split('/\r\n|\n|\r/', $data);
 
         // Remove empty lines
-        return array_values(array_filter($lines, fn($line) => trim($line) !== ''));
+        return array_values(array_filter($lines, fn ($line) => trim($line) !== ''));
     }
 
     /**
@@ -167,8 +162,9 @@ class SurveySampleService
                 Log::warning("CSV row {$lineNumber} has mismatched columns", [
                     'expected' => $headerCount,
                     'actual' => count($row),
-                    'line' => $line
+                    'line' => $line,
                 ]);
+
                 continue; // Skip malformed rows
             }
 

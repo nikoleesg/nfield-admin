@@ -2,8 +2,8 @@
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersCollectionEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
 
 final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements CapiInterviewersCollectionEndpointInterface
 {
@@ -16,8 +16,6 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
 
     /**
      * Get all CAPI interviewers
-     *
-     * @return array
      */
     public function list(): array
     {
@@ -28,9 +26,6 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
 
     /**
      * Find CAPI interviewers with filters
-     *
-     * @param array $data
-     * @return array
      */
     public function find(array $data = []): array
     {
@@ -53,9 +48,6 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
 
     /**
      * Get CAPI interviewer by client interviewer ID
-     *
-     * @param string $clientInterviewerId
-     * @return array
      */
     public function getByClientId(string $clientInterviewerId): array
     {
@@ -66,17 +58,17 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
 
     private function normalizeListResponse(mixed $json): array
     {
-        if (!is_array($json)) {
+        if (! is_array($json)) {
             return [];
         }
 
         $items = $json;
 
-        if (!array_is_list($items) && isset($items['value']) && is_array($items['value'])) {
+        if (! array_is_list($items) && isset($items['value']) && is_array($items['value'])) {
             $items = $items['value'];
         }
 
-        if (!is_array($items) || !array_is_list($items)) {
+        if (! is_array($items) || ! array_is_list($items)) {
             return [];
         }
 
@@ -85,7 +77,7 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
 
     private function normalizeItemResponse(mixed $json): array
     {
-        if (!is_array($json)) {
+        if (! is_array($json)) {
             return [];
         }
 

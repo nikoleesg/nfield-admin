@@ -2,7 +2,6 @@
 
 namespace Nikoleesg\NfieldAdmin\Contracts\Http;
 
-
 use Illuminate\Http\Client\Response;
 
 interface HttpClientInterface

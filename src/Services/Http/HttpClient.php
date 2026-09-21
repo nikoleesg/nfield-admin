@@ -14,7 +14,7 @@ class HttpClient implements HttpClientInterface
     private string $baseUrl;
 
     private array $skipAuth = [
-        '/v2/token'
+        '/v2/token',
     ];
 
     private PendingRequest $http;
@@ -28,27 +28,27 @@ class HttpClient implements HttpClientInterface
 
     public function get(string $uri, array $query = []): Response
     {
-        return $this->request(fn() => $this->http->get($uri, $query), $uri);
+        return $this->request(fn () => $this->http->get($uri, $query), $uri);
     }
 
     public function post(string $uri, array $data = []): Response
     {
-        return $this->request(fn() => $this->http->post($uri, $data), $uri);
+        return $this->request(fn () => $this->http->post($uri, $data), $uri);
     }
 
     public function patch(string $uri, array $data = []): Response
     {
-        return $this->request(fn() => $this->http->patch($uri, $data), $uri);
+        return $this->request(fn () => $this->http->patch($uri, $data), $uri);
     }
 
     public function put(string $uri, array $data = []): Response
     {
-        return $this->request(fn() => $this->http->put($uri, $data), $uri);
+        return $this->request(fn () => $this->http->put($uri, $data), $uri);
     }
 
     public function delete(string $uri, array $data = []): Response
     {
-        return $this->request(fn() => $this->http->delete($uri, $data), $uri);
+        return $this->request(fn () => $this->http->delete($uri, $data), $uri);
     }
 
     public function postRaw(string $uri, string $body, string $contentType): Response
@@ -56,7 +56,7 @@ class HttpClient implements HttpClientInterface
         try {
             $this->http
                 ->baseUrl($this->baseUrl)
-                ->when(!in_array($uri, $this->skipAuth), function ($request) {
+                ->when(! in_array($uri, $this->skipAuth), function ($request) {
                     $request->withToken($this->token());
                 });
 
@@ -79,7 +79,7 @@ class HttpClient implements HttpClientInterface
 
     public function destroy(string $uri, array $data): Response
     {
-        return $this->request(fn() => $this->http->delete($uri, $data), $uri);
+        return $this->request(fn () => $this->http->delete($uri, $data), $uri);
     }
 
     private function request(callable $call, string $uri): Response
@@ -87,7 +87,7 @@ class HttpClient implements HttpClientInterface
         try {
             $this->http
                 ->baseUrl($this->baseUrl)
-                ->when(!in_array($uri, $this->skipAuth), function ($request) {
+                ->when(! in_array($uri, $this->skipAuth), function ($request) {
                     $request->withToken($this->token());
                 })
                 ->withHeader('Content-Type', 'application/json');
@@ -121,13 +121,13 @@ class HttpClient implements HttpClientInterface
         $shouldCache = config('nfield-admin.cache_key', true);
 
         // If caching disabled, always fetch fresh token
-        if (!$shouldCache) {
+        if (! $shouldCache) {
             return $this->getAccessToken()['AccessToken'];
         }
 
         // Build cache key with prefix
         $cacheKeyPrefix = config('nfield-admin.cache_key_prefix', 'nfield_');
-        $cacheKey = $cacheKeyPrefix . 'access_token';
+        $cacheKey = $cacheKeyPrefix.'access_token';
 
         // Get TTL from config (in seconds)
         $ttl = config('nfield-admin.expire_seconds', 600);
@@ -136,6 +136,7 @@ class HttpClient implements HttpClientInterface
         // Only calls closure if cache miss, reducing unnecessary API calls
         return Cache::remember($cacheKey, $ttl, function () {
             $accessToken = $this->getAccessToken();
+
             return $accessToken['AccessToken'];
         });
     }
@@ -152,9 +153,9 @@ class HttpClient implements HttpClientInterface
     private function getCredentials(): array
     {
         return [
-            "domainName" => config('nfield-admin.Domain'),
-            "userName"   => config('nfield-admin.Username'),
-            "password"   => config('nfield-admin.Password'),
+            'domainName' => config('nfield-admin.Domain'),
+            'userName' => config('nfield-admin.Username'),
+            'password' => config('nfield-admin.Password'),
         ];
     }
 }

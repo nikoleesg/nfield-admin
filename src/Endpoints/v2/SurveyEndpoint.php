@@ -47,5 +47,4 @@ final class SurveyEndpoint extends BaseEndpoint implements SurveyEndpointInterfa
 
         return $this->httpClient->get($uri)->json();
     }
-
 }

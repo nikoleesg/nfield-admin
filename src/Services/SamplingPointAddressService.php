@@ -10,6 +10,7 @@ use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
 class SamplingPointAddressService
 {
     protected ?string $surveyId = null;
+
     protected ?string $samplingPointId = null;
 
     public function __construct(
@@ -20,12 +21,14 @@ class SamplingPointAddressService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
     public function setSamplingPointId(string $samplingPointId): self
     {
         $this->samplingPointId = $samplingPointId;
+
         return $this;
     }
 
@@ -48,8 +51,6 @@ class SamplingPointAddressService
 
     /**
      * Return a SaplingPointAddressResource for a specific survey and sampling point
-     * @param string $addressId
-     * @return SamplingPointAddressResource
      */
     public function for(string $addressId): SamplingPointAddressResource
     {
@@ -67,5 +68,4 @@ class SamplingPointAddressService
 
         return $samplingPointAddress;
     }
-
 }

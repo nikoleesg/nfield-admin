@@ -15,6 +15,5 @@ class AddressSampleDTO extends Data
     public function __construct(
         public string $name,
         public string $value
-    ) {
-    }
+    ) {}
 }

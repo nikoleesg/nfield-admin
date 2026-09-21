@@ -10,12 +10,12 @@ use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 final class SurveysQuotaTargetsEtagVariableModel extends Data
 {
     public function __construct(
-        public string  $id,
+        public string $id,
         public ?string $name,
-        public bool    $isMulti,
-        public int     $displayIndex,
+        public bool $isMulti,
+        public int $displayIndex,
         /** @var SurveysQuotaTargetsEtagLevelModel[] */
-        public ?array  $levels
+        public ?array $levels
     ) {}
 
 }

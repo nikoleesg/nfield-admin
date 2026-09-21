@@ -13,10 +13,6 @@ class SurveySamplingMethodEndpoint extends BaseEndpoint implements SurveySamplin
         return "/$this->version/surveys";
     }
 
-    /**
-     * @param string $surveyId
-     * @return array
-     */
     public function get(string $surveyId): array
     {
         $url = $this->subResourcePath($surveyId, 'samplingMethod');
@@ -24,11 +20,6 @@ class SurveySamplingMethodEndpoint extends BaseEndpoint implements SurveySamplin
         return $this->httpClient->get($url)->json();
     }
 
-    /**
-     * @param string $surveyId
-     * @param array $data
-     * @return bool
-     */
     public function update(string $surveyId, array $data): bool
     {
         $url = $this->subResourcePath($surveyId, 'samplingMethod');

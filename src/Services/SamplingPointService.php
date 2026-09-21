@@ -44,8 +44,6 @@ class SamplingPointService
 
     /**
      * Return SamplingPointResource for a specific survey samplingPoint
-     * @param string $samplingPointId
-     * @return SamplingPointResource
      */
     public function for(string $samplingPointId): SamplingPointResource
     {

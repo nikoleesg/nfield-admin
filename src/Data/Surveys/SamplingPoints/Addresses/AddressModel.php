@@ -22,6 +22,5 @@ class AddressModel extends Data
         public ?Carbon $appointmentDate,
         /** @var Collection<int, AddressSampleDataModel> */
         public ?Collection $sampleData
-    ) {
-    }
+    ) {}
 }

@@ -29,8 +29,7 @@ class CapiInterviewerService
     public function __construct(
         protected CapiInterviewersCollectionEndpointInterface $capiInterviewersCollectionEndpoint,
         protected CapiInterviewersEndpointInterface $capiInterviewersEndpoint,
-    ) {
-    }
+    ) {}
 
     /**
      * List all CAPI interviewers

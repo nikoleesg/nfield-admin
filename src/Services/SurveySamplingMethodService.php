@@ -15,6 +15,7 @@ class SurveySamplingMethodService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 

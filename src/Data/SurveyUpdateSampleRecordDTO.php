@@ -15,14 +15,13 @@ class SurveyUpdateSampleRecordDTO extends Data
         public int $sample_record_id,
         #[DataCollectionOf(SampleColumnUpdateDTO::class)]
         public ?DataCollection $column_updates
-    ) {
-    }
+    ) {}
 
     public static function fromResponse(array $sample): self
     {
         return new self(
             $sample['SampleRecordId'] ?? $sample['sample_record_id'],
-            ! empty($sample['ColumnUpdates']) ? SampleColumnUpdateDTO::collection($sample['ColumnUpdates']) : null
+            ! empty($sample['ColumnUpdates']) ? SampleColumnUpdateDTO::collect($sample['ColumnUpdates']) : null
         );
     }
 }

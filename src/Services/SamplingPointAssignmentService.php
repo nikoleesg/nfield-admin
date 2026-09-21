@@ -7,6 +7,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAssignmentEndpointInt
 class SamplingPointAssignmentService
 {
     protected ?string $surveyId = null;
+
     protected ?string $samplingPointId = null;
 
     public function __construct(
@@ -16,12 +17,14 @@ class SamplingPointAssignmentService
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
     public function setSamplingPointId(string $samplingPointId): self
     {
         $this->samplingPointId = $samplingPointId;
+
         return $this;
     }
 
@@ -39,5 +42,4 @@ class SamplingPointAssignmentService
     {
         return $this->samplingPointAssignmentEndpoint->unassign($this->surveyId, $this->samplingPointId, $interviewerId);
     }
-
 }

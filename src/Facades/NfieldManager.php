@@ -3,7 +3,6 @@
 namespace Nikoleesg\NfieldAdmin\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Nikoleesg\NfieldAdmin\Services\SurveysService;
 
 class NfieldManager extends Facade
 {
@@ -11,5 +10,4 @@ class NfieldManager extends Facade
     {
         return 'nfield-manager';
     }
-
 }

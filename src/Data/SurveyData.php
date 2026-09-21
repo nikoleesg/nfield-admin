@@ -9,9 +9,9 @@ use Nikoleesg\NfieldAdmin\Enums\SurveyTypeEnum;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
+use Spatie\LaravelData\Concerns\WithDeprecatedCollectionMethod;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\StudlyCaseMapper;
-use Spatie\LaravelData\Concerns\WithDeprecatedCollectionMethod;
 
 #[MapInputName(StudlyCaseMapper::class)]
 class SurveyData extends Data
@@ -31,8 +31,7 @@ class SurveyData extends Data
         public ?bool $is_blueprint,
         public ?string $survey_id,
         public string $survey_name
-    ) {
-    }
+    ) {}
 
     public static function fromBasic(string $surveyName, ChannelEnum|string $channel = ChannelEnum::Online): self
     {

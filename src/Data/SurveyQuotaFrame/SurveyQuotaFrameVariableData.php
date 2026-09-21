@@ -17,6 +17,5 @@ class SurveyQuotaFrameVariableData extends Data
         #[DataCollectionOf(SurveyQuotaFrameLevelData::class)]
         public DataCollection $levels,
         public bool $is_hidden
-    ) {
-    }
+    ) {}
 }

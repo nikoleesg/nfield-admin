@@ -7,9 +7,9 @@ use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseMo
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
@@ -56,7 +56,7 @@ class NfieldManagerService
     /**
      * Find surveys matching filter criteria.
      *
-     * @param array $filter Filter criteria (e.g., ['SurveyName' => 'value'])
+     * @param  array  $filter  Filter criteria (e.g., ['SurveyName' => 'value'])
      * @return Collection<SurveyModel> Filtered collection of surveys
      */
     public function findSurveys(array $filter): Collection
@@ -67,7 +67,7 @@ class NfieldManagerService
     /**
      * Create a new survey.
      *
-     * @param SurveyModel $surveyModel Survey data to create
+     * @param  SurveyModel  $surveyModel  Survey data to create
      * @return SurveyModel Created survey with ID
      */
     public function createSurvey(SurveyModel $surveyModel): SurveyModel
@@ -78,7 +78,7 @@ class NfieldManagerService
     /**
      * Create a new survey from a blueprint survey.
      *
-     * @param SurveyFromBlueprintModel $model Blueprint model with survey name and blueprint ID
+     * @param  SurveyFromBlueprintModel  $model  Blueprint model with survey name and blueprint ID
      * @return SurveyModel Created survey with all blueprint configurations copied
      */
     public function createSurveyFromBlueprint(SurveyFromBlueprintModel $model): SurveyModel
@@ -89,7 +89,7 @@ class NfieldManagerService
     /**
      * Search surveys by respondent criteria.
      *
-     * @param string $value Search value (email, phone, ID, etc.)
+     * @param  string  $value  Search value (email, phone, ID, etc.)
      * @return Collection<SurveyBaseModel> Collection of matching surveys
      */
     public function searchRespondent(string $value): Collection
@@ -102,7 +102,7 @@ class NfieldManagerService
      *
      * Used to track long-running operations like data downloads.
      *
-     * @param string $activityId Background activity ID
+     * @param  string  $activityId  Background activity ID
      * @return BackgroundActivityResponseModel Activity status and details
      */
     public function getBackgroundActivity(string $activityId): BackgroundActivityResponseModel
@@ -127,7 +127,7 @@ class NfieldManagerService
     /**
      * Find CAPI interviewers matching filter criteria.
      *
-     * @param array $filter Filter criteria
+     * @param  array  $filter  Filter criteria
      * @return Collection Filtered collection of CAPI interviewers
      */
     public function findCapiInterviewers(array $filter = []): Collection
@@ -138,7 +138,7 @@ class NfieldManagerService
     /**
      * Create a new CAPI interviewer.
      *
-     * @param NewCapiInterviewerRequestData $data CAPI interviewer data
+     * @param  NewCapiInterviewerRequestData  $data  CAPI interviewer data
      * @return CapiInterviewerResponseData Created CAPI interviewer
      */
     public function createCapiInterviewer(NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
@@ -149,7 +149,7 @@ class NfieldManagerService
     /**
      * Get a CAPI interviewer by client interviewer ID.
      *
-     * @param string $clientInterviewerId Client interviewer ID
+     * @param  string  $clientInterviewerId  Client interviewer ID
      * @return CapiInterviewerData CAPI interviewer data
      */
     public function getByClientId(string $clientInterviewerId): CapiInterviewerData
@@ -160,7 +160,7 @@ class NfieldManagerService
     /**
      * Get fluent resource for a specific CAPI interviewer.
      *
-     * @param string $interviewerId CAPI interviewer ID
+     * @param  string  $interviewerId  CAPI interviewer ID
      * @return CapiInterviewerResource Fluent resource for chaining operations
      */
     public function withCapiInterviewer(string $interviewerId): CapiInterviewerResource
