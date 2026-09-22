@@ -15,9 +15,4 @@ interface SurveyDataEndpointInterface
      * Post a request for a data download
      */
     public function downloadData(string $surveyId, array $surveyDataRequestModel): array;
-
-    /**
-     * Delete all data for a specified interview of a specified survey
-     */
-    public function deleteInterviewData(string $surveyId, string $interviewId): array;
 }

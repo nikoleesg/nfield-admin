@@ -10,7 +10,7 @@ final class SamplingPointAssignmentEndpoint extends BaseEndpoint implements Samp
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function list(string $surveyId, string $samplingPointId): array

@@ -26,18 +26,4 @@ final class SurveySettingsEndpoint extends BaseEndpoint implements SurveySetting
 
         return $this->httpClient->post($uri, $setting)->json();
     }
-
-    public function getGeneralSettings(string $surveyId): array
-    {
-        $uri = $this->subResourcePath($surveyId, 'generalSettings');
-
-        return $this->httpClient->get($uri)->json();
-    }
-
-    public function updateGeneralSettings(string $surveyId, array $data): void
-    {
-        $uri = $this->subResourcePath($surveyId, 'generalSettings');
-
-        $this->httpClient->patch($uri, $data);
-    }
 }

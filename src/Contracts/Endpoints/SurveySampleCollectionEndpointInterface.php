@@ -17,6 +17,11 @@ interface SurveySampleCollectionEndpointInterface
     public function upload(string $surveyId, string $sampleData, string $fileName = 'sample.csv'): array;
 
     /**
+     * Delete the specified survey's sample data matching the filter
+     */
+    public function destroy(string $surveyId, array $sampleFilterModel): array;
+
+    /**
      * Blocks sample data for a survey based on survey id and a filter
      */
     public function block(string $surveyId, array $sampleFilterModel): array;
@@ -37,7 +42,7 @@ interface SurveySampleCollectionEndpointInterface
     public function clear(string $surveyId, array $clearSurveySampleModel): array;
 
     /**
-     * Create a request for a sample data download
+     * Update the sample records matching the supplied filter
      */
-    public function requestDownload(string $surveyId, string $fileName): array;
+    public function update(string $surveyId, array $surveyUpdateSampleRecordModel): array;
 }

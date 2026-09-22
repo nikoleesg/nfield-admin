@@ -10,7 +10,7 @@ final class SamplingPointAddressEndpoint extends BaseEndpoint implements Samplin
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function get(string $surveyId, string $samplingPointId, string $addressId): array

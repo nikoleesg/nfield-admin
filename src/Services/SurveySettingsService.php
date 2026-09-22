@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsUpdateModel;
@@ -15,6 +16,7 @@ class SurveySettingsService
 {
     public function __construct(
         protected SurveySettingsEndpointInterface $surveySettingsEndpoint,
+        protected SurveyGeneralSettingsEndpointInterface $surveyGeneralSettingsEndpoint,
         protected readonly string $surveyId,
     ) {}
 
@@ -39,13 +41,13 @@ class SurveySettingsService
 
     public function getGeneral(): SurveyGeneralSettingsModel
     {
-        $data = $this->surveySettingsEndpoint->getGeneralSettings($this->surveyId);
+        $data = $this->surveyGeneralSettingsEndpoint->getGeneralSettings($this->surveyId);
 
         return SurveyGeneralSettingsModel::from($data);
     }
 
     public function updateGeneral(SurveyGeneralSettingsUpdateModel $model): void
     {
-        $this->surveySettingsEndpoint->updateGeneralSettings($this->surveyId, $model->toArray());
+        $this->surveyGeneralSettingsEndpoint->updateGeneralSettings($this->surveyId, $model->toArray());
     }
 }

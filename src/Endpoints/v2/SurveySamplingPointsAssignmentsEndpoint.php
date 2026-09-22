@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyAssignmentEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingPointsAssignmentsEndpointInterface;
 
-final class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentEndpointInterface
+final class SurveySamplingPointsAssignmentsEndpoint extends BaseEndpoint implements SurveySamplingPointsAssignmentsEndpointInterface
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function massAssign(string $surveyId, array $data): array
     {
-        $uri = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
+        $uri = $this->subResourcePath($surveyId, 'samplingPointsAssignments');
 
         return $this->httpClient->post($uri, $data)->json();
     }
 
     public function massUnassign(string $surveyId, array $data): array
     {
-        $uri = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
+        $uri = $this->subResourcePath($surveyId, 'samplingPointsAssignments');
 
         return $this->httpClient->delete($uri, $data)->json() ?? [];
     }

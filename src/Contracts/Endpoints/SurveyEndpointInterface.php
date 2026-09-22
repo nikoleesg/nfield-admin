@@ -30,4 +30,9 @@ interface SurveyEndpointInterface
      * Get custom columns for the specified survey.
      */
     public function getCustomColumns(string $surveyId): array;
+
+    /**
+     * Activate a list of spare sampling points so they can be assigned.
+     */
+    public function batchActivateSamplingPoints(string $surveyId, array $samplingPointIds): array;
 }

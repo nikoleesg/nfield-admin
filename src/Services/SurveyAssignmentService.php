@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyAssignmentEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingPointsAssignmentsEndpointInterface;
 
 class SurveyAssignmentService
 {
     public function __construct(
-        protected SurveyAssignmentEndpointInterface $surveyAssignmentEndpoint,
+        protected SurveySamplingPointsAssignmentsEndpointInterface $surveySamplingPointsAssignmentsEndpoint,
         protected readonly string $surveyId,
     ) {}
 
@@ -20,7 +20,7 @@ class SurveyAssignmentService
             'interviewerIds' => $interviewerIds,
         ];
 
-        return $this->surveyAssignmentEndpoint->massAssign($this->surveyId, $data);
+        return $this->surveySamplingPointsAssignmentsEndpoint->massAssign($this->surveyId, $data);
     }
 
     public function unassignInterviewers(array $samplingPointIds, array $interviewerIds): array
@@ -30,6 +30,6 @@ class SurveyAssignmentService
             'interviewerIds' => $interviewerIds,
         ];
 
-        return $this->surveyAssignmentEndpoint->massUnassign($this->surveyId, $data);
+        return $this->surveySamplingPointsAssignmentsEndpoint->massUnassign($this->surveyId, $data);
     }
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
@@ -81,6 +83,8 @@ function capiAssignmentPayload(array $overrides = []): array
 it('lists capi interviewers as DTO collection', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $collectionEndpoint
         ->shouldReceive('list')
@@ -90,7 +94,7 @@ it('lists capi interviewers as DTO collection', function () {
             capiInterviewerPayload(['interviewerId' => 'int-2', 'userName' => 'user-2']),
         ]);
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->listCapiInterviewers();
 
@@ -103,6 +107,8 @@ it('lists capi interviewers as DTO collection', function () {
 it('finds capi interviewers as DTO collection', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $filter = ['$top' => 1];
 
@@ -112,7 +118,7 @@ it('finds capi interviewers as DTO collection', function () {
         ->once()
         ->andReturn([capiInterviewerPayload(['interviewerId' => 'int-99'])]);
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->findCapiInterviewers($filter);
 
@@ -124,6 +130,8 @@ it('finds capi interviewers as DTO collection', function () {
 it('creates a capi interviewer from DTO and returns response DTO', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $dto = new NewCapiInterviewerRequestData(
         firstName: 'John',
@@ -142,7 +150,7 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['isSupervisor' => true]));
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->createCapiInterviewer($dto);
 
@@ -154,6 +162,8 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
 it('gets an interviewer by client id and returns DTO', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $collectionEndpoint
         ->shouldReceive('getByClientId')
@@ -161,7 +171,7 @@ it('gets an interviewer by client id and returns DTO', function () {
         ->once()
         ->andReturn(capiInterviewerPayload(['clientInterviewerId' => 'C0000001']));
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->getByClientId('C0000001');
 
@@ -172,6 +182,8 @@ it('gets an interviewer by client id and returns DTO', function () {
 it('gets an interviewer by id and returns DTO', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $endpoint
         ->shouldReceive('get')
@@ -179,7 +191,7 @@ it('gets an interviewer by id and returns DTO', function () {
         ->once()
         ->andReturn(capiInterviewerPayload(['interviewerId' => 'int-1']));
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->getCapiInterviewer('int-1');
 
@@ -190,6 +202,8 @@ it('gets an interviewer by id and returns DTO', function () {
 it('updates an interviewer from DTO and returns response DTO', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $dto = new EditCapiInterviewerRequestData(firstName: 'Jane');
 
@@ -199,7 +213,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['firstName' => 'Jane']));
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->updateCapiInterviewer('int-1', $dto);
 
@@ -210,6 +224,8 @@ it('updates an interviewer from DTO and returns response DTO', function () {
 it('resets password and returns response DTO', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $dto = new ResetCapiInterviewerPasswordRequestData('new-password');
 
@@ -219,7 +235,7 @@ it('resets password and returns response DTO', function () {
         ->once()
         ->andReturn(capiInterviewerResponsePayload());
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->resetPassword('int-1', $dto);
 
@@ -229,6 +245,8 @@ it('resets password and returns response DTO', function () {
 it('deletes an interviewer', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $endpoint
         ->shouldReceive('delete')
@@ -236,7 +254,7 @@ it('deletes an interviewer', function () {
         ->once()
         ->andReturnNull();
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $service->deleteCapiInterviewer('int-1');
 });
@@ -244,9 +262,11 @@ it('deletes an interviewer', function () {
 it('gets assignments as DTO collection', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
-    $endpoint
-        ->shouldReceive('getAssignments')
+    $assignmentsEndpoint
+        ->shouldReceive('list')
         ->with('int-1')
         ->once()
         ->andReturn([
@@ -254,7 +274,7 @@ it('gets assignments as DTO collection', function () {
             capiAssignmentPayload(['surveyId' => 'survey-2', 'successful' => 3]),
         ]);
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->getAssignments('int-1');
 
@@ -266,14 +286,16 @@ it('gets assignments as DTO collection', function () {
 it('gets offices as collection of strings', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
-    $endpoint
-        ->shouldReceive('getOffices')
+    $officesEndpoint
+        ->shouldReceive('list')
         ->with('int-1')
         ->once()
         ->andReturn(['office-1', 'office-2']);
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $result = $service->getOffices('int-1');
 
@@ -284,20 +306,22 @@ it('gets offices as collection of strings', function () {
 it('adds and removes office assignments', function () {
     $collectionEndpoint = Mockery::mock(CapiInterviewersCollectionEndpointInterface::class);
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
-    $endpoint
-        ->shouldReceive('updateOffice')
+    $officesEndpoint
+        ->shouldReceive('update')
         ->with('int-1', 'office-1')
         ->once()
         ->andReturnNull();
 
-    $endpoint
-        ->shouldReceive('deleteOffice')
+    $officesEndpoint
+        ->shouldReceive('delete')
         ->with('int-1', 'office-1')
         ->once()
         ->andReturnNull();
 
-    $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
+    $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
     $service->updateOffice('int-1', 'office-1');
     $service->deleteOffice('int-1', 'office-1');
@@ -305,6 +329,8 @@ it('adds and removes office assignments', function () {
 
 it('provides a fluent resource that proxies to endpoint', function () {
     $endpoint = Mockery::mock(CapiInterviewersEndpointInterface::class);
+    $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
+    $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
     $endpoint
         ->shouldReceive('get')
@@ -330,31 +356,31 @@ it('provides a fluent resource that proxies to endpoint', function () {
         ->once()
         ->andReturnNull();
 
-    $endpoint
-        ->shouldReceive('getAssignments')
+    $assignmentsEndpoint
+        ->shouldReceive('list')
         ->with('int-1')
         ->once()
         ->andReturn([capiAssignmentPayload()]);
 
-    $endpoint
-        ->shouldReceive('getOffices')
+    $officesEndpoint
+        ->shouldReceive('list')
         ->with('int-1')
         ->once()
         ->andReturn(['office-1']);
 
-    $endpoint
-        ->shouldReceive('updateOffice')
+    $officesEndpoint
+        ->shouldReceive('update')
         ->with('int-1', 'office-1')
         ->once()
         ->andReturnNull();
 
-    $endpoint
-        ->shouldReceive('deleteOffice')
+    $officesEndpoint
+        ->shouldReceive('delete')
         ->with('int-1', 'office-1')
         ->once()
         ->andReturnNull();
 
-    $resource = (new CapiInterviewerResource($endpoint))->setInterviewerId('int-1');
+    $resource = (new CapiInterviewerResource($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     expect($resource->get())->toBeInstanceOf(CapiInterviewerData::class);
     expect($resource->update(new EditCapiInterviewerRequestData(firstName: 'Jane')))->toBeInstanceOf(CapiInterviewerResponseData::class);

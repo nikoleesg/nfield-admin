@@ -6,6 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 
 class SamplingPointService
@@ -13,6 +14,7 @@ class SamplingPointService
     public function __construct(
         protected SamplingPointCollectionEndpointInterface $samplingPointCollectionEndpoint,
         protected SamplingPointEndpointInterface $samplingPointEndpoint,
+        protected SurveyEndpointInterface $surveyEndpoint,
         protected readonly string $surveyId,
     ) {}
 
@@ -33,7 +35,7 @@ class SamplingPointService
 
     public function activateSamplingPoints(array $samplingPointIds = []): void
     {
-        $this->samplingPointCollectionEndpoint->batchActivate($this->surveyId, $samplingPointIds);
+        $this->surveyEndpoint->batchActivateSamplingPoints($this->surveyId, $samplingPointIds);
     }
 
     /**

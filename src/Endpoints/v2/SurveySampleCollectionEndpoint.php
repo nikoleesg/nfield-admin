@@ -10,7 +10,7 @@ final class SurveySampleCollectionEndpoint extends BaseEndpoint implements Surve
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function download(string $surveyId): string
@@ -25,6 +25,13 @@ final class SurveySampleCollectionEndpoint extends BaseEndpoint implements Surve
         $uri = $this->subResourcePath($surveyId, 'sample');
 
         return $this->httpClient->postMultipart($uri, 'File', $sampleData, $fileName)->json();
+    }
+
+    public function destroy(string $surveyId, array $sampleFilterModel): array
+    {
+        $uri = $this->subResourcePath($surveyId, 'sample');
+
+        return $this->httpClient->delete($uri, $sampleFilterModel)->json();
     }
 
     public function block(string $surveyId, array $sampleFilterModel): array
@@ -55,10 +62,10 @@ final class SurveySampleCollectionEndpoint extends BaseEndpoint implements Surve
         return $this->httpClient->put($uri, $clearSurveySampleModel)->json();
     }
 
-    public function requestDownload(string $surveyId, string $fileName): array
+    public function update(string $surveyId, array $surveyUpdateSampleRecordModel): array
     {
-        $uri = $this->resourceActionPath($surveyId, "sampleDataDownload/$fileName");
+        $uri = $this->subResourceActionPath($surveyId, 'sample', 'update');
 
-        return $this->httpClient->post($uri, [])->json();
+        return $this->httpClient->put($uri, $surveyUpdateSampleRecordModel)->json();
     }
 }

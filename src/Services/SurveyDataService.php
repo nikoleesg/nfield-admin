@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyDataEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyInterviewEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 
@@ -12,6 +13,7 @@ class SurveyDataService
 {
     public function __construct(
         protected SurveyDataEndpointInterface $surveyDataEndpoint,
+        protected SurveyInterviewEndpointInterface $surveyInterviewEndpoint,
         protected readonly string $surveyId,
     ) {}
 
@@ -36,6 +38,6 @@ class SurveyDataService
 
     public function deleteInterviewData(string $interviewId): array
     {
-        return $this->surveyDataEndpoint->deleteInterviewData($this->surveyId, $interviewId);
+        return $this->surveyInterviewEndpoint->deleteInterviewData($this->surveyId, $interviewId);
     }
 }

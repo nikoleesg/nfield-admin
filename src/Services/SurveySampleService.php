@@ -6,6 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUploadStatus;
 use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
@@ -17,6 +18,7 @@ class SurveySampleService
     public function __construct(
         protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
+        protected SurveySampleDataDownloadEndpointInterface $surveySampleDataDownloadEndpoint,
         protected readonly string $surveyId,
     ) {}
 
@@ -73,7 +75,7 @@ class SurveySampleService
     {
         $fileName = $fileName ?? $this->generateSampleFileName();
 
-        return $this->surveySampleCollectionEndpoint->requestDownload($this->surveyId, $fileName);
+        return $this->surveySampleDataDownloadEndpoint->requestDownload($this->surveyId, $fileName);
     }
 
     /**
@@ -81,7 +83,7 @@ class SurveySampleService
      */
     public function for(int $interviewId): SurveySampleResource
     {
-        $surveySampleResource = new SurveySampleResource($this->surveySampleEndpoint);
+        $surveySampleResource = new SurveySampleResource($this->surveySampleEndpoint, $this->surveySampleCollectionEndpoint);
 
         if ($this->surveyId !== null) {
             $surveySampleResource->setSurveyId($this->surveyId);

@@ -28,24 +28,4 @@ interface CapiInterviewersEndpointInterface
      * Reset a CAPI interviewer's password (PUT)
      */
     public function resetPassword(string $interviewerId, ResetCapiInterviewerPasswordRequestData $data): array;
-
-    /**
-     * Get assignments for a CAPI interviewer
-     */
-    public function getAssignments(string $interviewerId): array;
-
-    /**
-     * Get offices for a CAPI interviewer
-     */
-    public function getOffices(string $interviewerId): array;
-
-    /**
-     * Update (patch) an office assignment
-     */
-    public function updateOffice(string $interviewerId, string $officeId): void;
-
-    /**
-     * Delete an office assignment
-     */
-    public function deleteOffice(string $interviewerId, string $officeId): void;
 }

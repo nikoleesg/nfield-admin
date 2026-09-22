@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Illuminate\Support\Collection;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
@@ -24,6 +26,8 @@ class CapiInterviewerResource
 
     public function __construct(
         protected CapiInterviewersEndpointInterface $capiInterviewersEndpoint,
+        protected CapiInterviewersAssignmentsEndpointInterface $capiInterviewersAssignmentsEndpoint,
+        protected CapiInterviewersOfficesEndpointInterface $capiInterviewersOfficesEndpoint,
     ) {}
 
     /**
@@ -80,7 +84,7 @@ class CapiInterviewerResource
     public function getAssignments(): Collection
     {
         return CapiInterviewerAssignmentData::collect(
-            $this->capiInterviewersEndpoint->getAssignments($this->interviewerId),
+            $this->capiInterviewersAssignmentsEndpoint->list($this->interviewerId),
             Collection::class
         );
     }
@@ -90,7 +94,7 @@ class CapiInterviewerResource
      */
     public function getOffices(): Collection
     {
-        return collect($this->capiInterviewersEndpoint->getOffices($this->interviewerId));
+        return collect($this->capiInterviewersOfficesEndpoint->list($this->interviewerId));
     }
 
     /**
@@ -98,7 +102,7 @@ class CapiInterviewerResource
      */
     public function updateOffice(string $officeId): void
     {
-        $this->capiInterviewersEndpoint->updateOffice($this->interviewerId, $officeId);
+        $this->capiInterviewersOfficesEndpoint->update($this->interviewerId, $officeId);
     }
 
     /**
@@ -106,6 +110,6 @@ class CapiInterviewerResource
      */
     public function deleteOffice(string $officeId): void
     {
-        $this->capiInterviewersEndpoint->deleteOffice($this->interviewerId, $officeId);
+        $this->capiInterviewersOfficesEndpoint->delete($this->interviewerId, $officeId);
     }
 }

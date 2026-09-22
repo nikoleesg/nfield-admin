@@ -13,24 +13,10 @@ final class SurveySampleEndpoint extends BaseEndpoint implements SurveySampleEnd
         return "/{$this->version}/surveys";
     }
 
-    public function destroy(string $surveyId, array $sampleFilterModel): array
-    {
-        $uri = $this->subResourcePath($surveyId, 'sample');
-
-        return $this->httpClient->delete($uri, $sampleFilterModel)->json();
-    }
-
     public function get(string $surveyId, int $interviewId): string
     {
         $uri = $this->subResourceItemPath($surveyId, 'sample', $interviewId);
 
         return $this->httpClient->get($uri)->body();
-    }
-
-    public function update(string $surveyId, array $surveyUpdateSampleRecordModel): array
-    {
-        $uri = $this->subResourceActionPath($surveyId, 'sample', 'update');
-
-        return $this->httpClient->put($uri, $surveyUpdateSampleRecordModel)->json();
     }
 }

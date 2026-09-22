@@ -10,12 +10,12 @@ final class SamplingPointQuotaTargetsEndpoint extends BaseEndpoint implements Sa
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function list(string $surveyId, string $samplingPointId): array
     {
-        $uri = $this->subResourceItemActionPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets');
+        $uri = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets');
 
         return $this->httpClient->get($uri)->json();
     }

@@ -10,7 +10,7 @@ final class SurveySamplingMethodEndpoint extends BaseEndpoint implements SurveyS
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function get(string $surveyId): array

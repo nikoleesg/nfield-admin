@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Resources;
 
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
 
@@ -15,6 +16,7 @@ final class SurveySampleResource
 
     public function __construct(
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
+        protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
     ) {}
 
     public function setSurveyId(string $surveyId): self
@@ -44,11 +46,11 @@ final class SurveySampleResource
 
     public function deleteSampleData(array $sampleFilterModel): array
     {
-        return $this->surveySampleEndpoint->destroy($this->surveyId, $sampleFilterModel);
+        return $this->surveySampleCollectionEndpoint->destroy($this->surveyId, $sampleFilterModel);
     }
 
     public function updateSampleRecord(array $surveyUpdateSampleRecordModel): array
     {
-        return $this->surveySampleEndpoint->update($this->surveyId, $surveyUpdateSampleRecordModel);
+        return $this->surveySampleCollectionEndpoint->update($this->surveyId, $surveyUpdateSampleRecordModel);
     }
 }

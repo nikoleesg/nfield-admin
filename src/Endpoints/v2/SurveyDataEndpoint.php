@@ -10,7 +10,7 @@ final class SurveyDataEndpoint extends BaseEndpoint implements SurveyDataEndpoin
 {
     protected function buildPath(): string
     {
-        return "/$this->version/surveys";
+        return "/{$this->version}/surveys";
     }
 
     public function downloadInterviewData(string $surveyId, string $interviewId, array $surveyDataInterviewRequestModel): array
@@ -22,15 +22,8 @@ final class SurveyDataEndpoint extends BaseEndpoint implements SurveyDataEndpoin
 
     public function downloadData(string $surveyId, array $surveyDataRequestModel): array
     {
-        $uri = $this->resourceActionPath($surveyId, 'dataDownload');
+        $uri = $this->subResourcePath($surveyId, 'dataDownload');
 
         return $this->httpClient->post($uri, $surveyDataRequestModel)->json();
-    }
-
-    public function deleteInterviewData(string $surveyId, string $interviewId): array
-    {
-        $uri = $this->subResourceItemPath($surveyId, 'interviews', $interviewId);
-
-        return $this->httpClient->delete($uri)->json();
     }
 }
