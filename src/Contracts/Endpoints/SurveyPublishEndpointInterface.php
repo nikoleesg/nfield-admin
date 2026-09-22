@@ -8,7 +8,7 @@ interface SurveyPublishEndpointInterface
 {
     public function getPublishState(string $surveyId): array;
 
-    public function publish(string $surveyId, array $model): bool;
+    public function publish(string $surveyId, array $model): void;
 
     public function startPublish(string $surveyId, array $model): array;
 }

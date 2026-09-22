@@ -14,7 +14,7 @@ interface SamplingPointAddressCollectionEndpointInterface
     /**
      * Retrieves a list of addresses, filter and sorted using standard OData syntax
      */
-    public function find(string $surveyId, string $samplingPointId, array $data): array;
+    public function find(string $surveyId, string $samplingPointId, array $data = []): array;
 
     /**
      * Add a new address to the specified sampling point.

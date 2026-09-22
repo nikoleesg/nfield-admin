@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyAssignmentEndpointInterface;
 
-class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentEndpointInterface
+final class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentEndpointInterface
 {
     protected string $version = 'v2';
 
@@ -17,15 +17,15 @@ class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentE
 
     public function massAssign(string $surveyId, array $data): array
     {
-        $url = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
+        $uri = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
 
-        return $this->httpClient->post($url, $data)->json();
+        return $this->httpClient->post($uri, $data)->json();
     }
 
     public function massUnassign(string $surveyId, array $data): array
     {
-        $url = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
+        $uri = $this->resourceActionPath($surveyId, 'samplingPointsAssignments');
 
-        return $this->httpClient->delete($url, $data)->json() ?? [];
+        return $this->httpClient->delete($uri, $data)->json() ?? [];
     }
 }

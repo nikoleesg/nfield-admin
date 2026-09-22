@@ -17,16 +17,16 @@ final class SamplingPointEndpoint extends BaseEndpoint implements SamplingPointE
 
     public function get(string $surveyId, string $samplingPointId): array
     {
-        $url = $this->subResourceItemPath($surveyId, 'samplingPoints', $samplingPointId);
+        $uri = $this->subResourceItemPath($surveyId, 'samplingPoints', $samplingPointId);
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 
-    public function delete(string $surveyId, string $samplingPointId): bool
+    public function delete(string $surveyId, string $samplingPointId): void
     {
-        $url = $this->subResourceItemPath($surveyId, 'samplingPoints', $samplingPointId);
+        $uri = $this->subResourceItemPath($surveyId, 'samplingPoints', $samplingPointId);
 
-        return $this->httpClient->delete($url)->getStatusCode() == 204;
+        $this->httpClient->delete($uri);
     }
 
     public function update(string $surveyId, string $samplingPointId, array $samplingPointUpdateRequestModel): array

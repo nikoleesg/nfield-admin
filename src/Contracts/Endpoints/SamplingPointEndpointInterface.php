@@ -14,7 +14,7 @@ interface SamplingPointEndpointInterface
     /**
      * Delete a specified sampling point.
      */
-    public function delete(string $surveyId, string $samplingPointId): bool;
+    public function delete(string $surveyId, string $samplingPointId): void;
 
     /**
      * Update a sampling point with the specified fields.

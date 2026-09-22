@@ -40,8 +40,8 @@ class SamplingPointAssignmentService
         return $this->samplingPointAssignmentEndpoint->assign($this->surveyId, $this->samplingPointId, $interviewerId);
     }
 
-    public function unassignInterviewer(string $interviewerId): bool
+    public function unassignInterviewer(string $interviewerId): void
     {
-        return $this->samplingPointAssignmentEndpoint->unassign($this->surveyId, $this->samplingPointId, $interviewerId);
+        $this->samplingPointAssignmentEndpoint->unassign($this->surveyId, $this->samplingPointId, $interviewerId);
     }
 }

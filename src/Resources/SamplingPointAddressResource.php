@@ -44,8 +44,8 @@ class SamplingPointAddressResource
         return $this->samplingPointAddressEndpoint->get($this->surveyId, $this->samplingPointId, $this->addressId);
     }
 
-    public function deleteAddress(): bool
+    public function deleteAddress(): void
     {
-        return $this->samplingPointAddressEndpoint->delete($this->surveyId, $this->samplingPointId, $this->addressId);
+        $this->samplingPointAddressEndpoint->delete($this->surveyId, $this->samplingPointId, $this->addressId);
     }
 }

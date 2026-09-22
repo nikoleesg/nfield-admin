@@ -8,7 +8,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
 
 final class SurveyCollectionEndpoint extends BaseEndpoint implements SurveyCollectionEndpointInterface
 {
-    private string $version = 'v2';
+    protected string $version = 'v2';
 
     protected function buildPath(): string
     {
@@ -17,36 +17,36 @@ final class SurveyCollectionEndpoint extends BaseEndpoint implements SurveyColle
 
     public function list(): array
     {
-        $url = $this->basePath();
+        $uri = $this->basePath();
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 
     public function find(array $data): array
     {
-        $url = $this->basePath();
+        $uri = $this->basePath();
 
-        return $this->httpClient->get($url, $data)->json();
+        return $this->httpClient->get($uri, $data)->json();
     }
 
     public function create(array $surveyModel): array
     {
-        $url = $this->basePath();
+        $uri = $this->basePath();
 
-        return $this->httpClient->post($url, $surveyModel)->json();
+        return $this->httpClient->post($uri, $surveyModel)->json();
     }
 
     public function createFromBlueprint(array $surveyFromBlueprintModel): array
     {
-        $url = $this->actionPath('createSurveyFromBlueprint');
+        $uri = $this->actionPath('createSurveyFromBlueprint');
 
-        return $this->httpClient->post($url, $surveyFromBlueprintModel)->json();
+        return $this->httpClient->post($uri, $surveyFromBlueprintModel)->json();
     }
 
     public function search(string $value): array
     {
-        $url = $this->actionPath('search');
+        $uri = $this->actionPath('search');
 
-        return $this->httpClient->get($url, ['Value' => $value])->json();
+        return $this->httpClient->get($uri, ['Value' => $value])->json();
     }
 }

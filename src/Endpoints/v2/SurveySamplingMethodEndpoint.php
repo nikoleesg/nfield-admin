@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingMethodEndpointInterface;
 
-class SurveySamplingMethodEndpoint extends BaseEndpoint implements SurveySamplingMethodEndpointInterface
+final class SurveySamplingMethodEndpoint extends BaseEndpoint implements SurveySamplingMethodEndpointInterface
 {
     protected string $version = 'v2';
 
@@ -17,15 +17,15 @@ class SurveySamplingMethodEndpoint extends BaseEndpoint implements SurveySamplin
 
     public function get(string $surveyId): array
     {
-        $url = $this->subResourcePath($surveyId, 'samplingMethod');
+        $uri = $this->subResourcePath($surveyId, 'samplingMethod');
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 
-    public function update(string $surveyId, array $data): bool
+    public function update(string $surveyId, array $data): void
     {
-        $url = $this->subResourcePath($surveyId, 'samplingMethod');
+        $uri = $this->subResourcePath($surveyId, 'samplingMethod');
 
-        return $this->httpClient->patch($url, $data)->getStatusCode() === 200;
+        $this->httpClient->patch($uri, $data);
     }
 }

@@ -14,5 +14,5 @@ interface SamplingPointAddressEndpointInterface
     /**
      * Delete a specific address.
      */
-    public function delete(string $surveyId, string $samplingPointId, string $addressId): bool;
+    public function delete(string $surveyId, string $samplingPointId, string $addressId): void;
 }

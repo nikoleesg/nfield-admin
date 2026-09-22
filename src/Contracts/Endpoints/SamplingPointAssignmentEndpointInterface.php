@@ -19,5 +19,5 @@ interface SamplingPointAssignmentEndpointInterface
     /**
      * Unassign an interviewer from a sampling point
      */
-    public function unassign(string $surveyId, string $samplingPointId, string $interviewerId): bool;
+    public function unassign(string $surveyId, string $samplingPointId, string $interviewerId): void;
 }

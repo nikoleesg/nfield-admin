@@ -32,9 +32,9 @@ class SurveyPublishService
         );
     }
 
-    public function publish(SurveyPackageTypeEnum $packageType, SurveyPublishForceUpgradeEnum $forceUpgrade): bool
+    public function publish(SurveyPackageTypeEnum $packageType, SurveyPublishForceUpgradeEnum $forceUpgrade): void
     {
-        return $this->surveyPublishEndpoint->publish($this->surveyId, [
+        $this->surveyPublishEndpoint->publish($this->surveyId, [
             'packageType' => $packageType->value,
             'forceUpgrade' => $forceUpgrade->value,
         ]);
@@ -50,19 +50,19 @@ class SurveyPublishService
         );
     }
 
-    public function publishLive(): bool
+    public function publishLive(): void
     {
-        return $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
+        $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
     }
 
-    public function forcePublishLive(): bool
+    public function forcePublishLive(): void
     {
-        return $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
+        $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
     }
 
-    public function publishTest(): bool
+    public function publishTest(): void
     {
-        return $this->publish(SurveyPackageTypeEnum::Test, SurveyPublishForceUpgradeEnum::NoUpgrade);
+        $this->publish(SurveyPackageTypeEnum::Test, SurveyPublishForceUpgradeEnum::NoUpgrade);
     }
 
     public function startPublishLive(): BackgroundActivityStatus

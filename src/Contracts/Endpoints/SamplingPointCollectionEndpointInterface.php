@@ -14,7 +14,7 @@ interface SamplingPointCollectionEndpointInterface
     /**
      * Get a list of sampling points for a survey, filtered and sorted using standard OData syntax.
      */
-    public function find(string $surveyId, array $data): array;
+    public function find(string $surveyId, array $data = []): array;
 
     /**
      * Create a new sampling point.

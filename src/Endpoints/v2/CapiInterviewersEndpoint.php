@@ -30,11 +30,11 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     /**
      * Delete a CAPI interviewer
      */
-    public function delete(string $interviewerId): bool
+    public function delete(string $interviewerId): void
     {
         $uri = $this->resourcePath($interviewerId);
 
-        return $this->httpClient->delete($uri)->getStatusCode() === 204;
+        $this->httpClient->delete($uri);
     }
 
     /**
@@ -117,24 +117,20 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     /**
      * Add a fieldwork office to an interviewer (PATCH)
      */
-    public function updateOffice(string $interviewerId, string $officeId): bool
+    public function updateOffice(string $interviewerId, string $officeId): void
     {
         $uri = $this->subResourceItemPath($interviewerId, 'offices', $officeId);
 
-        $status = $this->httpClient->patch($uri, [])->getStatusCode();
-
-        return $status === 201 || $status === 204;
+        $this->httpClient->patch($uri, []);
     }
 
     /**
      * Delete an office assignment
      */
-    public function deleteOffice(string $interviewerId, string $officeId): bool
+    public function deleteOffice(string $interviewerId, string $officeId): void
     {
         $uri = $this->subResourceItemPath($interviewerId, 'offices', $officeId);
 
-        $status = $this->httpClient->delete($uri)->getStatusCode();
-
-        return $status === 200 || $status === 204;
+        $this->httpClient->delete($uri);
     }
 }

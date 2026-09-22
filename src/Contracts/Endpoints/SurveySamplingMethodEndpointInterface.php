@@ -14,5 +14,5 @@ interface SurveySamplingMethodEndpointInterface
     /**
      * Saving the SamplingMethod
      */
-    public function update(string $surveyId, array $data): bool;
+    public function update(string $surveyId, array $data): void;
 }

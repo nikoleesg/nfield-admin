@@ -234,11 +234,11 @@ it('deletes an interviewer', function () {
         ->shouldReceive('delete')
         ->with('int-1')
         ->once()
-        ->andReturn(true);
+        ->andReturnNull();
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
 
-    expect($service->deleteCapiInterviewer('int-1'))->toBeTrue();
+    $service->deleteCapiInterviewer('int-1');
 });
 
 it('gets assignments as DTO collection', function () {
@@ -289,18 +289,18 @@ it('adds and removes office assignments', function () {
         ->shouldReceive('updateOffice')
         ->with('int-1', 'office-1')
         ->once()
-        ->andReturn(true);
+        ->andReturnNull();
 
     $endpoint
         ->shouldReceive('deleteOffice')
         ->with('int-1', 'office-1')
         ->once()
-        ->andReturn(true);
+        ->andReturnNull();
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint);
 
-    expect($service->updateOffice('int-1', 'office-1'))->toBeTrue();
-    expect($service->deleteOffice('int-1', 'office-1'))->toBeTrue();
+    $service->updateOffice('int-1', 'office-1');
+    $service->deleteOffice('int-1', 'office-1');
 });
 
 it('provides a fluent resource that proxies to endpoint', function () {
@@ -328,7 +328,7 @@ it('provides a fluent resource that proxies to endpoint', function () {
         ->shouldReceive('delete')
         ->with('int-1')
         ->once()
-        ->andReturn(true);
+        ->andReturnNull();
 
     $endpoint
         ->shouldReceive('getAssignments')
@@ -346,22 +346,22 @@ it('provides a fluent resource that proxies to endpoint', function () {
         ->shouldReceive('updateOffice')
         ->with('int-1', 'office-1')
         ->once()
-        ->andReturn(true);
+        ->andReturnNull();
 
     $endpoint
         ->shouldReceive('deleteOffice')
         ->with('int-1', 'office-1')
         ->once()
-        ->andReturn(true);
+        ->andReturnNull();
 
     $resource = (new CapiInterviewerResource($endpoint))->setInterviewerId('int-1');
 
     expect($resource->get())->toBeInstanceOf(CapiInterviewerData::class);
     expect($resource->update(new EditCapiInterviewerRequestData(firstName: 'Jane')))->toBeInstanceOf(CapiInterviewerResponseData::class);
     expect($resource->resetPassword(new ResetCapiInterviewerPasswordRequestData('pw')))->toBeInstanceOf(CapiInterviewerResponseData::class);
-    expect($resource->delete())->toBeTrue();
+    $resource->delete();
     expect($resource->getAssignments()->first())->toBeInstanceOf(CapiInterviewerAssignmentData::class);
     expect($resource->getOffices()->all())->toBe(['office-1']);
-    expect($resource->updateOffice('office-1'))->toBeTrue();
-    expect($resource->deleteOffice('office-1'))->toBeTrue();
+    $resource->updateOffice('office-1');
+    $resource->deleteOffice('office-1');
 });

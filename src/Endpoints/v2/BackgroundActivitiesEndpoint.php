@@ -17,8 +17,8 @@ final class BackgroundActivitiesEndpoint extends BaseEndpoint implements Backgro
 
     public function get(string $activityId): array
     {
-        $url = $this->resourcePath($activityId);
+        $uri = $this->resourcePath($activityId);
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 }

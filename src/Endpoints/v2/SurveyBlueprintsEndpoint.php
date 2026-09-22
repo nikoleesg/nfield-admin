@@ -8,7 +8,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 
 final class SurveyBlueprintsEndpoint extends BaseEndpoint implements SurveyBlueprintsEndpointInterface
 {
-    private string $version = 'v2';
+    protected string $version = 'v2';
 
     protected function buildPath(): string
     {

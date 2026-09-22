@@ -22,16 +22,16 @@ final class SamplingPointCollectionEndpoint extends BaseEndpoint implements Samp
 
     public function find(string $surveyId, array $data = []): array
     {
-        $url = $this->subResourcePath($surveyId, 'samplingPoints');
+        $uri = $this->subResourcePath($surveyId, 'samplingPoints');
 
-        return $this->httpClient->get($url, $data)->json();
+        return $this->httpClient->get($uri, $data)->json();
     }
 
     public function create(string $surveyId, array $samplingPointCreateRequestModel): array
     {
-        $url = $this->subResourcePath($surveyId, 'samplingPoints');
+        $uri = $this->subResourcePath($surveyId, 'samplingPoints');
 
-        return $this->httpClient->post($url, $samplingPointCreateRequestModel)->json();
+        return $this->httpClient->post($uri, $samplingPointCreateRequestModel)->json();
     }
 
     /**

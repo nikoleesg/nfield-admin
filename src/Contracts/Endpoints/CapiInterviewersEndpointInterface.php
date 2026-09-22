@@ -17,7 +17,7 @@ interface CapiInterviewersEndpointInterface
     /**
      * Delete a CAPI interviewer
      */
-    public function delete(string $interviewerId): bool;
+    public function delete(string $interviewerId): void;
 
     /**
      * Update (partial) a CAPI interviewer
@@ -42,10 +42,10 @@ interface CapiInterviewersEndpointInterface
     /**
      * Update (patch) an office assignment
      */
-    public function updateOffice(string $interviewerId, string $officeId): bool;
+    public function updateOffice(string $interviewerId, string $officeId): void;
 
     /**
      * Delete an office assignment
      */
-    public function deleteOffice(string $interviewerId, string $officeId): bool;
+    public function deleteOffice(string $interviewerId, string $officeId): void;
 }

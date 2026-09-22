@@ -106,9 +106,9 @@ class CapiInterviewerService
     /**
      * Delete a CAPI interviewer
      */
-    public function deleteCapiInterviewer(string $interviewerId): bool
+    public function deleteCapiInterviewer(string $interviewerId): void
     {
-        return $this->capiInterviewersEndpoint->delete($interviewerId);
+        $this->capiInterviewersEndpoint->delete($interviewerId);
     }
 
     /**
@@ -133,17 +133,17 @@ class CapiInterviewerService
     /**
      * Add a fieldwork office assignment
      */
-    public function updateOffice(string $interviewerId, string $officeId): bool
+    public function updateOffice(string $interviewerId, string $officeId): void
     {
-        return $this->capiInterviewersEndpoint->updateOffice($interviewerId, $officeId);
+        $this->capiInterviewersEndpoint->updateOffice($interviewerId, $officeId);
     }
 
     /**
      * Delete an office assignment
      */
-    public function deleteOffice(string $interviewerId, string $officeId): bool
+    public function deleteOffice(string $interviewerId, string $officeId): void
     {
-        return $this->capiInterviewersEndpoint->deleteOffice($interviewerId, $officeId);
+        $this->capiInterviewersEndpoint->deleteOffice($interviewerId, $officeId);
     }
 
     /**

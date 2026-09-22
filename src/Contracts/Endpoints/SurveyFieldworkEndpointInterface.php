@@ -9,7 +9,7 @@ interface SurveyFieldworkEndpointInterface
     /**
      * Starts the fieldwork of the survey
      */
-    public function start(string $surveyId): bool;
+    public function start(string $surveyId): void;
 
     /**
      * Returns fieldwork status
@@ -24,5 +24,5 @@ interface SurveyFieldworkEndpointInterface
     /**
      * Stop the fieldwork of the survey
      */
-    public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): bool;
+    public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): void;
 }

@@ -43,9 +43,9 @@ class SamplingPointResource
         return SamplingPointResponseModel::from($this->samplingPointEndpoint->get($this->surveyId, $this->samplingPointId));
     }
 
-    public function deleteSamplingPoint(): bool
+    public function deleteSamplingPoint(): void
     {
-        return $this->samplingPointEndpoint->delete($this->surveyId, $this->samplingPointId);
+        $this->samplingPointEndpoint->delete($this->surveyId, $this->samplingPointId);
     }
 
     public function updateSamplingPoint(array $data = []): array

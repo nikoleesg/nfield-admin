@@ -15,11 +15,11 @@ final class SurveyFieldworkEndpoint extends BaseEndpoint implements SurveyFieldw
         return "/{$this->version}/surveys";
     }
 
-    public function start(string $surveyId): bool
+    public function start(string $surveyId): void
     {
         $uri = $this->subResourceActionPath($surveyId, 'fieldwork', 'start');
 
-        return $this->httpClient->put($uri)->getStatusCode() === 200;
+        $this->httpClient->put($uri, []);
     }
 
     public function status(string $surveyId): int
@@ -36,10 +36,10 @@ final class SurveyFieldworkEndpoint extends BaseEndpoint implements SurveyFieldw
         return $this->httpClient->get($uri)->json();
     }
 
-    public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): bool
+    public function stop(string $surveyId, array $surveysFieldworkStopRequestModel): void
     {
         $uri = $this->subResourceActionPath($surveyId, 'fieldwork', 'stop');
 
-        return $this->httpClient->put($uri, $surveysFieldworkStopRequestModel)->getStatusCode() === 204;
+        $this->httpClient->put($uri, $surveysFieldworkStopRequestModel);
     }
 }

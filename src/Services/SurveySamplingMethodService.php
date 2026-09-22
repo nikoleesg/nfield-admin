@@ -26,8 +26,8 @@ class SurveySamplingMethodService
         return $this->surveySamplingMethodEndpoint->get($this->surveyId);
     }
 
-    public function setSamplingMethod(array $samplingMethodModel): bool
+    public function setSamplingMethod(array $samplingMethodModel): void
     {
-        return $this->surveySamplingMethodEndpoint->update($this->surveyId, $samplingMethodModel);
+        $this->surveySamplingMethodEndpoint->update($this->surveyId, $samplingMethodModel);
     }
 }

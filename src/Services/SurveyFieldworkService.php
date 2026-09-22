@@ -21,9 +21,9 @@ class SurveyFieldworkService
         return $this;
     }
 
-    public function start(): bool
+    public function start(): void
     {
-        return $this->surveyFieldworkEndpoint->start($this->surveyId);
+        $this->surveyFieldworkEndpoint->start($this->surveyId);
     }
 
     public function status(): int
@@ -36,8 +36,8 @@ class SurveyFieldworkService
         return $this->surveyFieldworkEndpoint->counts($this->surveyId);
     }
 
-    public function stop(array $surveysFieldworkStopRequestModel): bool
+    public function stop(array $surveysFieldworkStopRequestModel): void
     {
-        return $this->surveyFieldworkEndpoint->stop($this->surveyId, $surveysFieldworkStopRequestModel);
+        $this->surveyFieldworkEndpoint->stop($this->surveyId, $surveysFieldworkStopRequestModel);
     }
 }

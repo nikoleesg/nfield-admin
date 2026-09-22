@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressCollectionEndpointInterface;
 
-class SamplingPointAddressCollectionEndpoint extends BaseEndpoint implements SamplingPointAddressCollectionEndpointInterface
+final class SamplingPointAddressCollectionEndpoint extends BaseEndpoint implements SamplingPointAddressCollectionEndpointInterface
 {
     protected string $version = 'v2';
 
@@ -22,15 +22,15 @@ class SamplingPointAddressCollectionEndpoint extends BaseEndpoint implements Sam
 
     public function find(string $surveyId, string $samplingPointId, array $data = []): array
     {
-        $url = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'addresses');
+        $uri = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'addresses');
 
-        return $this->httpClient->get($url, $data)->json();
+        return $this->httpClient->get($uri, $data)->json();
     }
 
     public function create(string $surveyId, string $samplingPointId, array $addressModel): array
     {
-        $url = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'addresses');
+        $uri = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'addresses');
 
-        return $this->httpClient->post($url, $addressModel)->json();
+        return $this->httpClient->post($uri, $addressModel)->json();
     }
 }

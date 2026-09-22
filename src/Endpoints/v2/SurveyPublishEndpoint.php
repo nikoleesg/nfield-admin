@@ -22,11 +22,11 @@ final class SurveyPublishEndpoint extends BaseEndpoint implements SurveyPublishE
         return $this->httpClient->get($uri)->json();
     }
 
-    public function publish(string $surveyId, array $model): bool
+    public function publish(string $surveyId, array $model): void
     {
         $uri = $this->subResourcePath($surveyId, 'publish');
 
-        return $this->httpClient->put($uri, $model)->successful();
+        $this->httpClient->put($uri, $model);
     }
 
     public function startPublish(string $surveyId, array $model): array

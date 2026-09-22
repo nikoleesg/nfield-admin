@@ -69,9 +69,9 @@ class CapiInterviewerResource
     /**
      * Delete the interviewer
      */
-    public function delete(): bool
+    public function delete(): void
     {
-        return $this->capiInterviewersEndpoint->delete($this->interviewerId);
+        $this->capiInterviewersEndpoint->delete($this->interviewerId);
     }
 
     /**
@@ -96,16 +96,16 @@ class CapiInterviewerResource
     /**
      * Add a fieldwork office assignment
      */
-    public function updateOffice(string $officeId): bool
+    public function updateOffice(string $officeId): void
     {
-        return $this->capiInterviewersEndpoint->updateOffice($this->interviewerId, $officeId);
+        $this->capiInterviewersEndpoint->updateOffice($this->interviewerId, $officeId);
     }
 
     /**
      * Delete an office assignment
      */
-    public function deleteOffice(string $officeId): bool
+    public function deleteOffice(string $officeId): void
     {
-        return $this->capiInterviewersEndpoint->deleteOffice($this->interviewerId, $officeId);
+        $this->capiInterviewersEndpoint->deleteOffice($this->interviewerId, $officeId);
     }
 }

@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointInterface;
 
-class SamplingPointQuotaTargetsEndpoint extends BaseEndpoint implements SamplingPointQuotaTargetsEndpointInterface
+final class SamplingPointQuotaTargetsEndpoint extends BaseEndpoint implements SamplingPointQuotaTargetsEndpointInterface
 {
     protected string $version = 'v2';
 
@@ -17,22 +17,22 @@ class SamplingPointQuotaTargetsEndpoint extends BaseEndpoint implements Sampling
 
     public function list(string $surveyId, string $samplingPointId): array
     {
-        $url = $this->subResourceItemActionPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets');
+        $uri = $this->subResourceItemActionPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets');
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 
     public function get(string $surveyId, string $samplingPointId, string $quotaLevelId): array
     {
-        $url = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets', $quotaLevelId);
+        $uri = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets', $quotaLevelId);
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 
     public function update(string $surveyId, string $samplingPointId, string $quotaLevelId, array $data): array
     {
-        $url = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets', $quotaLevelId);
+        $uri = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'quotaTargets', $quotaLevelId);
 
-        return $this->httpClient->patch($url, $data)->json();
+        return $this->httpClient->patch($uri, $data)->json();
     }
 }

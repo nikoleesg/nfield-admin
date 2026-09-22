@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAssignmentEndpointInterface;
 
-class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPointAssignmentEndpointInterface
+final class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPointAssignmentEndpointInterface
 {
     protected string $version = 'v2';
 
@@ -17,22 +17,22 @@ class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPo
 
     public function list(string $surveyId, string $samplingPointId): array
     {
-        $url = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'assignments');
+        $uri = $this->nestedResourcePath($surveyId, 'samplingPoints', $samplingPointId, 'assignments');
 
-        return $this->httpClient->get($url)->json();
+        return $this->httpClient->get($uri)->json();
     }
 
     public function assign(string $surveyId, string $samplingPointId, string $interviewerId): array
     {
-        $url = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'assignments', $interviewerId);
+        $uri = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'assignments', $interviewerId);
 
-        return $this->httpClient->post($url)->json();
+        return $this->httpClient->post($uri, [])->json();
     }
 
-    public function unassign(string $surveyId, string $samplingPointId, string $interviewerId): bool
+    public function unassign(string $surveyId, string $samplingPointId, string $interviewerId): void
     {
-        $url = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'assignments', $interviewerId);
+        $uri = $this->nestedResourceItemPath($surveyId, 'samplingPoints', $samplingPointId, 'assignments', $interviewerId);
 
-        return $this->httpClient->delete($url)->getStatusCode() == 204;
+        $this->httpClient->delete($uri);
     }
 }
