@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Exceptions;
 
-class AuthenticationException extends ApiRequestException {}
+class NotFoundException extends ApiRequestException {}
