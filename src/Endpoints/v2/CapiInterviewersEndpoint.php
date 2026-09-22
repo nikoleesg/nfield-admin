@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;

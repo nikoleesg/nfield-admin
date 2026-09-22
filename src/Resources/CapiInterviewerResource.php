@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Illuminate\Support\Collection;
@@ -26,13 +28,11 @@ class CapiInterviewerResource
 
     /**
      * Set the interviewer ID
-     *
-     * @param string $interviewerId
-     * @return static
      */
     public function setInterviewerId(string $interviewerId): static
     {
         $this->interviewerId = $interviewerId;
+
         return $this;
     }
 
@@ -68,8 +68,6 @@ class CapiInterviewerResource
 
     /**
      * Delete the interviewer
-     *
-     * @return bool
      */
     public function delete(): bool
     {
@@ -105,9 +103,6 @@ class CapiInterviewerResource
 
     /**
      * Delete an office assignment
-     *
-     * @param string $officeId
-     * @return bool
      */
     public function deleteOffice(string $officeId): bool
     {

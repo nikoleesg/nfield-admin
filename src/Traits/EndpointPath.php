@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Traits;
 
 trait EndpointPath
@@ -25,7 +27,7 @@ trait EndpointPath
     /**
      * Helper function
      */
-    private function join(...$segments): string
+    private function join(string ...$segments): string
     {
         return implode('/', array_map(fn ($segment) => trim($segment, '/'), $segments));
     }

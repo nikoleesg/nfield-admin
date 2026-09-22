@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressCollectionEndpointInterface;
@@ -34,7 +36,7 @@ class SamplingPointAddressService
 
     public function listAddresses(): array
     {
-        return $this->samplingPointCollectionEndpoint->find($this->surveyId, $this->samplingPointId);
+        return $this->samplingPointCollectionEndpoint->find($this->surveyId, $this->samplingPointId, []);
     }
 
     public function findAddresses(array $data = []): array

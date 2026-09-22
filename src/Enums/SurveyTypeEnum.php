@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Enums;
 
 enum SurveyTypeEnum: string
 {
     case Online = 'OnlineBasic';
     case FreeIntercept = 'Basic';
-    //    case JointTargets = 'Basic';
-    //    case IndividualTargets = 'Basic';
+    // case JointTargets = 'Basic';
+    // case IndividualTargets = 'Basic';
     case SamplingPointsWithQuota = 'Advanced';
     case SamplingPointsWithAddresses = 'EuroBarometer';
     case SamplingPointsWithQuotaAndQuota = 'EuroBarometerAdvanced';
@@ -17,8 +19,6 @@ enum SurveyTypeEnum: string
         return match ($this) {
             SurveyTypeEnum::Online => 'Online',
             SurveyTypeEnum::FreeIntercept => 'CAPI',
-            SurveyTypeEnum::JointTargets => 'CAPI',
-            SurveyTypeEnum::IndividualTargets => 'CAPI',
             SurveyTypeEnum::SamplingPointsWithQuota => 'CAPI',
             SurveyTypeEnum::SamplingPointsWithAddresses => 'CAPI',
             SurveyTypeEnum::SamplingPointsWithQuotaAndQuota => 'CAPI',

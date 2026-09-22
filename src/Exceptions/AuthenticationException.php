@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Exceptions;
 
 use Exception;
 
-class AuthenticationException extends Exception
-{
-}
+class AuthenticationException extends Exception {}

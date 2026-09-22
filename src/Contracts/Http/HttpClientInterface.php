@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Contracts\Http;
 
 use Illuminate\Http\Client\Response;

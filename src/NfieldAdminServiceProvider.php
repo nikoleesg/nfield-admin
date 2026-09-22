@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints as Contracts;
@@ -25,7 +27,7 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
             ->hasViews();
     }
 
-    public function registeringPackage()
+    public function registeringPackage(): void
     {
         $this->app->singleton(HttpClientInterface::class, HttpClient::class);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
@@ -11,9 +13,11 @@ use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
 class SamplingPointResource
 {
     protected ?string $surveyId = null;
+
     protected ?string $samplingPointId = null;
 
     protected ?SamplingPointAddressService $samplingPointAddressService = null;
+
     protected ?SamplingPointAssignmentService $samplingPointAssignmentService = null;
 
     public function __construct(
@@ -23,12 +27,14 @@ class SamplingPointResource
     public function setSurveyId(string $surveyId): SamplingPointResource
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
     public function setSamplingPointId(string $samplingPointId): SamplingPointResource
     {
         $this->samplingPointId = $samplingPointId;
+
         return $this;
     }
 
@@ -47,36 +53,26 @@ class SamplingPointResource
         return $this->samplingPointEndpoint->update($this->surveyId, $this->samplingPointId, $data);
     }
 
-    public function activateSamplingPoint()
+    public function activateSamplingPoint(): void
     {
         // TODO
     }
 
-
-    public function replaceSamplingPoint(array $data = [])
+    public function replaceSamplingPoint(array $data = []): void
     {
         // TODO
     }
 
-    /**
-     * @return SamplingPointAddressService
-     */
     public function addresses(): SamplingPointAddressService
     {
         return $this->resolveService(SamplingPointAddressService::class);
     }
 
-    /**
-     * @return SamplingPointAssignmentService
-     */
     public function assignments(): SamplingPointAssignmentService
     {
         return $this->resolveService(SamplingPointAssignmentService::class);
     }
 
-    /**
-     * @return SamplingPointQuotaTargetsService
-     */
     public function quotaTargets(): SamplingPointQuotaTargetsService
     {
         return $this->resolveService(SamplingPointQuotaTargetsService::class);
@@ -84,8 +80,6 @@ class SamplingPointResource
 
     /**
      * Helper function to resolve service
-     * @param string $serviceClass
-     * @return mixed
      */
     protected function resolveService(string $serviceClass): mixed
     {

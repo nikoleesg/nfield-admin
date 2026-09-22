@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
@@ -7,7 +9,9 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterf
 class SamplingPointAddressResource
 {
     protected ?string $surveyId = null;
+
     protected ?string $samplingPointId = null;
+
     protected ?string $addressId = null;
 
     public function __construct(
@@ -17,18 +21,21 @@ class SamplingPointAddressResource
     public function setSurveyId(string $surveyId): self
     {
         $this->surveyId = $surveyId;
+
         return $this;
     }
 
     public function setSamplingPointId(string $samplingPointId): self
     {
         $this->samplingPointId = $samplingPointId;
+
         return $this;
     }
 
     public function setAddressId(string $addressId): self
     {
         $this->addressId = $addressId;
+
         return $this;
     }
 

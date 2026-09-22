@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses;
 
 use Carbon\Carbon;

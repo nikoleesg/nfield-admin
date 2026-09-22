@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Data;
 
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;

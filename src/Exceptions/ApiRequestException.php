@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Exceptions;
 
 use Exception;
@@ -7,7 +9,7 @@ use Exception;
 class ApiRequestException extends Exception
 {
     public function __construct(
-        string $message = "",
+        string $message = '',
         int $code = 0,
         ?\Throwable $previous = null
     ) {

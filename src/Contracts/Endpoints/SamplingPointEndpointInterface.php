@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Contracts\Endpoints;
 
 interface SamplingPointEndpointInterface
@@ -12,7 +14,7 @@ interface SamplingPointEndpointInterface
     /**
      * Delete a specified sampling point.
      */
-    public function delete(string $surveyId, string $samplingPointId);
+    public function delete(string $surveyId, string $samplingPointId): bool;
 
     /**
      * Update a sampling point with the specified fields.

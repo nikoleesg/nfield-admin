@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Illuminate\Support\Facades\Log;
@@ -72,7 +74,7 @@ final class SurveySampleResource
         // Extract and validate header
         $header = str_getcsv(array_shift($lines), "\t");
 
-        if (empty($header)) {
+        if (empty($header[0])) {
             throw new RuntimeException('CSV file has no header row');
         }
 

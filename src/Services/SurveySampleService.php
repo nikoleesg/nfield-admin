@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
@@ -42,9 +44,9 @@ class SurveySampleService
     }
 
     // TODO
-    public function uploadSampleData() {}
+    public function uploadSampleData(): void {}
 
-    public function blockSampleData() {}
+    public function blockSampleData(): void {}
 
     /**
      * Create a survey sample (Online)
@@ -57,9 +59,9 @@ class SurveySampleService
     }
 
     // TODO:
-    public function resetSampleData() {}
+    public function resetSampleData(): void {}
 
-    public function clearSampleDataColumns() {}
+    public function clearSampleDataColumns(): void {}
 
     public function requestSampleDownload(?string $fileName = null): array
     {
@@ -107,7 +109,7 @@ class SurveySampleService
         // Extract and validate header
         $header = str_getcsv(array_shift($lines), "\t");
 
-        if (empty($header)) {
+        if (empty($header[0])) {
             throw new RuntimeException('CSV file has no header row');
         }
 

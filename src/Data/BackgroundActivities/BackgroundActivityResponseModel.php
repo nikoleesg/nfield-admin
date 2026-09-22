@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Data\BackgroundActivities;
 
 use Carbon\Carbon;

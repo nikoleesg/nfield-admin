@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
@@ -24,7 +26,7 @@ class SamplingPointService
 
     public function listSamplingPoints(): array
     {
-        return $this->samplingPointCollectionEndpoint->find($this->surveyId);
+        return $this->samplingPointCollectionEndpoint->find($this->surveyId, []);
     }
 
     public function findSamplingPoints(array $data = []): array
