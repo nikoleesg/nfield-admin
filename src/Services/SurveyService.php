@@ -9,6 +9,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
@@ -32,7 +33,7 @@ class SurveyService
         return SurveyModel::collect($this->surveyCollectionEndpoint->find($filter), Collection::class);
     }
 
-    public function createSurvey(SurveyModel $surveyModel): SurveyModel
+    public function createSurvey(SurveyCreateModel $surveyModel): SurveyModel
     {
         return SurveyModel::from($this->surveyCollectionEndpoint->create($surveyModel->toArray()));
     }

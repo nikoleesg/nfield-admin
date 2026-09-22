@@ -10,6 +10,7 @@ use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
@@ -67,12 +68,12 @@ class NfieldManagerService
     }
 
     /**
-     * Create a new survey.
+     * Creates a new survey based on the provided data.
      *
-     * @param  SurveyModel  $surveyModel  Survey data to create
+     * @param SurveyCreateModel $surveyModel Data for the new survey
      * @return SurveyModel Created survey with ID
      */
-    public function createSurvey(SurveyModel $surveyModel): SurveyModel
+    public function createSurvey(SurveyCreateModel $surveyModel): SurveyModel
     {
         return $this->surveyService->createSurvey($surveyModel);
     }
