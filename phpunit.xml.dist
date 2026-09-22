@@ -20,6 +20,11 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <!--
+        Coverage reports are only written when a driver is present. The CI
+        workflow installs pcov for `composer test-coverage`; a plain
+        `composer test` run needs no driver and writes no report.
+    -->
     <coverage>
         <report>
             <html outputDirectory="build/coverage"/>

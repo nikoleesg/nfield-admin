@@ -25,11 +25,15 @@ trait EndpointPath
     }
 
     /**
-     * Helper function
+     * Join path segments with a single slash between them.
+     *
+     * Ids are not always strings — an interview id and a quota `eTag` are
+     * integers — and `declare(strict_types=1)` means a `string` parameter would
+     * throw a TypeError on the first such call rather than coerce.
      */
-    private function join(string ...$segments): string
+    private function join(string|int ...$segments): string
     {
-        return implode('/', array_map(fn ($segment) => trim($segment, '/'), $segments));
+        return implode('/', array_map(fn (string|int $segment) => trim((string) $segment, '/'), $segments));
     }
 
     /**
@@ -87,7 +91,7 @@ trait EndpointPath
      *
      * @example v2/surveys/{surveyId}/samplingPoints/{samplingPointId}
      */
-    protected function subResourceItemPath(string $resourceId, string $subResource, mixed $itemId): string
+    protected function subResourceItemPath(string $resourceId, string $subResource, string|int $itemId): string
     {
         return $this->join($this->basePath(), $resourceId, $subResource, $itemId);
     }
@@ -97,7 +101,7 @@ trait EndpointPath
      *
      * @example v2/surveys/{surveyId}/samplingPoints/{samplingPointId}/activate
      */
-    protected function subResourceItemActionPath(string $resourceId, string $subResource, mixed $itemId, string $action): string
+    protected function subResourceItemActionPath(string $resourceId, string $subResource, string|int $itemId, string $action): string
     {
         return $this->join($this->basePath(), $resourceId, $subResource, $itemId, $action);
     }
@@ -107,7 +111,7 @@ trait EndpointPath
      *
      * @example v2/surveys/{surveyId}/samplingPoints/{samplingPointId}/Addresses
      */
-    protected function nestedResourcePath(string $resourceId, string $subResource, mixed $itemId, string $nestedResource): string
+    protected function nestedResourcePath(string $resourceId, string $subResource, string|int $itemId, string $nestedResource): string
     {
         return $this->join($this->basePath(), $resourceId, $subResource, $itemId, $nestedResource);
     }
@@ -117,7 +121,7 @@ trait EndpointPath
      *
      * @example v2/surveys/{surveyId}/samplingPoints/{samplingPointId}/Addresses/{addressId}
      */
-    protected function nestedResourceItemPath(string $resourceId, string $subResource, mixed $itemId, string $nestedResource, mixed $nestedItemId): string
+    protected function nestedResourceItemPath(string $resourceId, string $subResource, string|int $itemId, string $nestedResource, string|int $nestedItemId): string
     {
         return $this->join($this->basePath(), $resourceId, $subResource, $itemId, $nestedResource, $nestedItemId);
     }

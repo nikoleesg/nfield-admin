@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Http;
 use Nikoleesg\NfieldAdmin\NfieldAdminServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelData\LaravelDataServiceProvider;
@@ -18,6 +19,10 @@ class TestCase extends Orchestra
         Factory::guessFactoryNamesUsing(
             fn (string $modelName) => 'Nikoleesg\\NfieldAdmin\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
+
+        // No test may reach the real NField API: an unfaked request throws
+        // instead of leaving the suite dependent on a network and credentials.
+        Http::preventStrayRequests();
     }
 
     protected function getPackageProviders($app)

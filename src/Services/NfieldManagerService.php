@@ -34,8 +34,6 @@ use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
  */
 class NfieldManagerService
 {
-    // TODO: add other (level 1) services if needed
-
     public function __construct(
         protected SurveyService $surveyService,
         protected CapiInterviewerService $capiInterviewerService,

@@ -348,3 +348,80 @@ it('exposes one name per fluent entry point', function () {
 
     expect($offenders)->toBe([]);
 });
+
+/**
+ * #29: rules that keep the removed v1 stack, the global facade aliases and
+ * unfinished work from creeping back into `src/`.
+ */
+function sourceFiles(): array
+{
+    $files = [];
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(__DIR__.'/../src', FilesystemIterator::SKIP_DOTS)
+    );
+
+    foreach ($iterator as $file) {
+        if ($file->getExtension() === 'php') {
+            $files[] = $file->getPathname();
+        }
+    }
+
+    sort($files);
+
+    return $files;
+}
+
+it('keeps every trace of the v1 stack out of src', function () {
+    // v2 only since 2.0: there is no `Endpoints\v1` or `Services\v1` to
+    // depend on, and nothing may reintroduce one.
+    $offenders = [];
+
+    foreach (sourceFiles() as $file) {
+        if (str_contains($file, '/v1/')) {
+            $offenders[] = substr($file, strlen(dirname(__DIR__)) + 1).' lives under a v1 directory';
+
+            continue;
+        }
+
+        if (preg_match('/\\\\v1\\\\/', (string) file_get_contents($file))) {
+            $offenders[] = substr($file, strlen(dirname(__DIR__)) + 1).' references a v1 namespace';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('imports facades by their full namespace, never the root alias', function () {
+    // `\Log` and `\Http` only resolve when the host application registers the
+    // aliases, which a package cannot assume.
+    $offenders = [];
+
+    foreach (sourceFiles() as $file) {
+        $source = (string) file_get_contents($file);
+
+        if (preg_match('/^use (Log|Http|Cache|Config)\s*;/m', $source, $matches)) {
+            $offenders[] = basename($file).' imports the root alias '.$matches[1];
+        }
+
+        if (preg_match('/(?<![A-Za-z0-9_\\\\])\\\\(Log|Http)::/', $source, $matches)) {
+            $offenders[] = basename($file).' calls the root alias \\'.$matches[1];
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('leaves no unfinished work marked in src', function () {
+    // A TODO in a published package is a note to nobody: it belongs in an
+    // issue, where it can be scheduled.
+    $offenders = [];
+
+    foreach (sourceFiles() as $file) {
+        if (preg_match('/\b(TODO|FIXME|XXX)\b/', (string) file_get_contents($file), $matches)) {
+            $offenders[] = basename($file).' contains a '.$matches[1];
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
