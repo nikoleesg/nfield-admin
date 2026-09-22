@@ -14,7 +14,7 @@ interface SurveySampleCollectionEndpointInterface
     /**
      * Uploads the sample data for specified survey
      */
-    public function upload(string $surveyId, string $sampleData): array;
+    public function upload(string $surveyId, string $sampleData, string $fileName = 'sample.csv'): array;
 
     /**
      * Blocks sample data for a survey based on survey id and a filter

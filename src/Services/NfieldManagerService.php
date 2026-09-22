@@ -70,7 +70,7 @@ class NfieldManagerService
     /**
      * Creates a new survey based on the provided data.
      *
-     * @param SurveyCreateModel $surveyModel Data for the new survey
+     * @param  SurveyCreateModel  $surveyModel  Data for the new survey
      * @return SurveyModel Created survey with ID
      */
     public function createSurvey(SurveyCreateModel $surveyModel): SurveyModel

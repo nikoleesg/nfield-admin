@@ -78,6 +78,21 @@ class HttpClient implements HttpClientInterface
         });
     }
 
+    public function postMultipart(string $uri, string $name, string $contents, string $filename): Response
+    {
+        return $this->request(function () use ($uri, $name, $contents, $filename) {
+            $request = $this->factory
+                ->baseUrl($this->baseUrl)
+                ->attach($name, $contents, $filename);
+
+            if (! in_array($uri, $this->skipAuth)) {
+                $request->withToken($this->token());
+            }
+
+            return $request->post($uri);
+        });
+    }
+
     private function request(callable $call): Response
     {
         try {

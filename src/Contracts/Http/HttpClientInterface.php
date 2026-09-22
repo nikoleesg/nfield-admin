@@ -19,4 +19,6 @@ interface HttpClientInterface
     public function delete(string $uri, array $data = []): Response;
 
     public function postRaw(string $uri, string $body, string $contentType): Response;
+
+    public function postMultipart(string $uri, string $name, string $contents, string $filename): Response;
 }

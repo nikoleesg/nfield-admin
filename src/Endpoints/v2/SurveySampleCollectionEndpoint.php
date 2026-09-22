@@ -22,12 +22,11 @@ class SurveySampleCollectionEndpoint extends BaseEndpoint implements SurveySampl
         return $this->httpClient->get($url)->body();
     }
 
-    public function upload(string $surveyId, string $sampleData): array
+    public function upload(string $surveyId, string $sampleData, string $fileName = 'sample.csv'): array
     {
         $url = $this->subResourcePath($surveyId, 'sample');
 
-        // TODO: check if set contentType to text/csv
-        return $this->httpClient->postRaw($url, $sampleData, '')->json();
+        return $this->httpClient->postMultipart($url, 'File', $sampleData, $fileName)->json();
     }
 
     public function block(string $surveyId, array $sampleFilterModel): array
@@ -60,7 +59,7 @@ class SurveySampleCollectionEndpoint extends BaseEndpoint implements SurveySampl
 
     public function requestDownload(string $surveyId, string $fileName): array
     {
-        $url = $this->resourceActionPath($surveyId, 'sampleDataDownload').'/'.$fileName;
+        $url = $this->resourceActionPath($surveyId, "sampleDataDownload/$fileName");
 
         return $this->httpClient->post($url)->json();
     }
