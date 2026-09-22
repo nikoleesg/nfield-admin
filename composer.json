@@ -77,7 +77,7 @@
                 "Nikoleesg\\NfieldAdmin\\NfieldAdminServiceProvider"
             ],
             "aliases": {
-                "NfieldAdmin": "Nikoleesg\\NfieldAdmin\\Facades\\NfieldAdmin"
+                "NfieldManager": "Nikoleesg\\NfieldAdmin\\Facades\\NfieldManager"
             }
         }
     },

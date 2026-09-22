@@ -9,6 +9,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
 use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveySettingsEndpoint;
 use Nikoleesg\NfieldAdmin\Endpoints\v2 as Endpoints;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
+use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -29,6 +30,8 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
 
     public function registeringPackage(): void
     {
+        $this->app->singleton('nfield-manager', NfieldManagerService::class);
+
         $this->app->singleton(HttpClientInterface::class, HttpClient::class);
 
         $this->app->singleton(Contracts\BackgroundActivitiesEndpointInterface::class, Endpoints\BackgroundActivitiesEndpoint::class);
