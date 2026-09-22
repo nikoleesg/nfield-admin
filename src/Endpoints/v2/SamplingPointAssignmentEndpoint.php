@@ -8,8 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAssignmentEndpointInt
 
 final class SamplingPointAssignmentEndpoint extends BaseEndpoint implements SamplingPointAssignmentEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/$this->version/surveys";

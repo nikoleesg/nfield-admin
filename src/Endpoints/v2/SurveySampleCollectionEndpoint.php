@@ -8,8 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInte
 
 final class SurveySampleCollectionEndpoint extends BaseEndpoint implements SurveySampleCollectionEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/$this->version/surveys";

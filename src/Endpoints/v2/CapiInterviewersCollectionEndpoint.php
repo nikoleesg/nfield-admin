@@ -9,8 +9,6 @@ use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
 
 final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements CapiInterviewersCollectionEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/{$this->version}/capiInterviewers";

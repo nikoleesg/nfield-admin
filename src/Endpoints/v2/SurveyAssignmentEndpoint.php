@@ -8,8 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyAssignmentEndpointInterface;
 
 final class SurveyAssignmentEndpoint extends BaseEndpoint implements SurveyAssignmentEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/$this->version/surveys";

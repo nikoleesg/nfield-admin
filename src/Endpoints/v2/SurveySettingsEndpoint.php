@@ -10,7 +10,7 @@ final class SurveySettingsEndpoint extends BaseEndpoint implements SurveySetting
 {
     protected function buildPath(): string
     {
-        return '/v2/surveys';
+        return "/{$this->version}/surveys";
     }
 
     public function listSettings(string $surveyId): array

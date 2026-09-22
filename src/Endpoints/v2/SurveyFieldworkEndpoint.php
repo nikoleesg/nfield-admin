@@ -8,8 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
 
 final class SurveyFieldworkEndpoint extends BaseEndpoint implements SurveyFieldworkEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/{$this->version}/surveys";

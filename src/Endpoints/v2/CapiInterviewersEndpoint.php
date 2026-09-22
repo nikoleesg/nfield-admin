@@ -10,8 +10,6 @@ use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequ
 
 final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiInterviewersEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/{$this->version}/capiInterviewers";

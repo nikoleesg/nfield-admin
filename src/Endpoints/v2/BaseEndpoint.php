@@ -11,6 +11,11 @@ abstract class BaseEndpoint
 {
     use EndpointPath;
 
+    /**
+     * The API version segment every endpoint path starts with.
+     */
+    protected string $version = 'v2';
+
     public function __construct(protected HttpClientInterface $httpClient)
     {
         $this->basePath = $this->buildPath();

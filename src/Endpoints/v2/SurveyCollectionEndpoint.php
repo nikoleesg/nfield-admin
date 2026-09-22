@@ -8,8 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
 
 final class SurveyCollectionEndpoint extends BaseEndpoint implements SurveyCollectionEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/{$this->version}/surveys";
@@ -47,6 +45,6 @@ final class SurveyCollectionEndpoint extends BaseEndpoint implements SurveyColle
     {
         $uri = $this->actionPath('search');
 
-        return $this->httpClient->get($uri, ['Value' => $value])->json();
+        return $this->httpClient->get($uri, ['value' => $value])->json();
     }
 }

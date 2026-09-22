@@ -8,11 +8,9 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\BackgroundActivitiesEndpointInterf
 
 final class BackgroundActivitiesEndpoint extends BaseEndpoint implements BackgroundActivitiesEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
-        return "/$this->version/backgroundActivities";
+        return "/{$this->version}/BackgroundActivities";
     }
 
     public function get(string $activityId): array

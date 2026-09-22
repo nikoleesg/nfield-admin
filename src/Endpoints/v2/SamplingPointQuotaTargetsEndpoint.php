@@ -8,8 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointI
 
 final class SamplingPointQuotaTargetsEndpoint extends BaseEndpoint implements SamplingPointQuotaTargetsEndpointInterface
 {
-    protected string $version = 'v2';
-
     protected function buildPath(): string
     {
         return "/$this->version/surveys";
