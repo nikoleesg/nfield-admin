@@ -163,7 +163,7 @@ class CapiInterviewerService
     /**
      * Get fluent resource for a specific interviewer
      */
-    public function for(string $interviewerId): CapiInterviewerResource
+    public function forInterviewer(string $interviewerId): CapiInterviewerResource
     {
         return (new CapiInterviewerResource(
             $this->capiInterviewersEndpoint,
@@ -171,13 +171,5 @@ class CapiInterviewerService
             $this->capiInterviewersOfficesEndpoint,
         ))
             ->setInterviewerId($interviewerId);
-    }
-
-    /**
-     * Alias for()
-     */
-    public function forInterviewer(string $interviewerId): CapiInterviewerResource
-    {
-        return $this->for($interviewerId);
     }
 }

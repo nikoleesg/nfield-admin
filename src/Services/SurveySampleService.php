@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
@@ -15,15 +16,17 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUploadStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyCreateSampleColumnModel;
 use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 use RuntimeException;
 
-class SurveySampleService
+class SurveySampleService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
         protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
         protected SurveySampleDataDownloadEndpointInterface $surveySampleDataDownloadEndpoint,
-        protected readonly string $surveyId,
     ) {}
 
     /**
@@ -38,7 +41,7 @@ class SurveySampleService
      */
     public function downloadSampleData(): Collection
     {
-        $rawCsvData = $this->surveySampleCollectionEndpoint->download($this->surveyId);
+        $rawCsvData = $this->surveySampleCollectionEndpoint->download($this->getSurveyId());
 
         return collect(CsvParser::parse($rawCsvData));
     }
@@ -46,7 +49,7 @@ class SurveySampleService
     public function uploadSampleData(string $sampleData, ?string $fileName = null): SampleUploadStatus
     {
         $fileName = $fileName ?? $this->generateSampleFileName();
-        $response = $this->surveySampleCollectionEndpoint->upload($this->surveyId, $sampleData, $fileName);
+        $response = $this->surveySampleCollectionEndpoint->upload($this->getSurveyId(), $sampleData, $fileName);
 
         return SampleUploadStatus::from($response);
     }
@@ -57,7 +60,7 @@ class SurveySampleService
     public function blockSampleData(iterable $filters): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->block($this->surveyId, $this->normaliseFilters($filters))
+            $this->surveySampleCollectionEndpoint->block($this->getSurveyId(), $this->normaliseFilters($filters))
         );
     }
 
@@ -76,7 +79,7 @@ class SurveySampleService
         }
 
         return SurveyCreateSampleColumnModel::collect(
-            $this->surveySampleCollectionEndpoint->create($this->surveyId, $payload),
+            $this->surveySampleCollectionEndpoint->create($this->getSurveyId(), $payload),
             Collection::class
         );
     }
@@ -87,7 +90,7 @@ class SurveySampleService
     public function resetSampleData(iterable $filters): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->reset($this->surveyId, $this->normaliseFilters($filters))
+            $this->surveySampleCollectionEndpoint->reset($this->getSurveyId(), $this->normaliseFilters($filters))
         );
     }
 
@@ -96,7 +99,7 @@ class SurveySampleService
         $payload = ClearSurveySampleModel::from($data)->toArray();
 
         return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->clear($this->surveyId, $payload)
+            $this->surveySampleCollectionEndpoint->clear($this->getSurveyId(), $payload)
         );
     }
 
@@ -105,19 +108,19 @@ class SurveySampleService
         $fileName = $fileName ?? $this->generateSampleFileName();
 
         return BackgroundActivityStatus::from(
-            $this->surveySampleDataDownloadEndpoint->requestDownload($this->surveyId, $fileName)
+            $this->surveySampleDataDownloadEndpoint->requestDownload($this->getSurveyId(), $fileName)
         );
     }
 
     /**
      * Return SurveySampleResource for the specified survey
      */
-    public function for(int $interviewId): SurveySampleResource
+    public function forInterview(int $interviewId): SurveySampleResource
     {
         $surveySampleResource = new SurveySampleResource($this->surveySampleEndpoint, $this->surveySampleCollectionEndpoint);
 
         return $surveySampleResource
-            ->setSurveyId($this->surveyId)
+            ->setSurveyId($this->getSurveyId())
             ->setInterviewId($interviewId);
     }
 
@@ -147,7 +150,7 @@ class SurveySampleService
     {
         return sprintf(
             'Survey_%s_Samples_%s',
-            $this->surveyId,
+            $this->getSurveyId(),
             now()->format('Ymd_His')
         );
     }

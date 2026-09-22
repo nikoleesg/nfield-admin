@@ -7,23 +7,26 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySettingsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveySettingModel;
 use Nikoleesg\NfieldAdmin\Enums\SurveySettingNameEnum;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveySettingsService
+class SurveySettingsService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
         protected SurveySettingsEndpointInterface $surveySettingsEndpoint,
         protected SurveyGeneralSettingsEndpointInterface $surveyGeneralSettingsEndpoint,
-        protected readonly string $surveyId,
     ) {}
 
     /** @return Collection<int, SurveySettingModel> */
     public function list(): Collection
     {
-        $data = $this->surveySettingsEndpoint->listSettings($this->surveyId);
+        $data = $this->surveySettingsEndpoint->listSettings($this->getSurveyId());
 
         return SurveySettingModel::collect($data, Collection::class);
     }
@@ -35,14 +38,14 @@ class SurveySettingsService
             value: $value,
         );
 
-        $data = $this->surveySettingsEndpoint->addOrUpdateSetting($this->surveyId, $setting->toArray());
+        $data = $this->surveySettingsEndpoint->addOrUpdateSetting($this->getSurveyId(), $setting->toArray());
 
         return SurveySettingModel::from($data);
     }
 
     public function getGeneral(): SurveyGeneralSettingsModel
     {
-        $data = $this->surveyGeneralSettingsEndpoint->getGeneralSettings($this->surveyId);
+        $data = $this->surveyGeneralSettingsEndpoint->getGeneralSettings($this->getSurveyId());
 
         return SurveyGeneralSettingsModel::from($data);
     }
@@ -51,6 +54,6 @@ class SurveySettingsService
     {
         $payload = SurveyGeneralSettingsUpdateModel::from($data)->toArray();
 
-        $this->surveyGeneralSettingsEndpoint->updateGeneralSettings($this->surveyId, $payload);
+        $this->surveyGeneralSettingsEndpoint->updateGeneralSettings($this->getSurveyId(), $payload);
     }
 }

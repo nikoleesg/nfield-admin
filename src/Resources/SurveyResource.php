@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Resources;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
@@ -22,52 +22,44 @@ use Nikoleesg\NfieldAdmin\Services\SurveyQuotaService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
+use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyResource
+class SurveyResource implements SurveyScopedInterface
 {
-    /** @var array<class-string, object> */
-    protected array $resolvedServices = [];
-
-    protected ?string $surveyId = null;
+    use ResolvesScopedServices;
+    use ScopedToSurvey;
 
     public function __construct(
         private readonly SurveyEndpointInterface $surveyEndpoint
     ) {}
 
-    public function setSurveyId(string $surveyId): static
-    {
-        $this->surveyId = $surveyId;
-        $this->resolvedServices = [];
-
-        return $this;
-    }
-
     public function getSurvey(): SurveyModel
     {
-        return SurveyModel::from($this->surveyEndpoint->get($this->surveyId));
+        return SurveyModel::from($this->surveyEndpoint->get($this->getSurveyId()));
     }
 
     public function deleteSurvey(): void
     {
-        $this->surveyEndpoint->destroy($this->surveyId);
+        $this->surveyEndpoint->destroy($this->getSurveyId());
     }
 
     public function updateSurvey(array|SurveyUpdateModel $data): SurveyModel
     {
         $payload = SurveyUpdateModel::from($data)->toArray();
 
-        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->surveyId, $payload));
+        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->getSurveyId(), $payload));
     }
 
     public function getSurveyCounts(): SurveyCountsModel
     {
-        return SurveyCountsModel::from($this->surveyEndpoint->counts($this->surveyId));
+        return SurveyCountsModel::from($this->surveyEndpoint->counts($this->getSurveyId()));
     }
 
     /** @return Collection<int, string> */
     public function getCustomColumns(): Collection
     {
-        return collect($this->surveyEndpoint->getCustomColumns($this->surveyId));
+        return collect($this->surveyEndpoint->getCustomColumns($this->getSurveyId()));
     }
 
     public function requestDataDownload(array|SurveyDataRequestModel $data): BackgroundActivityStatus
@@ -124,45 +116,4 @@ class SurveyResource
     {
         return $this->resolveService(SurveyPublicIdsService::class);
     }
-
-    /**
-     * Helper function to resolve service
-     *
-     * @return Application|mixed|object|string
-     */
-    protected function resolveService(string $serviceClass): mixed
-    {
-        if (isset($this->resolvedServices[$serviceClass])) {
-            return $this->resolvedServices[$serviceClass];
-        }
-
-        $parameters = [];
-
-        if (property_exists($this, 'surveyId') && $this->surveyId !== null) {
-            $parameters['surveyId'] = $this->surveyId;
-        }
-
-        if (property_exists($this, 'samplingPointId') && $this->samplingPointId !== null) {
-            $parameters['samplingPointId'] = $this->samplingPointId;
-        }
-
-        $service = app($serviceClass, $parameters);
-
-        $this->resolvedServices[$serviceClass] = $service;
-
-        return $service;
-    }
-
-    //
-    //    public function quotaFrame(): SurveyQuotaFrameResource
-    //    {
-    //        return new SurveyQuotaFrameResource($this->surveyQuotaFrameEndpoint, $this->surveyId);
-    //    }
-    //
-    //    public function quotaTargets(): SurveyQuotaTargetsResource
-    //    {
-    //        return new SurveyQuotaTargetsResource($this->surveyQuotaTargetsEndpoint, $this->surveyId);
-    //    }
-    //
-
 }

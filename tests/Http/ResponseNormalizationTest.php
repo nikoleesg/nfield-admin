@@ -161,7 +161,7 @@ it('hydrates the fieldwork counts DTO, nested list included', function () {
         ], 200),
     ]);
 
-    $counts = app(SurveyFieldworkService::class, ['surveyId' => 'survey-1'])->counts();
+    $counts = app(SurveyFieldworkService::class)->setSurveyId('survey-1')->counts();
 
     expect($counts)->toBeInstanceOf(SurveyFieldworkCountsResponseModel::class)
         ->and($counts->surveyId)->toBe('survey-1')

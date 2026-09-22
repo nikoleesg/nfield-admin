@@ -63,7 +63,7 @@ $surveys = $svc->filter();
 $survey = $svc->create();
 $surveys = $svc->searchRespondents();
 
-$survey = $svc->for('{surveyId}');
+$survey = $svc->forSurvey('{surveyId}');
 
 $survey->get();
 $survey->delete();

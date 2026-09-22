@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaFrameEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Quota\QuotaFrameModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Quota\QuotaFrameVersionModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveyQuotaFrameEtagRequestModel;
@@ -16,14 +17,16 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveyQuotaFrameRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveysQuotaFrameResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveysQuotaTargetsEtagResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveysQuotaTargetsResponseModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyQuotaService
+class SurveyQuotaService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
         protected SurveyQuotaFrameEndpointInterface $surveyQuotaFrameEndpoint,
         protected SurveyQuotaTargetsEndpointInterface $surveyQuotaTargetsEndpoint,
         protected SurveyQuotaVersionsEndpointInterface $surveyQuotaVersionsEndpoint,
-        protected readonly string $surveyId,
     ) {}
 
     // ==============================
@@ -31,7 +34,7 @@ class SurveyQuotaService
     // ==============================
     public function getQuotaFrame(): SurveysQuotaFrameResponseModel
     {
-        return SurveysQuotaFrameResponseModel::from($this->surveyQuotaFrameEndpoint->getQuotaFrame($this->surveyId));
+        return SurveysQuotaFrameResponseModel::from($this->surveyQuotaFrameEndpoint->getQuotaFrame($this->getSurveyId()));
     }
 
     public function setQuotaFrame(array|SurveyQuotaFrameRequestModel $data): SurveysQuotaFrameResponseModel
@@ -39,7 +42,7 @@ class SurveyQuotaService
         $payload = SurveyQuotaFrameRequestModel::from($data)->toArray();
 
         return SurveysQuotaFrameResponseModel::from(
-            $this->surveyQuotaFrameEndpoint->setQuotaFrame($this->surveyId, $payload)
+            $this->surveyQuotaFrameEndpoint->setQuotaFrame($this->getSurveyId(), $payload)
         );
     }
 
@@ -48,7 +51,7 @@ class SurveyQuotaService
         $payload = SurveyQuotaFrameEtagRequestModel::from($data)->toArray();
 
         return SurveyQuotaFrameEtagResponseModel::from(
-            $this->surveyQuotaFrameEndpoint->setQuotaLevelsTargets($this->surveyId, $eTag, $payload)
+            $this->surveyQuotaFrameEndpoint->setQuotaLevelsTargets($this->getSurveyId(), $eTag, $payload)
         );
     }
 
@@ -58,14 +61,14 @@ class SurveyQuotaService
     public function getQuotaTargets(): SurveysQuotaTargetsResponseModel
     {
         return SurveysQuotaTargetsResponseModel::from(
-            $this->surveyQuotaTargetsEndpoint->getQuotaTargets($this->surveyId)
+            $this->surveyQuotaTargetsEndpoint->getQuotaTargets($this->getSurveyId())
         );
     }
 
     public function getQuotaTargetsByETag(int $eTag): SurveysQuotaTargetsEtagResponseModel
     {
         return SurveysQuotaTargetsEtagResponseModel::from(
-            $this->surveyQuotaTargetsEndpoint->getQuotaTargetsByETag($this->surveyId, $eTag)
+            $this->surveyQuotaTargetsEndpoint->getQuotaTargetsByETag($this->getSurveyId(), $eTag)
         );
     }
 
@@ -76,7 +79,7 @@ class SurveyQuotaService
     public function getQuotaVersions(): Collection
     {
         return QuotaFrameVersionModel::collect(
-            $this->surveyQuotaVersionsEndpoint->getQuotaVersions($this->surveyId),
+            $this->surveyQuotaVersionsEndpoint->getQuotaVersions($this->getSurveyId()),
             Collection::class
         );
     }
@@ -84,7 +87,7 @@ class SurveyQuotaService
     public function getQuotaVersionsByETag(int $eTag): QuotaFrameModel
     {
         return QuotaFrameModel::from(
-            $this->surveyQuotaVersionsEndpoint->getQuotaVersionsByETag($this->surveyId, $eTag)
+            $this->surveyQuotaVersionsEndpoint->getQuotaVersionsByETag($this->getSurveyId(), $eTag)
         );
     }
 }

@@ -6,20 +6,23 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyPublicIdsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyPublicIdModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyPublicIdsService
+class SurveyPublicIdsService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
         protected SurveyPublicIdsEndpointInterface $surveyPublicIdsEndpoint,
-        protected readonly string $surveyId,
     ) {}
 
     /** @return Collection<int, SurveyPublicIdModel> */
     public function list(): Collection
     {
         return SurveyPublicIdModel::collect(
-            $this->surveyPublicIdsEndpoint->list($this->surveyId),
+            $this->surveyPublicIdsEndpoint->list($this->getSurveyId()),
             Collection::class
         );
     }
@@ -35,6 +38,6 @@ class SurveyPublicIdsService
             $payload[] = SurveyPublicIdModel::from($model)->toArray();
         }
 
-        $this->surveyPublicIdsEndpoint->update($this->surveyId, $payload);
+        $this->surveyPublicIdsEndpoint->update($this->getSurveyId(), $payload);
     }
 }

@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingPointsAssignmentsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointInterviewerAssignmentsModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyAssignmentService
+class SurveyAssignmentService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
         protected SurveySamplingPointsAssignmentsEndpointInterface $surveySamplingPointsAssignmentsEndpoint,
-        protected readonly string $surveyId,
     ) {}
 
     /**
@@ -23,7 +26,7 @@ class SurveyAssignmentService
         $payload = new SamplingPointInterviewerAssignmentsModel($samplingPointIds, $interviewerIds);
 
         return SamplingPointInterviewerAssignmentsModel::from(
-            $this->surveySamplingPointsAssignmentsEndpoint->massAssign($this->surveyId, $payload->toArray())
+            $this->surveySamplingPointsAssignmentsEndpoint->massAssign($this->getSurveyId(), $payload->toArray())
         );
     }
 
@@ -35,6 +38,6 @@ class SurveyAssignmentService
     {
         $payload = new SamplingPointInterviewerAssignmentsModel($samplingPointIds, $interviewerIds);
 
-        $this->surveySamplingPointsAssignmentsEndpoint->massUnassign($this->surveyId, $payload->toArray());
+        $this->surveySamplingPointsAssignmentsEndpoint->massUnassign($this->getSurveyId(), $payload->toArray());
     }
 }

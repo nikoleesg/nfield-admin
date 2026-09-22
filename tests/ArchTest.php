@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 
 it('will not use debugging functions')
     ->expect(['dd', 'dump', 'ray'])
@@ -183,22 +185,32 @@ it('keeps the API version in one place', function () {
  * `Spatie\LaravelData\DataCollection`, which Spatie has been steering users
  * away from since v4.
  */
+function publicSdkClasses(): array
+{
+    $classes = [];
+
+    foreach (['Services', 'Resources'] as $layer) {
+        foreach (glob(__DIR__.'/../src/'.$layer.'/*.php') as $file) {
+            $classes[] = 'Nikoleesg\NfieldAdmin\\'.$layer.'\\'.basename($file, '.php');
+        }
+    }
+
+    return $classes;
+}
+
 function publicSdkMethods(): array
 {
     $methods = [];
 
-    foreach (['Services', 'Resources'] as $layer) {
-        foreach (glob(__DIR__.'/../src/'.$layer.'/*.php') as $file) {
-            $class = 'Nikoleesg\NfieldAdmin\\'.$layer.'\\'.basename($file, '.php');
-            $reflection = new ReflectionClass($class);
+    foreach (publicSdkClasses() as $class) {
+        $reflection = new ReflectionClass($class);
 
-            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                if ($method->isConstructor() || $method->getDeclaringClass()->getName() !== $class) {
-                    continue;
-                }
-
-                $methods[] = [$class, $method];
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->isConstructor() || $method->getDeclaringClass()->getName() !== $class) {
+                continue;
             }
+
+            $methods[] = [$class, $method];
         }
     }
 
@@ -247,6 +259,90 @@ it('carries an element-type generic on every list method', function () {
 
         if (! preg_match('/@return\s+Collection<[^>]+>/', (string) $method->getDocComment())) {
             $offenders[] = class_basename($class).'::'.$method->getName().'() is missing @return Collection<int, Model>';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+/**
+ * #41: the resource layer is the fluent entry point, and it had no single
+ * pattern to copy. These four rules are that pattern.
+ */
+it('never scopes a service by constructor parameter name', function () {
+    // `app($service, ['surveyId' => ...])` matched the container's arguments
+    // against the literal parameter name, so renaming the parameter silently
+    // stopped the injection. Scope now travels through the *ScopedInterface
+    // setters instead.
+    $offenders = [];
+
+    foreach (publicSdkClasses() as $class) {
+        $constructor = (new ReflectionClass($class))->getConstructor();
+
+        if ($constructor === null) {
+            continue;
+        }
+
+        foreach ($constructor->getParameters() as $parameter) {
+            if (in_array($parameter->getName(), ['surveyId', 'samplingPointId'], true)) {
+                $offenders[] = class_basename($class).'::__construct() takes $'.$parameter->getName().'; use the scoping contract';
+            }
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('declares the scoping contract wherever a scope is read', function () {
+    $offenders = [];
+
+    foreach (publicSdkClasses() as $class) {
+        $source = (string) file_get_contents((new ReflectionClass($class))->getFileName());
+
+        if (str_contains($source, '$this->getSurveyId()')
+            && ! is_subclass_of($class, SurveyScopedInterface::class)) {
+            $offenders[] = class_basename($class).' reads the survey scope without implementing SurveyScopedInterface';
+        }
+
+        if (str_contains($source, '$this->getSamplingPointId()')
+            && ! is_subclass_of($class, SamplingPointScopedInterface::class)) {
+            $offenders[] = class_basename($class).' reads the sampling point scope without implementing SamplingPointScopedInterface';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('returns static from every fluent setter', function () {
+    // `static` is the only correct return type for a chainable setter: `self`
+    // and a hardcoded class name both lie under inheritance.
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        $returnType = $method->getReturnType();
+
+        if (! $returnType instanceof ReflectionNamedType) {
+            continue;
+        }
+
+        // A method that hands back its own class is a chainable setter,
+        // however it spells that: `self`, or the class name written out.
+        if (in_array($returnType->getName(), ['self', $class], true)) {
+            $offenders[] = class_basename($class).'::'.$method->getName().'() returns '.class_basename($returnType->getName()).', not static';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('exposes one name per fluent entry point', function () {
+    // `for()` and `forSurvey()` were two names for one call. The explicit form
+    // is self-documenting at a call site; the bare one is ambiguous when chained.
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        if ($method->getName() === 'for') {
+            $offenders[] = class_basename($class).'::for() — name the resource it returns, e.g. forSurvey()';
         }
     }
 

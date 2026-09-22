@@ -62,15 +62,10 @@ class SurveyService
         return $resource->setBlueprintId($blueprintId);
     }
 
-    public function for(string $surveyId): SurveyResource
+    public function forSurvey(string $surveyId): SurveyResource
     {
         $surveyResource = new SurveyResource($this->surveyEndpoint);
 
         return $surveyResource->setSurveyId($surveyId);
-    }
-
-    public function forSurvey(string $surveyId): SurveyResource
-    {
-        return $this->for($surveyId);
     }
 }

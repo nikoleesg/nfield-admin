@@ -168,7 +168,7 @@ class NfieldManagerService
      */
     public function withCapiInterviewer(string $interviewerId): CapiInterviewerResource
     {
-        return $this->capiInterviewerService->for($interviewerId);
+        return $this->capiInterviewerService->forInterviewer($interviewerId);
     }
 
     public function withSurvey(string $surveyId): SurveyResource

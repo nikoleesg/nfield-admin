@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareRequestModel;
@@ -14,44 +15,28 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequest
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
+use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSamplingPoint;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SamplingPointResource
+class SamplingPointResource implements SamplingPointScopedInterface
 {
-    /** @var array<class-string, object> */
-    protected array $resolvedServices = [];
-
-    protected ?string $surveyId = null;
-
-    protected ?string $samplingPointId = null;
+    use ResolvesScopedServices;
+    use ScopedToSamplingPoint;
+    use ScopedToSurvey;
 
     public function __construct(
         protected SamplingPointEndpointInterface $samplingPointEndpoint
     ) {}
 
-    public function setSurveyId(string $surveyId): static
-    {
-        $this->surveyId = $surveyId;
-        $this->resolvedServices = [];
-
-        return $this;
-    }
-
-    public function setSamplingPointId(string $samplingPointId): static
-    {
-        $this->samplingPointId = $samplingPointId;
-        $this->resolvedServices = [];
-
-        return $this;
-    }
-
     public function getSamplingPoint(): SamplingPointResponseModel
     {
-        return SamplingPointResponseModel::from($this->samplingPointEndpoint->get($this->surveyId, $this->samplingPointId));
+        return SamplingPointResponseModel::from($this->samplingPointEndpoint->get($this->getSurveyId(), $this->getSamplingPointId()));
     }
 
     public function deleteSamplingPoint(): void
     {
-        $this->samplingPointEndpoint->delete($this->surveyId, $this->samplingPointId);
+        $this->samplingPointEndpoint->delete($this->getSurveyId(), $this->getSamplingPointId());
     }
 
     public function updateSamplingPoint(array|SamplingPointUpdateRequestModel $data): SamplingPointResponseModel
@@ -59,7 +44,7 @@ class SamplingPointResource
         $payload = SamplingPointUpdateRequestModel::from($data)->toArray();
 
         return SamplingPointResponseModel::from(
-            $this->samplingPointEndpoint->update($this->surveyId, $this->samplingPointId, $payload)
+            $this->samplingPointEndpoint->update($this->getSurveyId(), $this->getSamplingPointId(), $payload)
         );
     }
 
@@ -68,7 +53,7 @@ class SamplingPointResource
         $payload = ActivateSpareSamplingPointRequestModel::from($data)->toArray();
 
         return ActivateSpareSamplingPointsResponseModel::from(
-            $this->samplingPointEndpoint->activate($this->surveyId, $this->samplingPointId, $payload)
+            $this->samplingPointEndpoint->activate($this->getSurveyId(), $this->getSamplingPointId(), $payload)
         );
     }
 
@@ -77,7 +62,7 @@ class SamplingPointResource
         $payload = ReplaceSamplingPointWithSpareRequestModel::from($data)->toArray();
 
         return ReplaceSamplingPointWithSpareResponseModel::from(
-            $this->samplingPointEndpoint->replace($this->surveyId, $this->samplingPointId, $payload)
+            $this->samplingPointEndpoint->replace($this->getSurveyId(), $this->getSamplingPointId(), $payload)
         );
     }
 
@@ -94,31 +79,5 @@ class SamplingPointResource
     public function quotaTargets(): SamplingPointQuotaTargetsService
     {
         return $this->resolveService(SamplingPointQuotaTargetsService::class);
-    }
-
-    /**
-     * Helper function to resolve service
-     */
-    protected function resolveService(string $serviceClass): mixed
-    {
-        if (isset($this->resolvedServices[$serviceClass])) {
-            return $this->resolvedServices[$serviceClass];
-        }
-
-        $parameters = [];
-
-        if (property_exists($this, 'surveyId') && $this->surveyId !== null) {
-            $parameters['surveyId'] = $this->surveyId;
-        }
-
-        if (property_exists($this, 'samplingPointId') && $this->samplingPointId !== null) {
-            $parameters['samplingPointId'] = $this->samplingPointId;
-        }
-
-        $service = app($serviceClass, $parameters);
-
-        $this->resolvedServices[$serviceClass] = $service;
-
-        return $service;
     }
 }

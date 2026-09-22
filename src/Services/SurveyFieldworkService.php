@@ -5,21 +5,24 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveysFieldworkStopRequestModel;
 use Nikoleesg\NfieldAdmin\Enums\InterviewingRestrictionTypeEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyFieldworkStatusEnum;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyFieldworkService
+class SurveyFieldworkService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
         protected SurveyFieldworkEndpointInterface $surveyFieldworkEndpoint,
-        protected readonly string $surveyId,
     ) {}
 
     public function start(): void
     {
-        $this->surveyFieldworkEndpoint->start($this->surveyId);
+        $this->surveyFieldworkEndpoint->start($this->getSurveyId());
     }
 
     /**
@@ -39,13 +42,13 @@ class SurveyFieldworkService
      */
     public function statusCode(): int
     {
-        return $this->surveyFieldworkEndpoint->status($this->surveyId);
+        return $this->surveyFieldworkEndpoint->status($this->getSurveyId());
     }
 
     public function counts(): SurveyFieldworkCountsResponseModel
     {
         return SurveyFieldworkCountsResponseModel::from(
-            $this->surveyFieldworkEndpoint->counts($this->surveyId)
+            $this->surveyFieldworkEndpoint->counts($this->getSurveyId())
         );
     }
 
@@ -58,6 +61,6 @@ class SurveyFieldworkService
 
         $payload = SurveysFieldworkStopRequestModel::from($data)->toArray();
 
-        $this->surveyFieldworkEndpoint->stop($this->surveyId, $payload);
+        $this->surveyFieldworkEndpoint->stop($this->getSurveyId(), $payload);
     }
 }

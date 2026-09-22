@@ -69,7 +69,7 @@ it('returns the fieldwork status as an enum', function () {
     $endpoint = Mockery::mock(SurveyFieldworkEndpointInterface::class);
     $endpoint->shouldReceive('status')->with('survey-1')->once()->andReturn(3);
 
-    $service = new SurveyFieldworkService($endpoint, 'survey-1');
+    $service = (new SurveyFieldworkService($endpoint))->setSurveyId('survey-1');
 
     expect($service->status())->toBe(SurveyFieldworkStatusEnum::Stopped);
 });
@@ -78,7 +78,7 @@ it('returns null rather than throwing on an unmapped fieldwork status', function
     $endpoint = Mockery::mock(SurveyFieldworkEndpointInterface::class);
     $endpoint->shouldReceive('status')->with('survey-1')->twice()->andReturn(2);
 
-    $service = new SurveyFieldworkService($endpoint, 'survey-1');
+    $service = (new SurveyFieldworkService($endpoint))->setSurveyId('survey-1');
 
     expect($service->status())->toBeNull()
         ->and($service->statusCode())->toBe(2);
@@ -90,7 +90,7 @@ it('builds the stop payload from an interviewing restriction enum', function () 
         ->with('survey-1', ['interviewingRestrictionType' => 2])
         ->once();
 
-    $service = new SurveyFieldworkService($endpoint, 'survey-1');
+    $service = (new SurveyFieldworkService($endpoint))->setSurveyId('survey-1');
 
     $service->stop(InterviewingRestrictionTypeEnum::AllowOnlyActives);
 });
@@ -101,7 +101,7 @@ it('accepts an array for the stop payload', function () {
         ->with('survey-1', ['interviewingRestrictionType' => 3])
         ->once();
 
-    $service = new SurveyFieldworkService($endpoint, 'survey-1');
+    $service = (new SurveyFieldworkService($endpoint))->setSurveyId('survey-1');
 
     $service->stop(['interviewingRestrictionType' => 3]);
 });
@@ -110,7 +110,7 @@ it('returns fieldwork counts as a DTO', function () {
     $endpoint = Mockery::mock(SurveyFieldworkEndpointInterface::class);
     $endpoint->shouldReceive('counts')->with('survey-1')->once()->andReturn(fieldworkCountsPayload());
 
-    $counts = (new SurveyFieldworkService($endpoint, 'survey-1'))->counts();
+    $counts = (new SurveyFieldworkService($endpoint))->setSurveyId('survey-1')->counts();
 
     expect($counts)->toBeInstanceOf(SurveyFieldworkCountsResponseModel::class)
         ->and($counts->successful)->toBe(12)
@@ -129,7 +129,7 @@ it('returns survey settings as an Illuminate collection of DTOs', function () {
         ['name' => 'Foo', 'value' => 'bar'],
     ]);
 
-    $result = (new SurveySettingsService($settingsEndpoint, $generalEndpoint, 'survey-1'))->list();
+    $result = (new SurveySettingsService($settingsEndpoint, $generalEndpoint))->setSurveyId('survey-1')->list();
 
     expect($result)->toBeInstanceOf(Collection::class)
         ->and($result->first())->toBeInstanceOf(SurveySettingModel::class)
@@ -153,7 +153,7 @@ it('normalises a sampling point create payload through the request model', funct
         ->once()
         ->andReturn(['name' => 'SP 1', 'samplingPointId' => 'sp-1', 'kind' => 1]);
 
-    $service = new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint, 'survey-1');
+    $service = (new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint))->setSurveyId('survey-1');
 
     $result = $service->createSamplingPoint(['name' => 'SP 1', 'kind' => 1]);
 
@@ -172,7 +172,7 @@ it('accepts a request model as well as an array', function () {
         ->once()
         ->andReturn(['name' => 'SP 2', 'samplingPointId' => 'sp-2']);
 
-    $service = new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint, 'survey-1');
+    $service = (new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint))->setSurveyId('survey-1');
 
     $result = $service->createSamplingPoint(new SamplingPointCreateRequestModel(name: 'SP 2'));
 
@@ -189,7 +189,7 @@ it('lists sampling points as a collection of DTOs', function () {
         ['name' => 'SP 2', 'samplingPointId' => 'sp-2'],
     ]);
 
-    $service = new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint, 'survey-1');
+    $service = (new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint))->setSurveyId('survey-1');
 
     $result = $service->listSamplingPoints();
 
@@ -204,12 +204,11 @@ it('lists sampling points as a collection of DTOs', function () {
 
 function sampleService(SurveySampleCollectionEndpointInterface $collectionEndpoint): SurveySampleService
 {
-    return new SurveySampleService(
+    return (new SurveySampleService(
         $collectionEndpoint,
         Mockery::mock(SurveySampleEndpointInterface::class),
         Mockery::mock(SurveySampleDataDownloadEndpointInterface::class),
-        'survey-1'
-    );
+    ))->setSurveyId('survey-1');
 }
 
 it('sends sample filters as a list of name/op/value clauses', function () {
@@ -270,12 +269,11 @@ function quotaService(
     SurveyQuotaTargetsEndpointInterface $targetsEndpoint,
     SurveyQuotaVersionsEndpointInterface $versionsEndpoint,
 ): SurveyQuotaService {
-    return new SurveyQuotaService(
+    return (new SurveyQuotaService(
         Mockery::mock(SurveyQuotaFrameEndpointInterface::class),
         $targetsEndpoint,
         $versionsEndpoint,
-        'survey-1'
-    );
+    ))->setSurveyId('survey-1');
 }
 
 it('returns quota targets as a DTO', function () {

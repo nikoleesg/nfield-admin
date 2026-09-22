@@ -7,15 +7,17 @@ namespace Nikoleesg\NfieldAdmin\Resources;
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUpdateStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyUpdateSampleRecordModel;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-final class SurveySampleResource
+final class SurveySampleResource implements SurveyScopedInterface
 {
-    protected ?string $surveyId = null;
+    use ScopedToSurvey;
 
     protected ?int $interviewId = null;
 
@@ -23,13 +25,6 @@ final class SurveySampleResource
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
         protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
     ) {}
-
-    public function setSurveyId(string $surveyId): static
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function setInterviewId(int $interviewId): static
     {
@@ -49,7 +44,7 @@ final class SurveySampleResource
     public function getSampleRecord(): ?Collection
     {
         // Get raw CSV data from endpoint
-        $rawCsvData = $this->surveySampleEndpoint->get($this->surveyId, $this->interviewId);
+        $rawCsvData = $this->surveySampleEndpoint->get($this->getSurveyId(), $this->interviewId);
 
         // Parse CSV into array
         /** @var array<int, array<string, string>> $parsed */
@@ -70,7 +65,7 @@ final class SurveySampleResource
         }
 
         return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->destroy($this->surveyId, $payload)
+            $this->surveySampleCollectionEndpoint->destroy($this->getSurveyId(), $payload)
         );
     }
 
@@ -79,7 +74,7 @@ final class SurveySampleResource
         $payload = SurveyUpdateSampleRecordModel::from($data)->toArray();
 
         return SampleUpdateStatus::from(
-            $this->surveySampleCollectionEndpoint->update($this->surveyId, $payload)
+            $this->surveySampleCollectionEndpoint->update($this->getSurveyId(), $payload)
         );
     }
 }
