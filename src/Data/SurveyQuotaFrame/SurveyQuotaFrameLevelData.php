@@ -32,7 +32,7 @@ class SurveyQuotaFrameLevelData extends Data
             $data['Target'],
             $data['MaxTarget'],
             $data['MaxOvershoot'],
-            ! empty($data['Variables']) ? SurveyQuotaFrameVariableData::collect($data['Variables']) : SurveyQuotaFrameVariableData::collect([]),
+            ! empty($data['Variables']) ? SurveyQuotaFrameVariableData::collect($data['Variables'], DataCollection::class) : SurveyQuotaFrameVariableData::collect([], DataCollection::class),
             $data['IsHidden']
         );
     }
