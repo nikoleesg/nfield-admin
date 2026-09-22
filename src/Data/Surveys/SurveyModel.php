@@ -6,13 +6,10 @@ namespace Nikoleesg\NfieldAdmin\Data\Surveys;
 
 use Nikoleesg\NfieldAdmin\Data\Casts\StrictNullCast;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
-use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
-#[MapInputName(StudlyCaseMapper::class)]
 final class SurveyModel extends Data
 {
     public function __construct(

@@ -10,48 +10,48 @@ use Nikoleesg\NfieldAdmin\Data\SurveyUpdateSampleRecordDTO;
 
 it('AddressDTO::fromResponse creates instance correctly', function () {
     $dto = AddressDTO::fromResponse([
-        'AddressId' => '123',
-        'Details' => 'Detail text',
-        'AppointmentDate' => '2023-01-01',
-        'SampleData' => [],
+        'addressId' => '123',
+        'details' => 'Detail text',
+        'appointmentDate' => '2023-01-01',
+        'sampleData' => [],
     ]);
-    expect($dto->address_id)->toBe('123')
+    expect($dto->addressId)->toBe('123')
         ->and($dto->details)->toBe('Detail text');
 });
 
 it('BackgroundActivityDTO::fromInitialised creates instance correctly for short array', function () {
-    $dto = BackgroundActivityDTO::fromInitialised(['ActivityId' => 'act-123']);
-    expect($dto->activity_id)->toBe('act-123')
+    $dto = BackgroundActivityDTO::fromInitialised(['activityId' => 'act-123']);
+    expect($dto->activityId)->toBe('act-123')
         ->and($dto->name)->toBeNull();
 });
 
 it('SurveyUpdateSampleRecordDTO::fromResponse creates instance correctly', function () {
     $dto = SurveyUpdateSampleRecordDTO::fromResponse([
-        'SampleRecordId' => 123,
-        'TargetList' => [],
+        'sampleRecordId' => 123,
+        'targetList' => [],
     ]);
-    expect($dto->sample_record_id)->toBe(123);
+    expect($dto->sampleRecordId)->toBe(123);
 });
 
 it('QuotaFrameVersionData::fromResponse creates instance correctly', function () {
     $dto = QuotaFrameVersionData::fromResponse([
-        'Id' => 'ver-123',
-        'ETag' => 'etag',
-        'PublishedDate' => '2023-01-01',
+        'id' => 'ver-123',
+        'eTag' => 'etag',
+        'publishedDate' => '2023-01-01',
     ]);
     expect($dto->id)->toBe('ver-123');
 });
 
 it('SurveyQuotaFrameLevelData::fromResponse creates instance correctly', function () {
     $dto = SurveyQuotaFrameLevelData::fromResponse([
-        'Id' => 'lvl-123',
-        'DefinitionId' => 'def-123',
-        'Target' => 100,
-        'MaxTarget' => 100,
-        'MaxOvershoot' => 0,
-        'MaxCount' => 100,
-        'TargetsByDefinition' => [],
-        'IsHidden' => false,
+        'id' => 'lvl-123',
+        'definitionId' => 'def-123',
+        'target' => 100,
+        'maxTarget' => 100,
+        'maxOvershoot' => 0,
+        'maxCount' => 100,
+        'targetsByDefinition' => [],
+        'isHidden' => false,
     ]);
     expect($dto->id)->toBe('lvl-123');
 });

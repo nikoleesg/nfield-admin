@@ -7,6 +7,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
+use Nikoleesg\NfieldAdmin\Services\Http\ResponseKeyNormalizer;
 
 final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiInterviewersEndpointInterface
 {
@@ -22,7 +23,7 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     {
         $uri = $this->resourcePath($interviewerId);
 
-        return $this->normalizeItemResponse($this->httpClient->get($uri)->json());
+        return $this->httpClient->get($uri)->json();
     }
 
     /**
@@ -47,7 +48,7 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
             static fn (mixed $value): bool => $value !== null
         );
 
-        return $this->normalizeItemResponse($this->httpClient->patch($uri, $payload)->json());
+        return $this->httpClient->patch($uri, $payload)->json();
     }
 
     /**
@@ -57,7 +58,7 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     {
         $uri = $this->resourcePath($interviewerId);
 
-        return $this->normalizeItemResponse($this->httpClient->put($uri, $data->toArray())->json());
+        return $this->httpClient->put($uri, $data->toArray())->json();
     }
 
     /**
@@ -67,7 +68,7 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     {
         $uri = $this->subResourcePath($interviewerId, 'assignments');
 
-        return $this->normalizeListResponse($this->httpClient->get($uri)->json());
+        return $this->unwrapList($this->httpClient->get($uri)->json());
     }
 
     /**
@@ -80,7 +81,13 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
         return $this->httpClient->get($uri)->json();
     }
 
-    private function normalizeListResponse(mixed $json): array
+    /**
+     * Unwrap the OData `{"value": [...]}` envelope some list responses use.
+     *
+     * Key casing is already normalized at the HTTP boundary (see
+     * {@see ResponseKeyNormalizer}).
+     */
+    private function unwrapList(mixed $json): array
     {
         if (! is_array($json)) {
             return [];
@@ -90,26 +97,7 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
             $json = $json['value'];
         }
 
-        if (! array_is_list($json)) {
-            return [];
-        }
-
-        return array_map([$this, 'normalizeItemResponse'], $json);
-    }
-
-    private function normalizeItemResponse(mixed $json): array
-    {
-        if (! is_array($json)) {
-            return [];
-        }
-
-        $normalized = [];
-
-        foreach ($json as $key => $value) {
-            $normalized[is_string($key) ? lcfirst($key) : $key] = $value;
-        }
-
-        return $normalized;
+        return array_is_list($json) ? $json : [];
     }
 
     /**

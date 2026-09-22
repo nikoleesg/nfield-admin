@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Data\Surveys;
 
 use Carbon\Carbon;
-use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
 /**
@@ -19,7 +17,6 @@ use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
  * Mirrors the API schema NfieldPublicApi.Models.Surveys.SurveyDataRequestModel:
  * property names are camelCase on the wire; snake_case input keys are also accepted.
  */
-#[MapInputName(SnakeCaseMapper::class)]
 final class SurveyDataRequestModel extends Data
 {
     private const DATE_FORMATS = [DATE_ATOM, 'Y-m-d\TH:i:s', 'Y-m-d H:i:s', '!Y-m-d'];

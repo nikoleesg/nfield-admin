@@ -25,6 +25,22 @@ class HttpClient implements HttpClientInterface
         '/v2/token/refresh',
     ];
 
+    /**
+     * Paths whose response keys must be left exactly as the API returned them.
+     *
+     * Response keys are normalized to camelCase everywhere else (see
+     * {@see ResponseKeyNormalizer}), which would corrupt any response that is a
+     * dictionary keyed by user data. An audit of all 282 v2 operations found
+     * exactly one such response: `GET /v2/roles`, a map of role name to
+     * permissions. It is listed here ahead of being implemented so the
+     * normalization cannot silently mangle it later.
+     *
+     * @var list<string> case-insensitive regular expressions matched against the request URI
+     */
+    private array $rawResponsePaths = [
+        '#^/?v2/roles$#i',
+    ];
+
     public function __construct(private Factory $factory)
     {
         $this->baseUrl = config('nfield-admin.base_url');
@@ -45,32 +61,32 @@ class HttpClient implements HttpClientInterface
 
     public function get(string $uri, array $query = []): Response
     {
-        return $this->request(fn () => $this->getPendingRequest($uri)->get($uri, $query));
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)->get($uri, $query));
     }
 
     public function post(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->getPendingRequest($uri)->post($uri, $data));
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)->post($uri, $data));
     }
 
     public function patch(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->getPendingRequest($uri)->patch($uri, $data));
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)->patch($uri, $data));
     }
 
     public function put(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->getPendingRequest($uri)->put($uri, $data));
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)->put($uri, $data));
     }
 
     public function delete(string $uri, array $data = []): Response
     {
-        return $this->request(fn () => $this->getPendingRequest($uri)->delete($uri, $data));
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)->delete($uri, $data));
     }
 
     public function postRaw(string $uri, string $body, string $contentType): Response
     {
-        return $this->request(function () use ($uri, $body, $contentType) {
+        return $this->request($uri, function () use ($uri, $body, $contentType) {
             $request = $this->factory
                 ->baseUrl($this->baseUrl)
                 ->withBody($body, $contentType);
@@ -85,7 +101,7 @@ class HttpClient implements HttpClientInterface
 
     public function postMultipart(string $uri, string $name, string $contents, string $filename): Response
     {
-        return $this->request(function () use ($uri, $name, $contents, $filename) {
+        return $this->request($uri, function () use ($uri, $name, $contents, $filename) {
             $request = $this->factory
                 ->baseUrl($this->baseUrl)
                 ->attach($name, $contents, $filename);
@@ -98,14 +114,16 @@ class HttpClient implements HttpClientInterface
         });
     }
 
-    private function request(callable $call, bool $retry = true): Response
+    private function request(string $uri, callable $call, bool $retry = true): Response
     {
         try {
             $response = $call();
 
             $response->throw();
 
-            return $response;
+            return $this->shouldNormalize($uri)
+                ? NormalizedResponse::wrap($response)
+                : $response;
 
         } catch (RequestException $exception) {
             $response = $exception->response;
@@ -115,7 +133,7 @@ class HttpClient implements HttpClientInterface
                 if ($retry) {
                     $this->forgetToken();
 
-                    return $this->request($call, false);
+                    return $this->request($uri, $call, false);
                 }
                 throw new AuthenticationException($exception->getMessage(), $status, $response, $exception);
             }
@@ -135,6 +153,20 @@ class HttpClient implements HttpClientInterface
                 $exception
             );
         }
+    }
+
+    /**
+     * Whether the decoded response for this URI should have its keys normalized.
+     */
+    private function shouldNormalize(string $uri): bool
+    {
+        foreach ($this->rawResponsePaths as $pattern) {
+            if (preg_match($pattern, $uri) === 1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function token(): string
@@ -184,9 +216,9 @@ class HttpClient implements HttpClientInterface
                 $data = $response->json();
 
                 return [
-                    'accessToken' => $data['accessToken'] ?? $data['AccessToken'] ?? '',
-                    'refreshToken' => $data['refreshToken'] ?? $data['RefreshToken'] ?? '',
-                    'expiresIn' => $data['expiresIn'] ?? $data['ExpiresIn'] ?? 3600,
+                    'accessToken' => $data['accessToken'] ?? '',
+                    'refreshToken' => $data['refreshToken'] ?? '',
+                    'expiresIn' => $data['expiresIn'] ?? 3600,
                 ];
             } catch (\Exception $e) {
                 // Ignore and fall back to normal token
@@ -199,9 +231,9 @@ class HttpClient implements HttpClientInterface
         $data = $response->json();
 
         return [
-            'accessToken' => $data['accessToken'] ?? $data['AccessToken'] ?? '',
-            'refreshToken' => $data['refreshToken'] ?? $data['RefreshToken'] ?? '',
-            'expiresIn' => $data['expiresIn'] ?? $data['ExpiresIn'] ?? 3600,
+            'accessToken' => $data['accessToken'] ?? '',
+            'refreshToken' => $data['refreshToken'] ?? '',
+            'expiresIn' => $data['expiresIn'] ?? 3600,
         ];
     }
 

@@ -36,9 +36,9 @@ it('creates a survey sending camelCase keys', function () {
         }))
         ->once()
         ->andReturn([
-            'SurveyId' => 'test-id',
-            'SurveyName' => 'Test Survey',
-            'SurveyType' => 'Capi',
+            'surveyId' => 'test-id',
+            'surveyName' => 'Test Survey',
+            'surveyType' => 'Capi',
         ]);
 
     $result = $service->createSurvey($createModel);

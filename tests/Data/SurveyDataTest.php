@@ -10,21 +10,21 @@ use Nikoleesg\NfieldAdmin\Enums\SurveyTypeEnum;
 it('creates a basic survey from name and channel enum', function () {
     $survey = SurveyData::fromBasic('Test Survey', ChannelEnum::CAPI);
 
-    expect($survey->survey_name)->toBe('Test Survey')
-        ->and($survey->survey_type)->toBe(SurveyTypeEnum::FreeIntercept)
-        ->and($survey->survey_state)->toBe(SurveyStateEnum::UnderConstruction)
-        ->and($survey->survey_group_id)->toBe(1)
-        ->and($survey->is_blueprint)->toBeFalse();
+    expect($survey->surveyName)->toBe('Test Survey')
+        ->and($survey->surveyType)->toBe(SurveyTypeEnum::FreeIntercept)
+        ->and($survey->surveyState)->toBe(SurveyStateEnum::UnderConstruction)
+        ->and($survey->surveyGroupId)->toBe(1)
+        ->and($survey->isBlueprint)->toBeFalse();
 });
 
 it('creates a basic survey from name and string channel', function () {
     $survey = SurveyData::fromBasic('Test Survey', 'Online');
 
-    expect($survey->survey_type)->toBe(SurveyTypeEnum::Online);
+    expect($survey->surveyType)->toBe(SurveyTypeEnum::Online);
 });
 
 it('defaults to online if invalid string channel is provided', function () {
     $survey = SurveyData::fromBasic('Test Survey', 'Invalid');
 
-    expect($survey->survey_type)->toBe(SurveyTypeEnum::Online);
+    expect($survey->surveyType)->toBe(SurveyTypeEnum::Online);
 });

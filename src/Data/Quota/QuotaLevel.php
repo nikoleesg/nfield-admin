@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Data\Quota;
 
-use Spatie\LaravelData\Attributes\MapInputName;
-use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Concerns\WithDeprecatedCollectionMethod;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
-#[MapInputName(StudlyCaseMapper::class)]
-#[MapOutputName(StudlyCaseMapper::class)]
 class QuotaLevel extends Data
 {
     use WithDeprecatedCollectionMethod;

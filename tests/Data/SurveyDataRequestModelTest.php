@@ -27,11 +27,11 @@ it('accepts camelCase input keys', function () {
         ->and($model->includeTestData)->toBeTrue();
 });
 
-it('accepts snake_case input keys', function () {
+it('ignores snake_case input keys, camelCase is the only convention', function () {
     $model = SurveyDataRequestModel::from(['file_name' => 'export', 'include_test_data' => true]);
 
-    expect($model->fileName)->toBe('export')
-        ->and($model->includeTestData)->toBeTrue();
+    expect($model->fileName)->toBeNull()
+        ->and($model->includeTestData)->toBeFalse();
 });
 
 it('keeps boolean defaults when keys are omitted from input', function () {

@@ -6,16 +6,13 @@ namespace Nikoleesg\NfieldAdmin\Data\BackgroundActivities;
 
 use Carbon\Carbon;
 use Nikoleesg\NfieldAdmin\Enums\ActivityStatusEnum;
-use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
-#[MapInputName(StudlyCaseMapper::class)]
 class BackgroundActivityResponseModel extends Data
 {
     public function __construct(

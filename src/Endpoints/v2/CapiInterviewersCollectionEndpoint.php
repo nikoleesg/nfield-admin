@@ -6,6 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Services\Http\ResponseKeyNormalizer;
 
 final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements CapiInterviewersCollectionEndpointInterface
 {
@@ -21,7 +22,7 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
     {
         $uri = $this->basePath();
 
-        return $this->normalizeListResponse($this->httpClient->get($uri)->json());
+        return $this->unwrapList($this->httpClient->get($uri)->json());
     }
 
     /**
@@ -31,7 +32,7 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
     {
         $uri = $this->basePath();
 
-        return $this->normalizeListResponse($this->httpClient->get($uri, $data)->json());
+        return $this->unwrapList($this->httpClient->get($uri, $data)->json());
     }
 
     /**
@@ -41,9 +42,7 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
     {
         $uri = $this->basePath();
 
-        return $this->normalizeItemResponse(
-            $this->httpClient->post($uri, $data->toArray())->json()
-        );
+        return $this->httpClient->post($uri, $data->toArray())->json();
     }
 
     /**
@@ -53,40 +52,25 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
     {
         $uri = $this->actionPath("getByClientId/{$clientInterviewerId}");
 
-        return $this->normalizeItemResponse($this->httpClient->get($uri)->json());
+        return $this->httpClient->get($uri)->json();
     }
 
-    private function normalizeListResponse(mixed $json): array
+    /**
+     * Unwrap the OData `{"value": [...]}` envelope some list responses use.
+     *
+     * Key casing is already normalized at the HTTP boundary (see
+     * {@see ResponseKeyNormalizer}).
+     */
+    private function unwrapList(mixed $json): array
     {
         if (! is_array($json)) {
             return [];
         }
 
-        $items = $json;
-
-        if (! array_is_list($items) && isset($items['value']) && is_array($items['value'])) {
-            $items = $items['value'];
+        if (! array_is_list($json) && isset($json['value']) && is_array($json['value'])) {
+            $json = $json['value'];
         }
 
-        if (! is_array($items) || ! array_is_list($items)) {
-            return [];
-        }
-
-        return array_map([$this, 'normalizeItemResponse'], $items);
-    }
-
-    private function normalizeItemResponse(mixed $json): array
-    {
-        if (! is_array($json)) {
-            return [];
-        }
-
-        $normalized = [];
-
-        foreach ($json as $key => $value) {
-            $normalized[is_string($key) ? lcfirst($key) : $key] = $value;
-        }
-
-        return $normalized;
+        return array_is_list($json) ? $json : [];
     }
 }

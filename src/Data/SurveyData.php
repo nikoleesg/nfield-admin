@@ -8,31 +8,28 @@ use Illuminate\Support\Str;
 use Nikoleesg\NfieldAdmin\Enums\ChannelEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyTypeEnum;
-use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Concerns\WithDeprecatedCollectionMethod;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Mappers\StudlyCaseMapper;
 
-#[MapInputName(StudlyCaseMapper::class)]
 class SurveyData extends Data
 {
     use WithDeprecatedCollectionMethod;
 
     public function __construct(
-        public ?string $client_name,
+        public ?string $clientName,
         #[WithCast(EnumCast::class)]
-        public SurveyTypeEnum $survey_type,
+        public SurveyTypeEnum $surveyType,
         public ?string $description,
-        public ?string $questionnaire_md5,
-        public ?string $interviewer_instruction,
+        public ?string $questionnaireMd5,
+        public ?string $interviewerInstruction,
         #[WithCast(EnumCast::class)]
-        public ?SurveyStateEnum $survey_state,
-        public ?int $survey_group_id,
-        public ?bool $is_blueprint,
-        public ?string $survey_id,
-        public string $survey_name
+        public ?SurveyStateEnum $surveyState,
+        public ?int $surveyGroupId,
+        public ?bool $isBlueprint,
+        public ?string $surveyId,
+        public string $surveyName
     ) {}
 
     public static function fromBasic(string $surveyName, ChannelEnum|string $channel = ChannelEnum::Online): self
@@ -47,16 +44,16 @@ class SurveyData extends Data
         };
 
         return new self(
-            client_name: null,
-            survey_type: $surveyType,
+            clientName: null,
+            surveyType: $surveyType,
             description: null,
-            questionnaire_md5: null,
-            interviewer_instruction: null,
-            survey_state: SurveyStateEnum::UnderConstruction,
-            survey_group_id: 1,
-            is_blueprint: false,
-            survey_id: null,
-            survey_name: $surveyName
+            questionnaireMd5: null,
+            interviewerInstruction: null,
+            surveyState: SurveyStateEnum::UnderConstruction,
+            surveyGroupId: 1,
+            isBlueprint: false,
+            surveyId: null,
+            surveyName: $surveyName
         );
     }
 }
