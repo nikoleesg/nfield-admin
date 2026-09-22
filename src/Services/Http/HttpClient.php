@@ -147,6 +147,7 @@ class HttpClient implements HttpClientInterface
 
         $cacheKeyPrefix = config('nfield-admin.cache.prefix', 'nfield_');
         $cacheKey = $cacheKeyPrefix.'access_token';
+        $refreshCacheKey = $cacheKeyPrefix.'refresh_token';
 
         $cached = Cache::store('redis')->get($cacheKey);
 
@@ -158,10 +159,13 @@ class HttpClient implements HttpClientInterface
 
         $expiresIn = $tokenData['expiresIn'] ?? 3600;
         $maxTtl = config('nfield-admin.cache.ttl', 600);
-
         $ttl = min(max($expiresIn - 30, 0), $maxTtl);
 
-        Cache::store('redis')->put($cacheKey, $tokenData, $ttl);
+        Cache::store('redis')->put($cacheKey, ['accessToken' => $tokenData['accessToken']], $ttl);
+
+        if (! empty($tokenData['refreshToken'])) {
+            Cache::store('redis')->put($refreshCacheKey, $tokenData['refreshToken'], 60 * 60 * 24 * 14); // 14 days
+        }
 
         return $tokenData['accessToken'];
     }
@@ -171,17 +175,17 @@ class HttpClient implements HttpClientInterface
         $shouldCache = config('nfield-admin.cache.enabled', true);
         $isRedis = config('cache.default') === 'redis';
         $cacheKeyPrefix = config('nfield-admin.cache.prefix', 'nfield_');
-        $cacheKey = $cacheKeyPrefix.'access_token';
+        $refreshCacheKey = $cacheKeyPrefix.'refresh_token';
 
-        $cached = null;
+        $refreshToken = null;
         if ($shouldCache && $isRedis) {
-            $cached = Cache::store('redis')->get($cacheKey);
+            $refreshToken = Cache::store('redis')->get($refreshCacheKey);
         }
 
-        if ($cached && isset($cached['refreshToken'])) {
+        if ($refreshToken) {
             try {
                 $response = $this->post('/v2/token/refresh', [
-                    'refreshToken' => $cached['refreshToken'],
+                    'refreshToken' => $refreshToken,
                 ]);
                 $response->throw();
 
@@ -217,7 +221,10 @@ class HttpClient implements HttpClientInterface
         if ($shouldCache && $isRedis) {
             $cacheKeyPrefix = config('nfield-admin.cache.prefix', 'nfield_');
             $cacheKey = $cacheKeyPrefix.'access_token';
+            $refreshCacheKey = $cacheKeyPrefix.'refresh_token';
+
             Cache::store('redis')->forget($cacheKey);
+            Cache::store('redis')->forget($refreshCacheKey);
         }
     }
 
