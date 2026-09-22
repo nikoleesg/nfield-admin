@@ -24,10 +24,10 @@ interface SamplingPointEndpointInterface
     /**
      * Activate a spare sampling point so it can be assigned.
      */
-    public function activate(string $surveyId, string $samplingPointId): void;
+    public function activate(string $surveyId, string $samplingPointId, array $activateRequestModel = []): array;
 
     /**
      * Replaces an active sampling point with a spare one.
      */
-    public function replace(string $surveyId, string $samplingPointId): void;
+    public function replace(string $surveyId, string $samplingPointId, array $replaceRequestModel): array;
 }

@@ -37,8 +37,10 @@ final class SamplingPointCollectionEndpoint extends BaseEndpoint implements Samp
     /**
      * Activated a list of spare sampling points so they can be assigned.
      */
-    public function batchActivate(string $surveyId, array $samplingPointIds): void
+    public function batchActivate(string $surveyId, array $samplingPointIds): array
     {
-        // TODO: Implement batchActivate() method.
+        $uri = $this->resourceActionPath($surveyId, 'activateSamplingpoints');
+
+        return $this->httpClient->post($uri, ['samplingPointIds' => $samplingPointIds])->json();
     }
 }

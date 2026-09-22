@@ -31,18 +31,22 @@ final class SamplingPointEndpoint extends BaseEndpoint implements SamplingPointE
 
     public function update(string $surveyId, string $samplingPointId, array $samplingPointUpdateRequestModel): array
     {
-        // TODO: Implement update() method.
+        $uri = $this->subResourceItemPath($surveyId, 'samplingPoints', $samplingPointId);
 
-        return [];
+        return $this->httpClient->patch($uri, $samplingPointUpdateRequestModel)->json();
     }
 
-    public function activate(string $surveyId, string $samplingPointId): void
+    public function activate(string $surveyId, string $samplingPointId, array $activateRequestModel = []): array
     {
-        // TODO: Implement activate() method.
+        $uri = $this->subResourceItemActionPath($surveyId, 'samplingPoints', $samplingPointId, 'activate');
+
+        return $this->httpClient->patch($uri, $activateRequestModel)->json();
     }
 
-    public function replace(string $surveyId, string $samplingPointId): void
+    public function replace(string $surveyId, string $samplingPointId, array $replaceRequestModel): array
     {
-        // TODO: Implement replace() method.
+        $uri = $this->subResourceItemActionPath($surveyId, 'samplingPoints', $samplingPointId, 'replace');
+
+        return $this->httpClient->patch($uri, $replaceRequestModel)->json();
     }
 }

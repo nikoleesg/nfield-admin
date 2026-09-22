@@ -53,14 +53,14 @@ class SamplingPointResource
         return $this->samplingPointEndpoint->update($this->surveyId, $this->samplingPointId, $data);
     }
 
-    public function activateSamplingPoint(): void
+    public function activateSamplingPoint(array $data = []): array
     {
-        // TODO
+        return $this->samplingPointEndpoint->activate($this->surveyId, $this->samplingPointId, $data);
     }
 
-    public function replaceSamplingPoint(array $data = []): void
+    public function replaceSamplingPoint(array $data): array
     {
-        // TODO
+        return $this->samplingPointEndpoint->replace($this->surveyId, $this->samplingPointId, $data);
     }
 
     public function addresses(): SamplingPointAddressService

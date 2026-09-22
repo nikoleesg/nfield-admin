@@ -52,7 +52,10 @@ class SurveySampleService
         return SampleUploadStatus::from($response);
     }
 
-    public function blockSampleData(): void {}
+    public function blockSampleData(array $sampleFilterModel): array
+    {
+        return $this->surveySampleCollectionEndpoint->block($this->surveyId, $sampleFilterModel);
+    }
 
     /**
      * Create a survey sample (Online)
@@ -64,10 +67,15 @@ class SurveySampleService
         return collect($response);
     }
 
-    // TODO:
-    public function resetSampleData(): void {}
+    public function resetSampleData(array $sampleFilterModel): array
+    {
+        return $this->surveySampleCollectionEndpoint->reset($this->surveyId, $sampleFilterModel);
+    }
 
-    public function clearSampleDataColumns(): void {}
+    public function clearSampleDataColumns(array $clearSurveySampleModel): array
+    {
+        return $this->surveySampleCollectionEndpoint->clear($this->surveyId, $clearSurveySampleModel);
+    }
 
     public function requestSampleDownload(?string $fileName = null): array
     {

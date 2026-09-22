@@ -24,5 +24,5 @@ interface SamplingPointCollectionEndpointInterface
     /**
      * Activated a list of spare sampling points so they can be assigned.
      */
-    public function batchActivate(string $surveyId, array $samplingPointIds): void;
+    public function batchActivate(string $surveyId, array $samplingPointIds): array;
 }
