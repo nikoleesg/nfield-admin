@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services\Http;
 
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
@@ -138,18 +139,15 @@ class HttpClient implements HttpClientInterface
 
     private function token(): string
     {
-        $shouldCache = config('nfield-admin.cache.enabled', true);
-        $isRedis = config('cache.default') === 'redis';
+        $cache = $this->cache();
 
-        if (! $shouldCache || ! $isRedis) {
+        if (! $cache instanceof Repository) {
             return $this->getAccessToken()['accessToken'];
         }
 
-        $cacheKeyPrefix = config('nfield-admin.cache.prefix', 'nfield_');
-        $cacheKey = $cacheKeyPrefix.'access_token';
-        $refreshCacheKey = $cacheKeyPrefix.'refresh_token';
+        $cacheKey = $this->cacheKey('access_token');
 
-        $cached = Cache::store('redis')->get($cacheKey);
+        $cached = $cache->get($cacheKey);
 
         if ($cached && isset($cached['accessToken'])) {
             return $cached['accessToken'];
@@ -161,10 +159,10 @@ class HttpClient implements HttpClientInterface
         $maxTtl = config('nfield-admin.cache.ttl', 600);
         $ttl = min(max($expiresIn - 30, 0), $maxTtl);
 
-        Cache::store('redis')->put($cacheKey, ['accessToken' => $tokenData['accessToken']], $ttl);
+        $cache->put($cacheKey, ['accessToken' => $tokenData['accessToken']], $ttl);
 
         if (! empty($tokenData['refreshToken'])) {
-            Cache::store('redis')->put($refreshCacheKey, $tokenData['refreshToken'], 60 * 60 * 24 * 14); // 14 days
+            $cache->put($this->cacheKey('refresh_token'), $tokenData['refreshToken'], 60 * 60 * 24 * 14); // 14 days
         }
 
         return $tokenData['accessToken'];
@@ -172,15 +170,9 @@ class HttpClient implements HttpClientInterface
 
     private function getAccessToken(): array
     {
-        $shouldCache = config('nfield-admin.cache.enabled', true);
-        $isRedis = config('cache.default') === 'redis';
-        $cacheKeyPrefix = config('nfield-admin.cache.prefix', 'nfield_');
-        $refreshCacheKey = $cacheKeyPrefix.'refresh_token';
+        $cache = $this->cache();
 
-        $refreshToken = null;
-        if ($shouldCache && $isRedis) {
-            $refreshToken = Cache::store('redis')->get($refreshCacheKey);
-        }
+        $refreshToken = $cache?->get($this->cacheKey('refresh_token'));
 
         if ($refreshToken) {
             try {
@@ -215,17 +207,30 @@ class HttpClient implements HttpClientInterface
 
     private function forgetToken(): void
     {
-        $shouldCache = config('nfield-admin.cache.enabled', true);
-        $isRedis = config('cache.default') === 'redis';
+        $cache = $this->cache();
 
-        if ($shouldCache && $isRedis) {
-            $cacheKeyPrefix = config('nfield-admin.cache.prefix', 'nfield_');
-            $cacheKey = $cacheKeyPrefix.'access_token';
-            $refreshCacheKey = $cacheKeyPrefix.'refresh_token';
+        $cache?->forget($this->cacheKey('access_token'));
+        $cache?->forget($this->cacheKey('refresh_token'));
+    }
 
-            Cache::store('redis')->forget($cacheKey);
-            Cache::store('redis')->forget($refreshCacheKey);
+    /**
+     * The cache repository used for tokens, or null when caching is disabled.
+     *
+     * A null store name resolves to the host application's default store — any
+     * PSR-16 compatible driver can hold a token string.
+     */
+    private function cache(): ?Repository
+    {
+        if (! config('nfield-admin.cache.enabled', true)) {
+            return null;
         }
+
+        return Cache::store(config('nfield-admin.cache.store'));
+    }
+
+    private function cacheKey(string $name): string
+    {
+        return config('nfield-admin.cache.prefix', 'nfield_').$name;
     }
 
     private function getCredentials(): array

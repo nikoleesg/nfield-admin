@@ -33,7 +33,14 @@ return [
     |
     */
     'cache' => [
-        'enabled' => env('NFIELD_CACHE_KEY', true),
+        'enabled' => env('NFIELD_CACHE_ENABLED', true),
+
+        /*
+        | The cache store used to hold tokens. Null uses the application's
+        | default store; any driver works for a token string.
+        */
+        'store' => env('NFIELD_CACHE_STORE'),
+
         'prefix' => env('NFIELD_CACHE_KEY_PREFIX', 'nfield_'),
         'ttl' => 60 * 10,
     ],

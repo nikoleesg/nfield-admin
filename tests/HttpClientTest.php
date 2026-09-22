@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
 
@@ -51,4 +52,59 @@ it('works with Http::fake', function () {
         return str_ends_with($request->url(), '/v2/test')
             && $request->header('Authorization')[0] === 'Bearer fake-token';
     });
+});
+
+it('caches the access token on the default store, whatever the driver', function () {
+    config()->set('cache.default', 'array');
+    config()->set('nfield-admin.cache.enabled', true);
+    config()->set('nfield-admin.cache.store', null);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'cached-token', 'ExpiresIn' => 3600], 200),
+        '*/v2/test' => Http::response(['success' => true], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $client->get('/v2/test');
+    $client->get('/v2/test');
+
+    expect(Cache::get('nfield_access_token'))->toBe(['accessToken' => 'cached-token']);
+
+    Http::assertSentCount(3); // one token request, two API calls
+});
+
+it('honours an explicitly configured cache store', function () {
+    config()->set('cache.default', 'null');
+    config()->set('nfield-admin.cache.store', 'array');
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'store-token', 'ExpiresIn' => 3600], 200),
+        '*/v2/test' => Http::response(['success' => true], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $client->get('/v2/test');
+    $client->get('/v2/test');
+
+    expect(Cache::store('array')->get('nfield_access_token'))->toBe(['accessToken' => 'store-token']);
+
+    Http::assertSentCount(3);
+});
+
+it('does not cache when caching is disabled', function () {
+    config()->set('cache.default', 'array');
+    config()->set('nfield-admin.cache.enabled', false);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'uncached-token', 'ExpiresIn' => 3600], 200),
+        '*/v2/test' => Http::response(['success' => true], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $client->get('/v2/test');
+    $client->get('/v2/test');
+
+    expect(Cache::store('array')->get('nfield_access_token'))->toBeNull();
+
+    Http::assertSentCount(4); // a token request before each API call
 });
