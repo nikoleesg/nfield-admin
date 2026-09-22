@@ -8,18 +8,10 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingMethodEndpointInterf
 
 class SurveySamplingMethodService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveySamplingMethodEndpointInterface $surveySamplingMethodEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function getSamplingMethod(): array
     {

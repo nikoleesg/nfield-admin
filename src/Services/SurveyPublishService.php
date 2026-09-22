@@ -12,18 +12,10 @@ use Nikoleesg\NfieldAdmin\Enums\SurveyPublishForceUpgradeEnum;
 
 class SurveyPublishService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveyPublishEndpointInterface $surveyPublishEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function getState(): SurveyPublishStateModel
     {

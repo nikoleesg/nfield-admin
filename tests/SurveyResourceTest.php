@@ -17,10 +17,6 @@ it('can request data download', function () {
     $resource = (new SurveyResource($endpoint))->setSurveyId('survey-1');
 
     $surveyDataService = Mockery::mock(SurveyDataService::class);
-    $surveyDataService->shouldReceive('setSurveyId')
-        ->with('survey-1')
-        ->once()
-        ->andReturnSelf();
 
     $requestModel = new SurveyDataRequestModel;
 
@@ -32,7 +28,7 @@ it('can request data download', function () {
         ->once()
         ->andReturn($status);
 
-    app()->instance(SurveyDataService::class, $surveyDataService);
+    app()->bind(SurveyDataService::class, fn () => $surveyDataService);
 
     $result = $resource->requestDataDownload($requestModel);
 

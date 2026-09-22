@@ -10,18 +10,10 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyPublicIdModel;
 
 class SurveyPublicIdsService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveyPublicIdsEndpointInterface $surveyPublicIdsEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function list(): Collection
     {

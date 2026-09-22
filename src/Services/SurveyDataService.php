@@ -10,18 +10,10 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 
 class SurveyDataService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveyDataEndpointInterface $surveyDataEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function downloadInterviewData(string $interviewId, string $fileName): array
     {

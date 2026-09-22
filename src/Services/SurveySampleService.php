@@ -14,19 +14,11 @@ use RuntimeException;
 
 class SurveySampleService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     /**
      * Download and parse sample data from the survey

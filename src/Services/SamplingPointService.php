@@ -10,19 +10,11 @@ use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 
 class SamplingPointService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SamplingPointCollectionEndpointInterface $samplingPointCollectionEndpoint,
-        protected SamplingPointEndpointInterface $samplingPointEndpoint
+        protected SamplingPointEndpointInterface $samplingPointEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function listSamplingPoints(): array
     {

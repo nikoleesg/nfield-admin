@@ -24,27 +24,10 @@ use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 
 class SurveyResource
 {
+    /** @var array<class-string, object> */
+    protected array $resolvedServices = [];
+
     protected ?string $surveyId = null;
-
-    protected ?SamplingPointService $samplingPointService = null;
-
-    protected ?SurveyAssignmentService $surveyAssignmentService = null;
-
-    protected ?SurveyFieldworkService $surveyFieldworkService = null;
-
-    protected ?SurveyDataService $surveyDataService = null;
-
-    protected ?SurveySampleService $surveySampleService = null;
-
-    protected ?SurveySamplingMethodService $surveySamplingMethodService = null;
-
-    protected ?SurveyQuotaService $surveyQuotaService = null;
-
-    protected ?SurveySettingsService $surveySettingsService = null;
-
-    protected ?SurveyPublishService $surveyPublishService = null;
-
-    protected ?SurveyPublicIdsService $surveyPublicIdsService = null;
 
     public function __construct(
         private readonly SurveyEndpointInterface $surveyEndpoint
@@ -53,6 +36,7 @@ class SurveyResource
     public function setSurveyId(string $surveyId): static
     {
         $this->surveyId = $surveyId;
+        $this->resolvedServices = [];
 
         return $this;
     }
@@ -144,14 +128,23 @@ class SurveyResource
      */
     protected function resolveService(string $serviceClass): mixed
     {
-        // Lazy load with property caching
-        $property = lcfirst(class_basename($serviceClass));
-
-        $service = $this->$property ??= app($serviceClass);
-
-        if ($this->surveyId !== null) {
-            $service->setSurveyId($this->surveyId);
+        if (isset($this->resolvedServices[$serviceClass])) {
+            return $this->resolvedServices[$serviceClass];
         }
+
+        $parameters = [];
+
+        if (property_exists($this, 'surveyId') && $this->surveyId !== null) {
+            $parameters['surveyId'] = $this->surveyId;
+        }
+
+        if (property_exists($this, 'samplingPointId') && $this->samplingPointId !== null) {
+            $parameters['samplingPointId'] = $this->samplingPointId;
+        }
+
+        $service = app($serviceClass, $parameters);
+
+        $this->resolvedServices[$serviceClass] = $service;
 
         return $service;
     }

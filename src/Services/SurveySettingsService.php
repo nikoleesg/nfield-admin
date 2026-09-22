@@ -13,18 +13,10 @@ use Spatie\LaravelData\DataCollection;
 
 class SurveySettingsService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveySettingsEndpointInterface $surveySettingsEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function list(): DataCollection
     {

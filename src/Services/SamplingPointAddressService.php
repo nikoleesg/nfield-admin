@@ -11,28 +11,12 @@ use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
 
 class SamplingPointAddressService
 {
-    protected ?string $surveyId = null;
-
-    protected ?string $samplingPointId = null;
-
     public function __construct(
         protected SamplingPointAddressCollectionEndpointInterface $samplingPointCollectionEndpoint,
-        protected SamplingPointAddressEndpointInterface $samplingPointAddressEndpoint
+        protected SamplingPointAddressEndpointInterface $samplingPointAddressEndpoint,
+        protected readonly string $surveyId,
+        protected readonly string $samplingPointId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
-
-    public function setSamplingPointId(string $samplingPointId): self
-    {
-        $this->samplingPointId = $samplingPointId;
-
-        return $this;
-    }
 
     public function listAddresses(): array
     {

@@ -12,18 +12,10 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota\SurveysQuotaFrameResponseMode
 
 class SurveyQuotaService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
-        protected SurveyQuotaEndpointInterface $surveyQuotaEndpoint
+        protected SurveyQuotaEndpointInterface $surveyQuotaEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     // ==============================
     // Quota Frame

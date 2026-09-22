@@ -8,18 +8,10 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
 
 class SurveyFieldworkService
 {
-    protected ?string $surveyId = null;
-
     public function __construct(
         protected SurveyFieldworkEndpointInterface $surveyFieldworkEndpoint,
+        protected readonly string $surveyId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
 
     public function start(): void
     {

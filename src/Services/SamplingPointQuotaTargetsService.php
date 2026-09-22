@@ -8,27 +8,11 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointI
 
 class SamplingPointQuotaTargetsService
 {
-    protected ?string $surveyId = null;
-
-    protected ?string $samplingPointId = null;
-
     public function __construct(
-        protected SamplingPointQuotaTargetsEndpointInterface $samplingPointQuotaTargetsEndpoint
+        protected SamplingPointQuotaTargetsEndpointInterface $samplingPointQuotaTargetsEndpoint,
+        protected readonly string $surveyId,
+        protected readonly string $samplingPointId,
     ) {}
-
-    public function setSurveyId(string $surveyId): self
-    {
-        $this->surveyId = $surveyId;
-
-        return $this;
-    }
-
-    public function setSamplingPointId(string $samplingPointId): self
-    {
-        $this->samplingPointId = $samplingPointId;
-
-        return $this;
-    }
 
     public function listQuotaTargets(): array
     {
