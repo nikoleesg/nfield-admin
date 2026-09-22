@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Nikoleesg\NfieldAdmin\Endpoints\v1;
+namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySettingsEndpointInterface;
-use Nikoleesg\NfieldAdmin\Endpoints\v2\BaseEndpoint;
 
 final class SurveySettingsEndpoint extends BaseEndpoint implements SurveySettingsEndpointInterface
 {
     protected function buildPath(): string
     {
-        return '/v1/surveys';
+        return '/v2/surveys';
     }
 
     public function listSettings(string $surveyId): array

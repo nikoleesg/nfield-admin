@@ -6,8 +6,8 @@ namespace Nikoleesg\NfieldAdmin;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints as Contracts;
 use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
-use Nikoleesg\NfieldAdmin\Endpoints\v1\SurveySettingsEndpoint;
 use Nikoleesg\NfieldAdmin\Endpoints\v2 as Endpoints;
+use Nikoleesg\NfieldAdmin\Endpoints\v2\SurveySettingsEndpoint;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Spatie\LaravelPackageTools\Package;
