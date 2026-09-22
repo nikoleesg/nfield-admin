@@ -23,26 +23,33 @@ class SurveyService
         private readonly SurveyBlueprintsEndpointInterface $surveyBlueprintsEndpoint,
     ) {}
 
+    /** @return Collection<int, SurveyModel> */
     public function listSurveys(): Collection
     {
         return SurveyModel::collect($this->surveyCollectionEndpoint->list(), Collection::class);
     }
 
+    /** @return Collection<int, SurveyModel> */
     public function findSurveys(array $filter): Collection
     {
         return SurveyModel::collect($this->surveyCollectionEndpoint->find($filter), Collection::class);
     }
 
-    public function createSurvey(SurveyCreateModel $surveyModel): SurveyModel
+    public function createSurvey(array|SurveyCreateModel $data): SurveyModel
     {
-        return SurveyModel::from($this->surveyCollectionEndpoint->create($surveyModel->toArray()));
+        $payload = SurveyCreateModel::from($data)->toArray();
+
+        return SurveyModel::from($this->surveyCollectionEndpoint->create($payload));
     }
 
-    public function createSurveyFromBlueprint(SurveyFromBlueprintModel $model): SurveyModel
+    public function createSurveyFromBlueprint(array|SurveyFromBlueprintModel $data): SurveyModel
     {
-        return SurveyModel::from($this->surveyCollectionEndpoint->createFromBlueprint($model->toArray()));
+        $payload = SurveyFromBlueprintModel::from($data)->toArray();
+
+        return SurveyModel::from($this->surveyCollectionEndpoint->createFromBlueprint($payload));
     }
 
+    /** @return Collection<int, SurveyBaseModel> */
     public function findSurveysByRespondent(string $value): Collection
     {
         return SurveyBaseModel::collect($this->surveyCollectionEndpoint->search($value), Collection::class);

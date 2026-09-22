@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointsRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointsResponseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointCreateRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 
 class SamplingPointService
@@ -18,24 +23,42 @@ class SamplingPointService
         protected readonly string $surveyId,
     ) {}
 
-    public function listSamplingPoints(): array
+    /** @return Collection<int, SamplingPointResponseModel> */
+    public function listSamplingPoints(): Collection
     {
-        return $this->samplingPointCollectionEndpoint->find($this->surveyId, []);
+        return $this->findSamplingPoints();
     }
 
-    public function findSamplingPoints(array $data = []): array
+    /** @return Collection<int, SamplingPointResponseModel> */
+    public function findSamplingPoints(array $filter = []): Collection
     {
-        return $this->samplingPointCollectionEndpoint->find($this->surveyId, $data);
+        return SamplingPointResponseModel::collect(
+            $this->samplingPointCollectionEndpoint->find($this->surveyId, $filter),
+            Collection::class
+        );
     }
 
-    public function createSamplingPoint(array $data = []): array
+    public function createSamplingPoint(array|SamplingPointCreateRequestModel $data): SamplingPointResponseModel
     {
-        return $this->samplingPointCollectionEndpoint->create($this->surveyId, $data);
+        $payload = SamplingPointCreateRequestModel::from($data)->toArray();
+
+        return SamplingPointResponseModel::from(
+            $this->samplingPointCollectionEndpoint->create($this->surveyId, $payload)
+        );
     }
 
-    public function activateSamplingPoints(array $samplingPointIds = []): void
+    /**
+     * @param  array<int, string>  $samplingPointIds
+     */
+    public function activateSamplingPoints(array $samplingPointIds = []): ActivateSpareSamplingPointsResponseModel
     {
-        $this->surveyEndpoint->batchActivateSamplingPoints($this->surveyId, $samplingPointIds);
+        $payload = ActivateSpareSamplingPointsRequestModel::from(
+            ['samplingPointIds' => $samplingPointIds]
+        )->toArray();
+
+        return ActivateSpareSamplingPointsResponseModel::from(
+            $this->surveyEndpoint->batchActivateSamplingPoints($this->surveyId, $payload)
+        );
     }
 
     /**
@@ -43,13 +66,9 @@ class SamplingPointService
      */
     public function for(string $samplingPointId): SamplingPointResource
     {
-        $samplingPointResource = new SamplingPointResource($this->samplingPointEndpoint);
-
-        if ($this->surveyId !== null) {
-            $samplingPointResource->setSurveyId($this->surveyId);
-        }
-
-        return $samplingPointResource->setSamplingPointId($samplingPointId);
+        return (new SamplingPointResource($this->samplingPointEndpoint))
+            ->setSurveyId($this->surveyId)
+            ->setSamplingPointId($samplingPointId);
     }
 
     public function forSamplingPoint(string $samplingPointId): SamplingPointResource

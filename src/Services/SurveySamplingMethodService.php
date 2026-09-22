@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingMethodEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingMethodModel;
 
 class SurveySamplingMethodService
 {
@@ -13,13 +14,15 @@ class SurveySamplingMethodService
         protected readonly string $surveyId,
     ) {}
 
-    public function getSamplingMethod(): array
+    public function getSamplingMethod(): SamplingMethodModel
     {
-        return $this->surveySamplingMethodEndpoint->get($this->surveyId);
+        return SamplingMethodModel::from($this->surveySamplingMethodEndpoint->get($this->surveyId));
     }
 
-    public function setSamplingMethod(array $samplingMethodModel): void
+    public function setSamplingMethod(array|SamplingMethodModel $data): void
     {
-        $this->surveySamplingMethodEndpoint->update($this->surveyId, $samplingMethodModel);
+        $payload = SamplingMethodModel::from($data)->toArray();
+
+        $this->surveySamplingMethodEndpoint->update($this->surveyId, $payload);
     }
 }

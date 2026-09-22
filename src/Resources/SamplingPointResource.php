@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointsResponseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
@@ -23,7 +28,7 @@ class SamplingPointResource
         protected SamplingPointEndpointInterface $samplingPointEndpoint
     ) {}
 
-    public function setSurveyId(string $surveyId): SamplingPointResource
+    public function setSurveyId(string $surveyId): static
     {
         $this->surveyId = $surveyId;
         $this->resolvedServices = [];
@@ -31,7 +36,7 @@ class SamplingPointResource
         return $this;
     }
 
-    public function setSamplingPointId(string $samplingPointId): SamplingPointResource
+    public function setSamplingPointId(string $samplingPointId): static
     {
         $this->samplingPointId = $samplingPointId;
         $this->resolvedServices = [];
@@ -49,19 +54,31 @@ class SamplingPointResource
         $this->samplingPointEndpoint->delete($this->surveyId, $this->samplingPointId);
     }
 
-    public function updateSamplingPoint(array $data = []): array
+    public function updateSamplingPoint(array|SamplingPointUpdateRequestModel $data): SamplingPointResponseModel
     {
-        return $this->samplingPointEndpoint->update($this->surveyId, $this->samplingPointId, $data);
+        $payload = SamplingPointUpdateRequestModel::from($data)->toArray();
+
+        return SamplingPointResponseModel::from(
+            $this->samplingPointEndpoint->update($this->surveyId, $this->samplingPointId, $payload)
+        );
     }
 
-    public function activateSamplingPoint(array $data = []): array
+    public function activateSamplingPoint(array|ActivateSpareSamplingPointRequestModel $data = []): ActivateSpareSamplingPointsResponseModel
     {
-        return $this->samplingPointEndpoint->activate($this->surveyId, $this->samplingPointId, $data);
+        $payload = ActivateSpareSamplingPointRequestModel::from($data)->toArray();
+
+        return ActivateSpareSamplingPointsResponseModel::from(
+            $this->samplingPointEndpoint->activate($this->surveyId, $this->samplingPointId, $payload)
+        );
     }
 
-    public function replaceSamplingPoint(array $data): array
+    public function replaceSamplingPoint(array|ReplaceSamplingPointWithSpareRequestModel $data): ReplaceSamplingPointWithSpareResponseModel
     {
-        return $this->samplingPointEndpoint->replace($this->surveyId, $this->samplingPointId, $data);
+        $payload = ReplaceSamplingPointWithSpareRequestModel::from($data)->toArray();
+
+        return ReplaceSamplingPointWithSpareResponseModel::from(
+            $this->samplingPointEndpoint->replace($this->surveyId, $this->samplingPointId, $payload)
+        );
     }
 
     public function addresses(): SamplingPointAddressService

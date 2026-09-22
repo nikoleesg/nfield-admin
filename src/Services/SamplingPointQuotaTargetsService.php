@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaTargetModel;
 
 class SamplingPointQuotaTargetsService
 {
@@ -14,18 +17,28 @@ class SamplingPointQuotaTargetsService
         protected readonly string $samplingPointId,
     ) {}
 
-    public function listQuotaTargets(): array
+    /** @return Collection<int, SamplingPointQuotaTargetModel> */
+    public function listQuotaTargets(): Collection
     {
-        return $this->samplingPointQuotaTargetsEndpoint->list($this->surveyId, $this->samplingPointId);
+        return SamplingPointQuotaTargetModel::collect(
+            $this->samplingPointQuotaTargetsEndpoint->list($this->surveyId, $this->samplingPointId),
+            Collection::class
+        );
     }
 
-    public function getQuotaTargets(string $quotaLevelId): array
+    public function getQuotaTargets(string $quotaLevelId): SamplingPointQuotaTargetModel
     {
-        return $this->samplingPointQuotaTargetsEndpoint->get($this->surveyId, $this->samplingPointId, $quotaLevelId);
+        return SamplingPointQuotaTargetModel::from(
+            $this->samplingPointQuotaTargetsEndpoint->get($this->surveyId, $this->samplingPointId, $quotaLevelId)
+        );
     }
 
-    public function setQuotaTargets(string $quotaLevelId, array $samplingPointQuotaLevelTargetModel): array
+    public function setQuotaTargets(string $quotaLevelId, array|SamplingPointQuotaLevelTargetModel $data): SamplingPointQuotaTargetModel
     {
-        return $this->samplingPointQuotaTargetsEndpoint->update($this->surveyId, $this->samplingPointId, $quotaLevelId, $samplingPointQuotaLevelTargetModel);
+        $payload = SamplingPointQuotaLevelTargetModel::from($data)->toArray();
+
+        return SamplingPointQuotaTargetModel::from(
+            $this->samplingPointQuotaTargetsEndpoint->update($this->surveyId, $this->samplingPointId, $quotaLevelId, $payload)
+        );
     }
 }

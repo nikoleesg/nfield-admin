@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Data\Surveys\SurveyQuota;
 
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
 final class SurveysQuotaTargetsResponseModel extends Data
 {
+    /**
+     * @param  array<int, SurveysQuotaTargetsVariableModel>|null  $variables
+     */
     public function __construct(
-        public ?string $id,
-        public ?int $target,
-        /** @var SurveysQuotaTargetsVariableModel[] */
-        public ?array $variables,
+        public ?string $id = null,
+        public ?int $target = null,
+        public ?int $rootLevelMaxOvershoot = null,
+        #[DataCollectionOf(SurveysQuotaTargetsVariableModel::class)]
+        public ?array $variables = null,
     ) {}
-
 }

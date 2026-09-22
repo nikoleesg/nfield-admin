@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveySettingModel;
 use Nikoleesg\NfieldAdmin\Enums\SurveySettingNameEnum;
-use Spatie\LaravelData\DataCollection;
 
 class SurveySettingsService
 {
@@ -20,11 +20,12 @@ class SurveySettingsService
         protected readonly string $surveyId,
     ) {}
 
-    public function list(): DataCollection
+    /** @return Collection<int, SurveySettingModel> */
+    public function list(): Collection
     {
         $data = $this->surveySettingsEndpoint->listSettings($this->surveyId);
 
-        return SurveySettingModel::collect($data, DataCollection::class);
+        return SurveySettingModel::collect($data, Collection::class);
     }
 
     public function set(string|SurveySettingNameEnum $name, string $value): SurveySettingModel
@@ -46,8 +47,10 @@ class SurveySettingsService
         return SurveyGeneralSettingsModel::from($data);
     }
 
-    public function updateGeneral(SurveyGeneralSettingsUpdateModel $model): void
+    public function updateGeneral(array|SurveyGeneralSettingsUpdateModel $data): void
     {
-        $this->surveyGeneralSettingsEndpoint->updateGeneralSettings($this->surveyId, $model->toArray());
+        $payload = SurveyGeneralSettingsUpdateModel::from($data)->toArray();
+
+        $this->surveyGeneralSettingsEndpoint->updateGeneralSettings($this->surveyId, $payload);
     }
 }

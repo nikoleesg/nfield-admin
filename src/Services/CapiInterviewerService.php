@@ -40,6 +40,7 @@ class CapiInterviewerService
     /**
      * List all CAPI interviewers
      */
+    /** @return Collection<int, CapiInterviewerData> */
     public function listCapiInterviewers(): Collection
     {
         return CapiInterviewerData::collect(
@@ -51,6 +52,7 @@ class CapiInterviewerService
     /**
      * Find CAPI interviewers with filter criteria
      */
+    /** @return Collection<int, CapiInterviewerData> */
     public function findCapiInterviewers(array $filter = []): Collection
     {
         return CapiInterviewerData::collect(
@@ -62,10 +64,12 @@ class CapiInterviewerService
     /**
      * Create a new CAPI interviewer
      */
-    public function createCapiInterviewer(NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function createCapiInterviewer(array|NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
     {
+        $payload = NewCapiInterviewerRequestData::from($data)->toArray();
+
         return CapiInterviewerResponseData::from(
-            $this->capiInterviewersCollectionEndpoint->create($data)
+            $this->capiInterviewersCollectionEndpoint->create($payload)
         );
     }
 
@@ -90,20 +94,24 @@ class CapiInterviewerService
     /**
      * Update (partial) a CAPI interviewer
      */
-    public function updateCapiInterviewer(string $interviewerId, EditCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function updateCapiInterviewer(string $interviewerId, array|EditCapiInterviewerRequestData $data): CapiInterviewerResponseData
     {
+        $payload = EditCapiInterviewerRequestData::from($data)->toArray();
+
         return CapiInterviewerResponseData::from(
-            $this->capiInterviewersEndpoint->update($interviewerId, $data)
+            $this->capiInterviewersEndpoint->update($interviewerId, $payload)
         );
     }
 
     /**
      * Reset a CAPI interviewer's password
      */
-    public function resetPassword(string $interviewerId, ResetCapiInterviewerPasswordRequestData $data): CapiInterviewerResponseData
+    public function resetPassword(string $interviewerId, array|ResetCapiInterviewerPasswordRequestData $data): CapiInterviewerResponseData
     {
+        $payload = ResetCapiInterviewerPasswordRequestData::from($data)->toArray();
+
         return CapiInterviewerResponseData::from(
-            $this->capiInterviewersEndpoint->resetPassword($interviewerId, $data)
+            $this->capiInterviewersEndpoint->resetPassword($interviewerId, $payload)
         );
     }
 
@@ -118,6 +126,7 @@ class CapiInterviewerService
     /**
      * Get assignments for a CAPI interviewer
      */
+    /** @return Collection<int, CapiInterviewerAssignmentData> */
     public function getAssignments(string $interviewerId): Collection
     {
         return CapiInterviewerAssignmentData::collect(
@@ -129,6 +138,7 @@ class CapiInterviewerService
     /**
      * Get offices for a CAPI interviewer
      */
+    /** @return Collection<int, string> */
     public function getOffices(string $interviewerId): Collection
     {
         return collect($this->capiInterviewersOfficesEndpoint->list($interviewerId));

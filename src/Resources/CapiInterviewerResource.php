@@ -53,20 +53,24 @@ class CapiInterviewerResource
     /**
      * Update (partial) the interviewer
      */
-    public function update(EditCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function update(array|EditCapiInterviewerRequestData $data): CapiInterviewerResponseData
     {
+        $payload = EditCapiInterviewerRequestData::from($data)->toArray();
+
         return CapiInterviewerResponseData::from(
-            $this->capiInterviewersEndpoint->update($this->interviewerId, $data)
+            $this->capiInterviewersEndpoint->update($this->interviewerId, $payload)
         );
     }
 
     /**
      * Reset the interviewer's password
      */
-    public function resetPassword(ResetCapiInterviewerPasswordRequestData $data): CapiInterviewerResponseData
+    public function resetPassword(array|ResetCapiInterviewerPasswordRequestData $data): CapiInterviewerResponseData
     {
+        $payload = ResetCapiInterviewerPasswordRequestData::from($data)->toArray();
+
         return CapiInterviewerResponseData::from(
-            $this->capiInterviewersEndpoint->resetPassword($this->interviewerId, $data)
+            $this->capiInterviewersEndpoint->resetPassword($this->interviewerId, $payload)
         );
     }
 
@@ -81,6 +85,7 @@ class CapiInterviewerResource
     /**
      * Get interviewer assignments (surveys/tasks)
      */
+    /** @return Collection<int, CapiInterviewerAssignmentData> */
     public function getAssignments(): Collection
     {
         return CapiInterviewerAssignmentData::collect(
@@ -92,6 +97,7 @@ class CapiInterviewerResource
     /**
      * Get interviewer's office assignments
      */
+    /** @return Collection<int, string> */
     public function getOffices(): Collection
     {
         return collect($this->capiInterviewersOfficesEndpoint->list($this->interviewerId));

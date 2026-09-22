@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAssignmentEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\InterviewerSamplingPointAssignmentModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointInterviewerAssignmentsModel;
 
 class SamplingPointAssignmentService
 {
@@ -14,14 +17,20 @@ class SamplingPointAssignmentService
         protected readonly string $samplingPointId,
     ) {}
 
-    public function listAssignments(): array
+    /** @return Collection<int, InterviewerSamplingPointAssignmentModel> */
+    public function listAssignments(): Collection
     {
-        return $this->samplingPointAssignmentEndpoint->list($this->surveyId, $this->samplingPointId);
+        return InterviewerSamplingPointAssignmentModel::collect(
+            $this->samplingPointAssignmentEndpoint->list($this->surveyId, $this->samplingPointId),
+            Collection::class
+        );
     }
 
-    public function assignInterviewer(string $interviewerId): array
+    public function assignInterviewer(string $interviewerId): SamplingPointInterviewerAssignmentsModel
     {
-        return $this->samplingPointAssignmentEndpoint->assign($this->surveyId, $this->samplingPointId, $interviewerId);
+        return SamplingPointInterviewerAssignmentsModel::from(
+            $this->samplingPointAssignmentEndpoint->assign($this->surveyId, $this->samplingPointId, $interviewerId)
+        );
     }
 
     public function unassignInterviewer(string $interviewerId): void

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
+use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
 
 /**
@@ -137,4 +139,32 @@ it('reads the access token from a real PascalCase token response', function () {
 
     Http::assertSent(fn (Request $request) => ! str_ends_with($request->url(), '/v2/test')
         || $request->header('Authorization')[0] === 'Bearer fake-token');
+});
+
+it('hydrates the fieldwork counts DTO, nested list included', function () {
+    Http::fake([
+        '*/v2/surveys/survey-1/fieldwork/counts' => Http::response([
+            'SurveyId' => 'survey-1',
+            'Successful' => 12,
+            'SuccessfulLast24Hours' => 4,
+            'ScreenedOut' => 3,
+            'DroppedOut' => 1,
+            'Rejected' => 0,
+            'SuccessfulDeleted' => 0,
+            'ScreenedOutDeleted' => 0,
+            'DroppedOutDeleted' => 0,
+            'RejectedDeleted' => 0,
+            'ActiveInterviews' => 2,
+            'ScreenedOutOverview' => [
+                ['ResponseCode' => 21, 'Count' => 3],
+            ],
+        ], 200),
+    ]);
+
+    $counts = app(SurveyFieldworkService::class, ['surveyId' => 'survey-1'])->counts();
+
+    expect($counts)->toBeInstanceOf(SurveyFieldworkCountsResponseModel::class)
+        ->and($counts->surveyId)->toBe('survey-1')
+        ->and($counts->successfulLast24Hours)->toBe(4)
+        ->and($counts->screenedOutOverview[0]->responseCode)->toBe(21);
 });

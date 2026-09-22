@@ -146,7 +146,7 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
 
     $collectionEndpoint
         ->shouldReceive('create')
-        ->with(Mockery::type(NewCapiInterviewerRequestData::class))
+        ->with(Mockery::on(fn ($arg) => is_array($arg) && $arg['userName'] === 'user-1' && $arg['password'] === 'secret'))
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['isSupervisor' => true]));
 
@@ -209,7 +209,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
 
     $endpoint
         ->shouldReceive('update')
-        ->with('int-1', Mockery::type(EditCapiInterviewerRequestData::class))
+        ->with('int-1', Mockery::on(fn ($arg) => is_array($arg) && $arg['firstName'] === 'Jane'))
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['firstName' => 'Jane']));
 
@@ -231,7 +231,7 @@ it('resets password and returns response DTO', function () {
 
     $endpoint
         ->shouldReceive('resetPassword')
-        ->with('int-1', Mockery::type(ResetCapiInterviewerPasswordRequestData::class))
+        ->with('int-1', Mockery::on(fn ($arg) => is_array($arg) && $arg['password'] === 'new-password'))
         ->once()
         ->andReturn(capiInterviewerResponsePayload());
 
@@ -340,13 +340,13 @@ it('provides a fluent resource that proxies to endpoint', function () {
 
     $endpoint
         ->shouldReceive('update')
-        ->with('int-1', Mockery::type(EditCapiInterviewerRequestData::class))
+        ->with('int-1', Mockery::on(fn ($arg) => is_array($arg) && $arg['firstName'] === 'Jane'))
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['firstName' => 'Jane']));
 
     $endpoint
         ->shouldReceive('resetPassword')
-        ->with('int-1', Mockery::type(ResetCapiInterviewerPasswordRequestData::class))
+        ->with('int-1', Mockery::on(fn ($arg) => is_array($arg) && $arg['password'] === 'pw'))
         ->once()
         ->andReturn(capiInterviewerResponsePayload());
 

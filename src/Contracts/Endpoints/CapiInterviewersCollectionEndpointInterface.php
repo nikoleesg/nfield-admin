@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Contracts\Endpoints;
 
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
-
 interface CapiInterviewersCollectionEndpointInterface
 {
     /**
@@ -21,7 +19,7 @@ interface CapiInterviewersCollectionEndpointInterface
     /**
      * Create a new CAPI interviewer
      */
-    public function create(NewCapiInterviewerRequestData $data): array;
+    public function create(array $newCapiInterviewerRequestData): array;
 
     /**
      * Get CAPI interviewer by client interviewer ID

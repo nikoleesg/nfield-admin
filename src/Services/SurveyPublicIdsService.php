@@ -15,6 +15,7 @@ class SurveyPublicIdsService
         protected readonly string $surveyId,
     ) {}
 
+    /** @return Collection<int, SurveyPublicIdModel> */
     public function list(): Collection
     {
         return SurveyPublicIdModel::collect(
@@ -23,12 +24,16 @@ class SurveyPublicIdsService
         );
     }
 
-    public function update(array $models): void
+    /**
+     * @param  iterable<int, array|SurveyPublicIdModel>  $models
+     */
+    public function update(iterable $models): void
     {
-        $payload = array_map(
-            fn (SurveyPublicIdModel $model) => $model->toArray(),
-            $models
-        );
+        $payload = [];
+
+        foreach ($models as $model) {
+            $payload[] = SurveyPublicIdModel::from($model)->toArray();
+        }
 
         $this->surveyPublicIdsEndpoint->update($this->surveyId, $payload);
     }

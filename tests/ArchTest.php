@@ -173,3 +173,82 @@ it('keeps the API version in one place', function () {
 
     expect($offenders)->toBe([]);
 });
+
+/**
+ * #37/#38: the service layer is the public SDK surface.
+ *
+ * Every public method on a service or resource hands back a DTO, an
+ * `Illuminate\Support\Collection` of DTOs, or nothing — never a raw `array`
+ * the caller has to know the wire format of, and never a
+ * `Spatie\LaravelData\DataCollection`, which Spatie has been steering users
+ * away from since v4.
+ */
+function publicSdkMethods(): array
+{
+    $methods = [];
+
+    foreach (['Services', 'Resources'] as $layer) {
+        foreach (glob(__DIR__.'/../src/'.$layer.'/*.php') as $file) {
+            $class = 'Nikoleesg\NfieldAdmin\\'.$layer.'\\'.basename($file, '.php');
+            $reflection = new ReflectionClass($class);
+
+            foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                if ($method->isConstructor() || $method->getDeclaringClass()->getName() !== $class) {
+                    continue;
+                }
+
+                $methods[] = [$class, $method];
+            }
+        }
+    }
+
+    return $methods;
+}
+
+it('never returns a raw array from the public SDK surface', function () {
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        $returnType = $method->getReturnType();
+
+        if ($returnType instanceof ReflectionNamedType && $returnType->getName() === 'array') {
+            $offenders[] = class_basename($class).'::'.$method->getName().'() returns array';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('never returns a DataCollection from the public SDK surface', function () {
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        $returnType = $method->getReturnType();
+
+        if ($returnType instanceof ReflectionNamedType && $returnType->getName() === 'Spatie\LaravelData\DataCollection') {
+            $offenders[] = class_basename($class).'::'.$method->getName().'() returns DataCollection';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('carries an element-type generic on every list method', function () {
+    // A bare `Collection` return tells PHPStan and the IDE nothing about what
+    // is inside it, which is the whole point of returning DTOs.
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        $returnType = $method->getReturnType();
+
+        if (! $returnType instanceof ReflectionNamedType || $returnType->getName() !== 'Illuminate\Support\Collection') {
+            continue;
+        }
+
+        if (! preg_match('/@return\s+Collection<[^>]+>/', (string) $method->getDocComment())) {
+            $offenders[] = class_basename($class).'::'.$method->getName().'() is missing @return Collection<int, Model>';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});

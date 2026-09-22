@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
 
 class SamplingPointAddressResource
 {
@@ -18,30 +19,32 @@ class SamplingPointAddressResource
         protected SamplingPointAddressEndpointInterface $samplingPointAddressEndpoint
     ) {}
 
-    public function setSurveyId(string $surveyId): self
+    public function setSurveyId(string $surveyId): static
     {
         $this->surveyId = $surveyId;
 
         return $this;
     }
 
-    public function setSamplingPointId(string $samplingPointId): self
+    public function setSamplingPointId(string $samplingPointId): static
     {
         $this->samplingPointId = $samplingPointId;
 
         return $this;
     }
 
-    public function setAddressId(string $addressId): self
+    public function setAddressId(string $addressId): static
     {
         $this->addressId = $addressId;
 
         return $this;
     }
 
-    public function getAddress(): array
+    public function getAddress(): AddressModel
     {
-        return $this->samplingPointAddressEndpoint->get($this->surveyId, $this->samplingPointId, $this->addressId);
+        return AddressModel::from(
+            $this->samplingPointAddressEndpoint->get($this->surveyId, $this->samplingPointId, $this->addressId)
+        );
     }
 
     public function deleteAddress(): void

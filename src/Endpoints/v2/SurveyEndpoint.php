@@ -51,10 +51,10 @@ final class SurveyEndpoint extends BaseEndpoint implements SurveyEndpointInterfa
     /**
      * Activate a list of spare sampling points so they can be assigned.
      */
-    public function batchActivateSamplingPoints(string $surveyId, array $samplingPointIds): array
+    public function batchActivateSamplingPoints(string $surveyId, array $activateSpareSamplingPointsRequestModel): array
     {
         $uri = $this->resourceActionPath($surveyId, 'activateSamplingpoints');
 
-        return $this->httpClient->post($uri, ['samplingPointIds' => $samplingPointIds])->json();
+        return $this->httpClient->post($uri, $activateSpareSamplingPointsRequestModel)->json();
     }
 }

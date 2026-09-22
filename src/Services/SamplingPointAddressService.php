@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
@@ -18,40 +19,38 @@ class SamplingPointAddressService
         protected readonly string $samplingPointId,
     ) {}
 
-    public function listAddresses(): array
+    /** @return Collection<int, AddressModel> */
+    public function listAddresses(): Collection
     {
-        return $this->samplingPointCollectionEndpoint->find($this->surveyId, $this->samplingPointId, []);
+        return $this->findAddresses();
     }
 
-    public function findAddresses(array $data = []): array
+    /** @return Collection<int, AddressModel> */
+    public function findAddresses(array $filter = []): Collection
     {
-        return $this->samplingPointCollectionEndpoint->find($this->surveyId, $this->samplingPointId, $data);
+        return AddressModel::collect(
+            $this->samplingPointCollectionEndpoint->find($this->surveyId, $this->samplingPointId, $filter),
+            Collection::class
+        );
     }
 
-    public function createAddress(AddressModel $data): AddressModel
+    public function createAddress(array|AddressModel $data): AddressModel
     {
-        $createdAddress = $this->samplingPointCollectionEndpoint->create($this->surveyId, $this->samplingPointId, $data->toArray());
+        $payload = AddressModel::from($data)->toArray();
 
-        return AddressModel::from($createdAddress);
+        return AddressModel::from(
+            $this->samplingPointCollectionEndpoint->create($this->surveyId, $this->samplingPointId, $payload)
+        );
     }
 
     /**
-     * Return a SaplingPointAddressResource for a specific survey and sampling point
+     * Return a SamplingPointAddressResource for a specific survey and sampling point
      */
     public function for(string $addressId): SamplingPointAddressResource
     {
-        $samplingPointAddress = new SamplingPointAddressResource($this->samplingPointAddressEndpoint);
-
-        if ($this->surveyId !== null) {
-            $samplingPointAddress->setSurveyId($this->surveyId);
-        }
-
-        if ($this->samplingPointId !== null) {
-            $samplingPointAddress->setSamplingPointId($this->samplingPointId);
-        }
-
-        $samplingPointAddress->setAddressId($addressId);
-
-        return $samplingPointAddress;
+        return (new SamplingPointAddressResource($this->samplingPointAddressEndpoint))
+            ->setSurveyId($this->surveyId)
+            ->setSamplingPointId($this->samplingPointId)
+            ->setAddressId($addressId);
     }
 }

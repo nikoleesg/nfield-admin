@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Data\Surveys\Sample;
 
 use Spatie\LaravelData\Data;
 
-final class SurveyCreateSampleColumnModel extends Data
+final class SampleColumnUpdateModel extends Data
 {
     public function __construct(
         public ?string $columnName = null,

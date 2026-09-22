@@ -22,8 +22,10 @@ class BlueprintSurveyResource
         return $this;
     }
 
-    public function update(UpdateBlueprintModel $model): void
+    public function update(array|UpdateBlueprintModel $data): void
     {
-        $this->surveyBlueprintsEndpoint->update($this->blueprintId, $model->toArray());
+        $payload = UpdateBlueprintModel::from($data)->toArray();
+
+        $this->surveyBlueprintsEndpoint->update($this->blueprintId, $payload);
     }
 }

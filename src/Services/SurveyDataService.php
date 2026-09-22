@@ -7,6 +7,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyDataEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyInterviewEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataInterviewRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 
 class SurveyDataService
@@ -17,27 +18,28 @@ class SurveyDataService
         protected readonly string $surveyId,
     ) {}
 
-    public function downloadInterviewData(string $interviewId, string $fileName): array
+    public function downloadInterviewData(string $interviewId, string $fileName): BackgroundActivityStatus
     {
-        $data = [
-            'fileName' => $fileName,
-        ];
+        $payload = SurveyDataInterviewRequestModel::from(['fileName' => $fileName])->toArray();
 
-        return $this->surveyDataEndpoint->downloadInterviewData($this->surveyId, $interviewId, $data);
-    }
-
-    public function downloadData(SurveyDataRequestModel $surveyDataRequestModel): BackgroundActivityStatus
-    {
         return BackgroundActivityStatus::from(
-            $this->surveyDataEndpoint->downloadData(
-                $this->surveyId,
-                $surveyDataRequestModel->toArray()
-            )
+            $this->surveyDataEndpoint->downloadInterviewData($this->surveyId, $interviewId, $payload)
         );
     }
 
-    public function deleteInterviewData(string $interviewId): array
+    public function downloadData(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
-        return $this->surveyInterviewEndpoint->deleteInterviewData($this->surveyId, $interviewId);
+        $payload = SurveyDataRequestModel::from($data)->toArray();
+
+        return BackgroundActivityStatus::from(
+            $this->surveyDataEndpoint->downloadData($this->surveyId, $payload)
+        );
+    }
+
+    public function deleteInterviewData(string $interviewId): BackgroundActivityStatus
+    {
+        return BackgroundActivityStatus::from(
+            $this->surveyInterviewEndpoint->deleteInterviewData($this->surveyId, $interviewId)
+        );
     }
 }

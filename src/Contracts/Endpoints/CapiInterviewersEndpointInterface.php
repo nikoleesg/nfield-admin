@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Contracts\Endpoints;
 
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
-
 interface CapiInterviewersEndpointInterface
 {
     /**
@@ -22,10 +19,10 @@ interface CapiInterviewersEndpointInterface
     /**
      * Update (partial) a CAPI interviewer
      */
-    public function update(string $interviewerId, EditCapiInterviewerRequestData $data): array;
+    public function update(string $interviewerId, array $editCapiInterviewerRequestData): array;
 
     /**
      * Reset a CAPI interviewer's password (PUT)
      */
-    public function resetPassword(string $interviewerId, ResetCapiInterviewerPasswordRequestData $data): array;
+    public function resetPassword(string $interviewerId, array $resetCapiInterviewerPasswordRequestData): array;
 }

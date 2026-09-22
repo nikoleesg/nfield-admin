@@ -49,7 +49,7 @@ class NfieldManagerService
     /**
      * List all surveys from the API.
      *
-     * @return Collection<SurveyModel> Collection of all surveys
+     * @return Collection<int, SurveyModel> Collection of all surveys
      */
     public function listSurveys(): Collection
     {
@@ -60,7 +60,7 @@ class NfieldManagerService
      * Find surveys matching filter criteria.
      *
      * @param  array  $filter  Filter criteria (e.g., ['SurveyName' => 'value'])
-     * @return Collection<SurveyModel> Filtered collection of surveys
+     * @return Collection<int, SurveyModel> Filtered collection of surveys
      */
     public function findSurveys(array $filter): Collection
     {
@@ -70,30 +70,30 @@ class NfieldManagerService
     /**
      * Creates a new survey based on the provided data.
      *
-     * @param  SurveyCreateModel  $surveyModel  Data for the new survey
+     * @param  array|SurveyCreateModel  $data  Data for the new survey
      * @return SurveyModel Created survey with ID
      */
-    public function createSurvey(SurveyCreateModel $surveyModel): SurveyModel
+    public function createSurvey(array|SurveyCreateModel $data): SurveyModel
     {
-        return $this->surveyService->createSurvey($surveyModel);
+        return $this->surveyService->createSurvey($data);
     }
 
     /**
      * Create a new survey from a blueprint survey.
      *
-     * @param  SurveyFromBlueprintModel  $model  Blueprint model with survey name and blueprint ID
+     * @param  array|SurveyFromBlueprintModel  $data  Blueprint model with survey name and blueprint ID
      * @return SurveyModel Created survey with all blueprint configurations copied
      */
-    public function createSurveyFromBlueprint(SurveyFromBlueprintModel $model): SurveyModel
+    public function createSurveyFromBlueprint(array|SurveyFromBlueprintModel $data): SurveyModel
     {
-        return $this->surveyService->createSurveyFromBlueprint($model);
+        return $this->surveyService->createSurveyFromBlueprint($data);
     }
 
     /**
      * Search surveys by respondent criteria.
      *
      * @param  string  $value  Search value (email, phone, ID, etc.)
-     * @return Collection<SurveyBaseModel> Collection of matching surveys
+     * @return Collection<int, SurveyBaseModel> Collection of matching surveys
      */
     public function searchRespondent(string $value): Collection
     {
@@ -120,7 +120,7 @@ class NfieldManagerService
     /**
      * List all CAPI interviewers.
      *
-     * @return Collection Collection of all CAPI interviewers
+     * @return Collection<int, CapiInterviewerData> Collection of all CAPI interviewers
      */
     public function listCapiInterviewers(): Collection
     {
@@ -131,7 +131,7 @@ class NfieldManagerService
      * Find CAPI interviewers matching filter criteria.
      *
      * @param  array  $filter  Filter criteria
-     * @return Collection Filtered collection of CAPI interviewers
+     * @return Collection<int, CapiInterviewerData> Filtered collection of CAPI interviewers
      */
     public function findCapiInterviewers(array $filter = []): Collection
     {
@@ -141,10 +141,10 @@ class NfieldManagerService
     /**
      * Create a new CAPI interviewer.
      *
-     * @param  NewCapiInterviewerRequestData  $data  CAPI interviewer data
+     * @param  array|NewCapiInterviewerRequestData  $data  CAPI interviewer data
      * @return CapiInterviewerResponseData Created CAPI interviewer
      */
-    public function createCapiInterviewer(NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function createCapiInterviewer(array|NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
     {
         return $this->capiInterviewerService->createCapiInterviewer($data);
     }

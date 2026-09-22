@@ -10,7 +10,7 @@ use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 
-class SamplingPointCreateRequestModel extends Data
+final class SamplingPointUpdateRequestModel extends Data
 {
     /**
      * @param  array<int, SamplingPointCustomDataModel>|null  $customDataItems
@@ -25,6 +25,5 @@ class SamplingPointCreateRequestModel extends Data
         public ?array $customDataItems = null,
         #[WithCast(EnumCast::class)]
         public ?SamplingPointKindEnum $kind = null,
-        public ?string $samplingPointId = null,
     ) {}
 }

@@ -34,5 +34,5 @@ interface SurveyEndpointInterface
     /**
      * Activate a list of spare sampling points so they can be assigned.
      */
-    public function batchActivateSamplingPoints(string $surveyId, array $samplingPointIds): array;
+    public function batchActivateSamplingPoints(string $surveyId, array $activateSpareSamplingPointsRequestModel): array;
 }

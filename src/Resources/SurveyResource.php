@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
@@ -51,9 +52,11 @@ class SurveyResource
         $this->surveyEndpoint->destroy($this->surveyId);
     }
 
-    public function updateSurvey(SurveyUpdateModel $surveyUpdateModel): SurveyModel
+    public function updateSurvey(array|SurveyUpdateModel $data): SurveyModel
     {
-        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->surveyId, $surveyUpdateModel->toArray()));
+        $payload = SurveyUpdateModel::from($data)->toArray();
+
+        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->surveyId, $payload));
     }
 
     public function getSurveyCounts(): SurveyCountsModel
@@ -61,14 +64,15 @@ class SurveyResource
         return SurveyCountsModel::from($this->surveyEndpoint->counts($this->surveyId));
     }
 
-    public function getCustomColumns(): array
+    /** @return Collection<int, string> */
+    public function getCustomColumns(): Collection
     {
-        return $this->surveyEndpoint->getCustomColumns($this->surveyId);
+        return collect($this->surveyEndpoint->getCustomColumns($this->surveyId));
     }
 
-    public function requestDataDownload(SurveyDataRequestModel $surveyDataRequestModel): BackgroundActivityStatus
+    public function requestDataDownload(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
-        return $this->data()->downloadData($surveyDataRequestModel);
+        return $this->data()->downloadData($data);
     }
 
     public function samplingPoints(): SamplingPointService

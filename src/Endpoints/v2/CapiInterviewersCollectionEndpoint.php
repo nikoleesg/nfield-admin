@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
 use Nikoleesg\NfieldAdmin\Services\Http\ResponseKeyNormalizer;
 
 final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements CapiInterviewersCollectionEndpointInterface
@@ -38,11 +37,11 @@ final class CapiInterviewersCollectionEndpoint extends BaseEndpoint implements C
     /**
      * Create a new CAPI interviewer
      */
-    public function create(NewCapiInterviewerRequestData $data): array
+    public function create(array $newCapiInterviewerRequestData): array
     {
         $uri = $this->basePath();
 
-        return $this->httpClient->post($uri, $data->toArray())->json();
+        return $this->httpClient->post($uri, $newCapiInterviewerRequestData)->json();
     }
 
     /**

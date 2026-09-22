@@ -8,7 +8,11 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUploadStatus;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyCreateSampleColumnModel;
 use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
 use RuntimeException;
@@ -23,19 +27,20 @@ class SurveySampleService
     ) {}
 
     /**
-     * Download and parse sample data from the survey
+     * Download and parse sample data from the survey.
      *
-     * @return array Array of sample records with headers as keys
+     * Sample columns are defined per survey, so a record has no fixed shape and
+     * is returned as a keyed array of its CSV header columns.
+     *
+     * @return Collection<int, array<string, string>>
      *
      * @throws RuntimeException If CSV parsing fails
      */
-    public function downloadSampleData(): array
+    public function downloadSampleData(): Collection
     {
-        // Get raw CSV data from endpoint
         $rawCsvData = $this->surveySampleCollectionEndpoint->download($this->surveyId);
 
-        // Parse CSV into array
-        return CsvParser::parse($rawCsvData);
+        return collect(CsvParser::parse($rawCsvData));
     }
 
     public function uploadSampleData(string $sampleData, ?string $fileName = null): SampleUploadStatus
@@ -46,36 +51,62 @@ class SurveySampleService
         return SampleUploadStatus::from($response);
     }
 
-    public function blockSampleData(array $sampleFilterModel): array
+    /**
+     * @param  iterable<int, array|SampleFilterModel>  $filters
+     */
+    public function blockSampleData(iterable $filters): BackgroundActivityStatus
     {
-        return $this->surveySampleCollectionEndpoint->block($this->surveyId, $sampleFilterModel);
+        return BackgroundActivityStatus::from(
+            $this->surveySampleCollectionEndpoint->block($this->surveyId, $this->normaliseFilters($filters))
+        );
     }
 
     /**
-     * Create a survey sample (Online)
+     * Create a survey sample (Online).
+     *
+     * @param  iterable<int, array|SurveyCreateSampleColumnModel>  $columns
+     * @return Collection<int, SurveyCreateSampleColumnModel>
      */
-    public function createSampleData(Collection $surveyCreateSampleColumnModelCollection): Collection
+    public function createSampleData(iterable $columns): Collection
     {
-        $response = $this->surveySampleCollectionEndpoint->create($this->surveyId, $surveyCreateSampleColumnModelCollection->toArray());
+        $payload = [];
 
-        return collect($response);
+        foreach ($columns as $column) {
+            $payload[] = SurveyCreateSampleColumnModel::from($column)->toArray();
+        }
+
+        return SurveyCreateSampleColumnModel::collect(
+            $this->surveySampleCollectionEndpoint->create($this->surveyId, $payload),
+            Collection::class
+        );
     }
 
-    public function resetSampleData(array $sampleFilterModel): array
+    /**
+     * @param  iterable<int, array|SampleFilterModel>  $filters
+     */
+    public function resetSampleData(iterable $filters): BackgroundActivityStatus
     {
-        return $this->surveySampleCollectionEndpoint->reset($this->surveyId, $sampleFilterModel);
+        return BackgroundActivityStatus::from(
+            $this->surveySampleCollectionEndpoint->reset($this->surveyId, $this->normaliseFilters($filters))
+        );
     }
 
-    public function clearSampleDataColumns(array $clearSurveySampleModel): array
+    public function clearSampleDataColumns(array|ClearSurveySampleModel $data): BackgroundActivityStatus
     {
-        return $this->surveySampleCollectionEndpoint->clear($this->surveyId, $clearSurveySampleModel);
+        $payload = ClearSurveySampleModel::from($data)->toArray();
+
+        return BackgroundActivityStatus::from(
+            $this->surveySampleCollectionEndpoint->clear($this->surveyId, $payload)
+        );
     }
 
-    public function requestSampleDownload(?string $fileName = null): array
+    public function requestSampleDownload(?string $fileName = null): BackgroundActivityStatus
     {
         $fileName = $fileName ?? $this->generateSampleFileName();
 
-        return $this->surveySampleDataDownloadEndpoint->requestDownload($this->surveyId, $fileName);
+        return BackgroundActivityStatus::from(
+            $this->surveySampleDataDownloadEndpoint->requestDownload($this->surveyId, $fileName)
+        );
     }
 
     /**
@@ -85,13 +116,26 @@ class SurveySampleService
     {
         $surveySampleResource = new SurveySampleResource($this->surveySampleEndpoint, $this->surveySampleCollectionEndpoint);
 
-        if ($this->surveyId !== null) {
-            $surveySampleResource->setSurveyId($this->surveyId);
+        return $surveySampleResource
+            ->setSurveyId($this->surveyId)
+            ->setInterviewId($interviewId);
+    }
+
+    /**
+     * The sample filter endpoints take a bare JSON array of filter clauses.
+     *
+     * @param  iterable<int, array|SampleFilterModel>  $filters
+     * @return array<int, array<string, mixed>>
+     */
+    protected function normaliseFilters(iterable $filters): array
+    {
+        $payload = [];
+
+        foreach ($filters as $filter) {
+            $payload[] = SampleFilterModel::from($filter)->toArray();
         }
 
-        $surveySampleResource->setInterviewId($interviewId);
-
-        return $surveySampleResource;
+        return $payload;
     }
 
     /**

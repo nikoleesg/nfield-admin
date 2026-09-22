@@ -33,7 +33,7 @@ it('activates sampling points from the survey endpoint', function () {
         ->once()
         ->andReturn(jsonResponse(['ok' => true]));
 
-    $result = (new SurveyEndpoint($httpClient))->batchActivateSamplingPoints('survey-id', ['sp-1', 'sp-2']);
+    $result = (new SurveyEndpoint($httpClient))->batchActivateSamplingPoints('survey-id', ['samplingPointIds' => ['sp-1', 'sp-2']]);
 
     expect($result)->toBe(['ok' => true]);
 });

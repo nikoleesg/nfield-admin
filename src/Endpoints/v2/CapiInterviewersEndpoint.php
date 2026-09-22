@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Endpoints\v2;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
 
 final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiInterviewersEndpointInterface
 {
@@ -38,12 +36,12 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     /**
      * Update (partial) a CAPI interviewer via PATCH
      */
-    public function update(string $interviewerId, EditCapiInterviewerRequestData $data): array
+    public function update(string $interviewerId, array $editCapiInterviewerRequestData): array
     {
         $uri = $this->resourcePath($interviewerId);
 
         $payload = array_filter(
-            $data->toArray(),
+            $editCapiInterviewerRequestData,
             static fn (mixed $value): bool => $value !== null
         );
 
@@ -53,10 +51,10 @@ final class CapiInterviewersEndpoint extends BaseEndpoint implements CapiIntervi
     /**
      * Reset a CAPI interviewer's password via PUT
      */
-    public function resetPassword(string $interviewerId, ResetCapiInterviewerPasswordRequestData $data): array
+    public function resetPassword(string $interviewerId, array $resetCapiInterviewerPasswordRequestData): array
     {
         $uri = $this->resourcePath($interviewerId);
 
-        return $this->httpClient->put($uri, $data->toArray())->json();
+        return $this->httpClient->put($uri, $resetCapiInterviewerPasswordRequestData)->json();
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySamplingPointsAssignmentsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointInterviewerAssignmentsModel;
 
 class SurveyAssignmentService
 {
@@ -13,23 +14,27 @@ class SurveyAssignmentService
         protected readonly string $surveyId,
     ) {}
 
-    public function assignInterviewers(array $samplingPointIds, array $interviewerIds): array
+    /**
+     * @param  array<int, string>  $samplingPointIds
+     * @param  array<int, string>  $interviewerIds
+     */
+    public function assignInterviewers(array $samplingPointIds, array $interviewerIds): SamplingPointInterviewerAssignmentsModel
     {
-        $data = [
-            'samplingPointIds' => $samplingPointIds,
-            'interviewerIds' => $interviewerIds,
-        ];
+        $payload = new SamplingPointInterviewerAssignmentsModel($samplingPointIds, $interviewerIds);
 
-        return $this->surveySamplingPointsAssignmentsEndpoint->massAssign($this->surveyId, $data);
+        return SamplingPointInterviewerAssignmentsModel::from(
+            $this->surveySamplingPointsAssignmentsEndpoint->massAssign($this->surveyId, $payload->toArray())
+        );
     }
 
-    public function unassignInterviewers(array $samplingPointIds, array $interviewerIds): array
+    /**
+     * @param  array<int, string>  $samplingPointIds
+     * @param  array<int, string>  $interviewerIds
+     */
+    public function unassignInterviewers(array $samplingPointIds, array $interviewerIds): void
     {
-        $data = [
-            'samplingPointIds' => $samplingPointIds,
-            'interviewerIds' => $interviewerIds,
-        ];
+        $payload = new SamplingPointInterviewerAssignmentsModel($samplingPointIds, $interviewerIds);
 
-        return $this->surveySamplingPointsAssignmentsEndpoint->massUnassign($this->surveyId, $data);
+        $this->surveySamplingPointsAssignmentsEndpoint->massUnassign($this->surveyId, $payload->toArray());
     }
 }
