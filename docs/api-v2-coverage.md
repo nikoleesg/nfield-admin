@@ -1,48 +1,75 @@
 # NField API v2 — Endpoint Coverage
 
-Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`), verified against `src/` on branch `dev` (HEAD `3c5d8aa`).
+Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
 **Overall: 89 of 282 operations implemented (32%), across 182 paths.**
+
+**Planned for development: 50 operations across 11 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+
+Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
 Counting is per *operation* (method + path), not per path. "Implemented" means a class in `src/Endpoints/v2/` (or `HttpClient`) issues that exact request.
 
 ## Summary by section
 
-| Section | Implemented | Total | Coverage |
-|---|---:|---:|---:|
-| CAPI Interviewers | 11 | 11 | 100% |
-| Surveys — Quota | 7 | 7 | 100% |
-| Surveys — Fieldwork | 4 | 4 | 100% |
-| Background Activities | 1 | 1 | 100% |
-| Survey Blueprints | 1 | 1 | 100% |
-| Event Subscriptions | 5 | 5 | 100% |
-| Surveys — Sampling Points | 22 | 25 | 88% |
-| Surveys — Sample | 10 | 12 | 83% |
-| Surveys — Core | 9 | 14 | 64% |
-| Surveys — Settings & Content | 6 | 23 | 26% |
-| Surveys — Publishing & Script | 3 | 13 | 23% |
-| Surveys — Interviews & Data | 6 | 16 | 38% |
-| Access & Authentication | 4 | 20 | 20% |
-| Data Delivery | 0 | 38 | 0% |
-| Surveys — Invitations & Distribution | 0 | 16 | 0% |
-| Parent Surveys & Waves | 0 | 14 | 0% |
-| Survey Groups | 0 | 12 | 0% |
-| Screeners | 0 | 10 | 0% |
-| Surveys — Interviewers & Assignments | 0 | 7 | 0% |
-| CATI Interviewers | 0 | 5 | 0% |
-| Offices | 0 | 5 | 0% |
-| Language Translations (tenant) | 0 | 4 | 0% |
-| Response Codes (tenant) | 0 | 4 | 0% |
-| Themes | 0 | 3 | 0% |
-| Blacklist | 0 | 2 | 0% |
-| Default Texts | 0 | 2 | 0% |
-| Email Settings (tenant) | 0 | 2 | 0% |
-| Search Fields Setting | 0 | 2 | 0% |
-| Interviewers Worklog | 0 | 1 | 0% |
-| Manual Tests (tenant) | 0 | 1 | 0% |
-| Survey Resources | 0 | 1 | 0% |
-| Templates | 0 | 1 | 0% |
-| **Total** | **89** | **282** | **32%** |
+| Section | Implemented | Planned | Total | Coverage |
+|---|---:|---:|---:|---:|
+| CAPI Interviewers | 11 | — | 11 | 100% |
+| Surveys — Quota | 7 | — | 7 | 100% |
+| Surveys — Fieldwork | 4 | — | 4 | 100% |
+| Background Activities | 1 | — | 1 | 100% |
+| Survey Blueprints | 1 | — | 1 | 100% |
+| Event Subscriptions | 5 | — | 5 | 100% |
+| Surveys — Sampling Points | 22 | — | 25 | 88% |
+| Surveys — Sample | 10 | — | 12 | 83% |
+| Surveys — Core | 9 | 4 | 14 | 64% |
+| Surveys — Settings & Content | 6 | 5 | 23 | 26% |
+| Surveys — Publishing & Script | 3 | 6 | 13 | 23% |
+| Surveys — Interviews & Data | 6 | 2 | 16 | 38% |
+| Access & Authentication | 4 | 5 | 20 | 20% |
+| Data Delivery | 0 | — | 38 | 0% |
+| Surveys — Invitations & Distribution | 0 | — | 16 | 0% |
+| Parent Surveys & Waves | 0 | 14 | 14 | 0% |
+| Survey Groups | 0 | 5 | 12 | 0% |
+| Screeners | 0 | — | 10 | 0% |
+| Surveys — Interviewers & Assignments | 0 | — | 7 | 0% |
+| CATI Interviewers | 0 | — | 5 | 0% |
+| Offices | 0 | — | 5 | 0% |
+| Language Translations (tenant) | 0 | — | 4 | 0% |
+| Response Codes (tenant) | 0 | 4 | 4 | 0% |
+| Themes | 0 | 3 | 3 | 0% |
+| Blacklist | 0 | — | 2 | 0% |
+| Default Texts | 0 | — | 2 | 0% |
+| Email Settings (tenant) | 0 | — | 2 | 0% |
+| Search Fields Setting | 0 | — | 2 | 0% |
+| Interviewers Worklog | 0 | 1 | 1 | 0% |
+| Manual Tests (tenant) | 0 | — | 1 | 0% |
+| Survey Resources | 0 | 1 | 1 | 0% |
+| Templates | 0 | — | 1 | 0% |
+| **Total** | **89** | **50** | **282** | **32%** |
+
+---
+
+## Planned for development
+
+Planned for the next release (2026-09-23). Work proceeds section by section; each issue carries a checkbox per operation and is closed once all of them are implemented. When an operation lands, change its row in the detail tables below from 🗓️ to ✅, name the implementing class, and update the counts.
+
+| Section | Operations | Tracking issue |
+|---|---:|---|
+| Access & Authentication | 5 | [#57](https://github.com/nikoleesg/nfield-admin/issues/57) |
+| Interviewers Worklog | 1 | [#58](https://github.com/nikoleesg/nfield-admin/issues/58) |
+| Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
+| Response Codes (tenant) | 4 | [#59](https://github.com/nikoleesg/nfield-admin/issues/59) |
+| Survey Groups | 5 | [#60](https://github.com/nikoleesg/nfield-admin/issues/60) |
+| Survey Resources | 1 | [#61](https://github.com/nikoleesg/nfield-admin/issues/61) |
+| Surveys — Core | 4 | [#62](https://github.com/nikoleesg/nfield-admin/issues/62) |
+| Surveys — Interviews & Data | 2 | [#63](https://github.com/nikoleesg/nfield-admin/issues/63) |
+| Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
+| Surveys — Settings & Content | 5 | [#65](https://github.com/nikoleesg/nfield-admin/issues/65) |
+| Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
+| **Total** | **50** | |
+
+Survey Groups is only partly planned: the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
 ---
 
@@ -173,11 +200,11 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | ✅ | PATCH | `/v2/surveys/{surveyId}` | `SurveyEndpoint::updatePartial` |
 | ✅ | GET | `/v2/surveys/{surveyId}/counts` | `SurveyEndpoint::counts` |
 | ✅ | GET | `/v2/surveys/{surveyId}/customColumns` | `SurveyEndpoint::getCustomColumns` |
-| ❌ | GET | `/v2/surveys/{surveyId}/dataRetentionSettings` | — |
-| ❌ | PUT | `/v2/surveys/{surveyId}/dataRetentionSettings` | — |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/dataRetentionSettings` | Planned for Development (#62) |
+| 🗓️ | PUT | `/v2/surveys/{surveyId}/dataRetentionSettings` | Planned for Development (#62) |
 | ❌ | POST | `/v2/surveys/{surveyId}/respondentDataEncrypt` | — |
-| ❌ | PUT | `/v2/surveys/{surveyId}/surveyGroup` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/versions` | — |
+| 🗓️ | PUT | `/v2/surveys/{surveyId}/surveyGroup` | Planned for Development (#62) |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/versions` | Planned for Development (#62) |
 
 ### Surveys — Settings & Content
 
@@ -201,11 +228,11 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | ❌ | POST | `/v2/surveys/{surveyId}/mediaFiles/{fileName}` | — |
 | ✅ | GET | `/v2/surveys/{surveyId}/publicIds` | `SurveyPublicIdsEndpoint::list` |
 | ✅ | PUT | `/v2/surveys/{surveyId}/publicIds` | `SurveyPublicIdsEndpoint::update` |
-| ❌ | GET | `/v2/surveys/{surveyId}/responseCodes` | — |
-| ❌ | POST | `/v2/surveys/{surveyId}/responseCodes` | — |
-| ❌ | DELETE | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | — |
-| ❌ | PATCH | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | — |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/responseCodes` | Planned for Development (#65) |
+| 🗓️ | POST | `/v2/surveys/{surveyId}/responseCodes` | Planned for Development (#65) |
+| 🗓️ | DELETE | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
+| 🗓️ | PATCH | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
 | ✅ | GET | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::listSettings` |
 | ✅ | POST | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::addOrUpdateSetting` |
 
@@ -215,19 +242,19 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/surveys/{surveyId}/package` | — |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/package` | Planned for Development (#64) |
 | ✅ | GET | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::getPublishState` |
 | ✅ | PUT | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::publish` |
 | ✅ | POST | `/v2/surveys/{surveyId}/publish/start` | `SurveyPublishEndpoint::startPublish` |
-| ❌ | GET | `/v2/surveys/{surveyId}/script` | — |
-| ❌ | POST | `/v2/surveys/{surveyId}/script` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/script/{eTag}` | — |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/script` | Planned for Development (#64) |
+| 🗓️ | POST | `/v2/surveys/{surveyId}/script` | Planned for Development (#64) |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/script/{eTag}` | Planned for Development (#64) |
 | ❌ | GET | `/v2/surveys/{surveyId}/scriptFragments` | — |
 | ❌ | DELETE | `/v2/surveys/{surveyId}/scriptFragments/{fragmentName}` | — |
 | ❌ | GET | `/v2/surveys/{surveyId}/scriptFragments/{fragmentName}` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/scriptFragments/{fragmentName}` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/varFile` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/varFile/{eTag}` | — |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/varFile` | Planned for Development (#64) |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/varFile/{eTag}` | Planned for Development (#64) |
 
 ### Surveys — Interviews & Data
 
@@ -249,12 +276,12 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | ✅ | DELETE | `/v2/surveys/{surveyId}/interviews/{interviewId}` | `SurveyInterviewEndpoint::deleteInterviewData` |
 | ❌ | GET | `/v2/surveys/{surveyId}/manualTests` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/manualTests` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/performance/metrics/live` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/performance/metrics/test` | — |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/performance/metrics/live` | Planned for Development (#63) |
+| 🗓️ | GET | `/v2/surveys/{surveyId}/performance/metrics/test` | Planned for Development (#63) |
 
 ### Access & Authentication
 
-*2/20 implemented.*
+*4/20 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
@@ -270,11 +297,11 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | ✅ | GET | `/v2/me/role` | `UserRoleEndpoint::get` |
 | ❌ | GET | `/v2/passwordSettings` | — |
 | ❌ | PATCH | `/v2/passwordSettings` | — |
-| ❌ | GET | `/v2/requests` | — |
-| ❌ | POST | `/v2/requests` | — |
-| ❌ | PUT | `/v2/requests` | — |
-| ❌ | DELETE | `/v2/requests/{requestId}` | — |
-| ❌ | GET | `/v2/requests/{requestId}` | — |
+| 🗓️ | GET | `/v2/requests` | Planned for Development (#57) |
+| 🗓️ | POST | `/v2/requests` | Planned for Development (#57) |
+| 🗓️ | PUT | `/v2/requests` | Planned for Development (#57) |
+| 🗓️ | DELETE | `/v2/requests/{requestId}` | Planned for Development (#57) |
+| 🗓️ | GET | `/v2/requests/{requestId}` | Planned for Development (#57) |
 | ✅ | GET | `/v2/roles` | `RolesEndpoint::list` |
 | ✅ | POST | `/v2/token` | `Services\Http\HttpClient::getAccessToken` |
 | ✅ | POST | `/v2/token/refresh` | `Services\Http\HttpClient::getAccessToken (refresh flow)` |
@@ -353,20 +380,20 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/parentSurveys` | — |
-| ❌ | POST | `/v2/parentSurveys` | — |
-| ❌ | GET | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | — |
-| ❌ | PUT | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | — |
-| ❌ | GET | `/v2/parentSurveys/{parentSurveyId}/waves` | — |
-| ❌ | POST | `/v2/parentSurveys/{parentSurveyId}/waves` | — |
-| ❌ | POST | `/v2/parentSurveys/{parentSurveyId}/waves/{waveId}` | — |
-| ❌ | DELETE | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | — |
-| ❌ | GET | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | — |
-| ❌ | PUT | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | — |
-| ❌ | GET | `/v2/surveyWaves/{waveId}/startDate` | — |
-| ❌ | PUT | `/v2/surveyWaves/{waveId}/startDate` | — |
-| ❌ | GET | `/v2/surveyWaves/{waveId}/stopDate` | — |
-| ❌ | PUT | `/v2/surveyWaves/{waveId}/stopDate` | — |
+| 🗓️ | GET | `/v2/parentSurveys` | Planned for Development (#67) |
+| 🗓️ | POST | `/v2/parentSurveys` | Planned for Development (#67) |
+| 🗓️ | GET | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
+| 🗓️ | PUT | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
+| 🗓️ | GET | `/v2/parentSurveys/{parentSurveyId}/waves` | Planned for Development (#67) |
+| 🗓️ | POST | `/v2/parentSurveys/{parentSurveyId}/waves` | Planned for Development (#67) |
+| 🗓️ | POST | `/v2/parentSurveys/{parentSurveyId}/waves/{waveId}` | Planned for Development (#67) |
+| 🗓️ | DELETE | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
+| 🗓️ | GET | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
+| 🗓️ | PUT | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
+| 🗓️ | GET | `/v2/surveyWaves/{waveId}/startDate` | Planned for Development (#67) |
+| 🗓️ | PUT | `/v2/surveyWaves/{waveId}/startDate` | Planned for Development (#67) |
+| 🗓️ | GET | `/v2/surveyWaves/{waveId}/stopDate` | Planned for Development (#67) |
+| 🗓️ | PUT | `/v2/surveyWaves/{waveId}/stopDate` | Planned for Development (#67) |
 
 ### Survey Groups
 
@@ -374,16 +401,16 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/surveyGroups` | — |
+| 🗓️ | GET | `/v2/surveyGroups` | Planned for Development (#60) |
 | ❌ | POST | `/v2/surveyGroups` | — |
 | ❌ | DELETE | `/v2/surveyGroups/{surveyGroupId}` | — |
-| ❌ | GET | `/v2/surveyGroups/{surveyGroupId}` | — |
+| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}` | Planned for Development (#60) |
 | ❌ | PATCH | `/v2/surveyGroups/{surveyGroupId}` | — |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/assignDirectory` | — |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/assignLocal` | — |
-| ❌ | GET | `/v2/surveyGroups/{surveyGroupId}/directoryAssignments` | — |
-| ❌ | GET | `/v2/surveyGroups/{surveyGroupId}/localAssignments` | — |
-| ❌ | GET | `/v2/surveyGroups/{surveyGroupId}/surveys` | — |
+| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}/directoryAssignments` | Planned for Development (#60) |
+| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}/localAssignments` | Planned for Development (#60) |
+| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}/surveys` | Planned for Development (#60) |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/unassignDirectory` | — |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/unassignLocal` | — |
 
@@ -471,10 +498,10 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/responseCodes` | — |
-| ❌ | POST | `/v2/responseCodes` | — |
-| ❌ | DELETE | `/v2/responseCodes/{responseCodeId}` | — |
-| ❌ | PATCH | `/v2/responseCodes/{responseCodeId}` | — |
+| 🗓️ | GET | `/v2/responseCodes` | Planned for Development (#59) |
+| 🗓️ | POST | `/v2/responseCodes` | Planned for Development (#59) |
+| 🗓️ | DELETE | `/v2/responseCodes/{responseCodeId}` | Planned for Development (#59) |
+| 🗓️ | PATCH | `/v2/responseCodes/{responseCodeId}` | Planned for Development (#59) |
 
 ### Themes
 
@@ -482,9 +509,9 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/themes` | — |
-| ❌ | PUT | `/v2/themes` | — |
-| ❌ | DELETE | `/v2/themes/{themeId}` | — |
+| 🗓️ | GET | `/v2/themes` | Planned for Development (#66) |
+| 🗓️ | PUT | `/v2/themes` | Planned for Development (#66) |
+| 🗓️ | DELETE | `/v2/themes/{themeId}` | Planned for Development (#66) |
 
 ### Blacklist
 
@@ -528,7 +555,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | POST | `/v2/interviewersWorklog` | — |
+| 🗓️ | POST | `/v2/interviewersWorklog` | Planned for Development (#58) |
 
 ### Manual Tests (tenant)
 
@@ -544,7 +571,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/surveyResources` | — |
+| 🗓️ | GET | `/v2/surveyResources` | Planned for Development (#61) |
 
 ### Templates
 
@@ -559,7 +586,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 ## Notes & observations
 
-- **The package is survey-centric.** 76 of the 79 implemented operations live under `/v2/surveys`, `/v2/capiInterviewers`, `/v2/surveyBlueprints` and `/v2/BackgroundActivities`; the remaining 3 are the token endpoints. Whole top-level areas (Data Delivery, Survey Groups, Offices, Screeners, Parent Surveys/Waves, Themes, Templates) are untouched.
+- **The package is survey-centric.** 80 of the 89 implemented operations live under `/v2/surveys`, `/v2/capiInterviewers`, `/v2/surveyBlueprints` and `/v2/BackgroundActivities`; the remaining 9 are the two token endpoints, `GET /v2/me/role`, `GET /v2/roles` and the five `/v2/events/subscriptions` operations. Whole top-level areas (Data Delivery, Survey Groups, Offices, Screeners, Parent Surveys/Waves, Themes, Templates) are untouched; Survey Groups, Parent Surveys/Waves and Themes are now planned.
 - **Largest single gap: Data Delivery** (38 operations, 0 implemented) — repositories, subscriptions, users, firewall rules, Fabric data shares and delivery survey properties.
 - **CAPI is complete, CATI is absent.** `/v2/capiInterviewers` is fully covered (11/11); `/v2/catiInterviewers` (5 operations) has no counterpart.
 - **Survey-level interviewer management is missing** (7 operations): assign/unassign an interviewer to a survey, per-interviewer quota level targets and workpackage target distribution. Note this is distinct from *sampling-point* assignments, which are implemented.
@@ -586,33 +613,16 @@ The OpenAPI document marks exactly two operations `deprecated: true`:
 
 ### Stale calls (endpoints that no longer exist)
 
-None. All 79 implemented operations resolve to a live method+path pair in the v2 spec. The v1 stack was fully removed (`930bf06`, finished in `3c5d8aa`) — `src/Endpoints/v1/` and `src/Services/v1/` no longer exist and nothing in `src/` references them.
+None. All 89 implemented operations resolve to a live method+path pair in the v2 spec. The v1 stack was fully removed (`930bf06`, finished in `3c5d8aa`) — `src/Endpoints/v1/` and `src/Services/v1/` no longer exist and nothing in `src/` references them.
 
 ### Stale leftovers in the code
 
-These are not wrong API calls, but residue from the removed v1 stack and from a DTO layer that was never wired up.
+**All resolved** (re-checked 2026-09-23). The audit on 2026-09-22 listed residue from the removed v1 stack: a duplicate root-namespace `NewCapiInterviewerRequestModel`, unreferenced v1-era `*DTO` / `*Data` classes in `src/Data/`, unused v2 request/response models, an empty `SampleFilterModel` stub, and unreferenced `SurveyFieldworkStatusEnum` / `InterviewingRestrictionTypeEnum`. Today:
 
-**1. Duplicate DTO, dead copy** — `src/Data/NewCapiInterviewerRequestModel.php` (root `Data` namespace, `StudlyCaseMapper`, snake_case properties) is referenced by nothing. The live one is `src/Data/CapiInterviewers/NewCapiInterviewerRequestModel.php`. Delete the root copy.
-
-**2. v1-era DTOs, unreferenced** — all use the v1 `#[MapInputName(StudlyCaseMapper::class)]` + snake_case convention and serve endpoints this package does not implement (response codes, survey-level interviewers):
-
-- `src/Data/InterviewerDTO.php`, `InterviewerDetailsData.php`, `InterviewerAssignmentResponseData.php`, `InterviewerSamplingPointAssignmentData.php`
-- `src/Data/ResponseCodeDTO.php`, `SurveyResponseCodeDTO.php`, `SurveyResponseCodeForPatch.php`, `DomainResponseCodeForPatch.php`
-- `src/Data/SamplingPointData.php`, `SamplingPointQuotaTargetData.php`, `SamplingPointInterviewerAssignmentsData.php`
-- `src/Data/SurveyPublishStateData.php`, `SurveyDataRequestDTO.php`, `SurveyFieldworkCountsDTO.php`, `BackgroundTaskDTO.php`
-
-**3. `*DTO` vs `*Model` duplication** — several of the above duplicate newer v2-style models that are also unused, e.g. `Data/SurveyFieldworkCountsDTO` vs `Data/Surveys/SurveyFieldwork/SurveyFieldworkCountsResponseModel`. Pick one naming convention.
-
-**4. Unused v2 request/response models** — written but never referenced, because the endpoints take raw `array` instead:
-
-- `Data/Surveys/SamplingPoints/SamplingPointCreateRequestModel`, `SamplingPointCustomDataModel`
-- `Data/Surveys/Sample/SurveyCreateSampleColumnModel`, `ClearSurveySampleModel`, `SampleFilterModel`
-- `Data/Surveys/SurveyQuota/SurveysQuotaTargetsResponseModel`, `SurveysQuotaTargetsEtagResponseModel`
-- `Data/SurveyQuotaFrame/SurveyQuotaFrameData`, `SurveyQuotaFrameResponseData`, `Data/Quota/QuotaAttribute`
-
-`Data/Surveys/Sample/SampleFilterModel` is an empty stub (`class SampleFilterModel {}`) — either implement it or drop it.
-
-**5. Unused enums where the typed value is available** — `Enums/SurveyFieldworkStatusEnum` and `Enums/InterviewingRestrictionTypeEnum` are unreferenced, yet `SurveyFieldworkService::status()` returns a bare `int` and `stop()` takes a raw `array` whose only field is `interviewingRestrictionType`. Wiring these up is the cheapest type-safety win in the package.
+- `src/Data/` has no root-level classes, and `Data/SurveyQuotaFrame/` and `Data/Quota/QuotaAttribute` are gone.
+- `*DTO` / `*Data` suffixes are retired and `tests/ArchTest.php` rejects them (#28).
+- The request models are wired into services (`array|RequestModel` input), and `SampleFilterModel` is a real model used by `SurveySampleService`.
+- Both enums are referenced (`SurveyFieldworkService`, `SurveysFieldworkStopRequestModel`).
 
 ### Minor drift in implemented calls
 
@@ -626,15 +636,15 @@ These are not wrong API calls, but residue from the removed v1 stack and from a 
 
 ### Stale documentation
 
-`CLAUDE.md` (lines 31, 49, 136) and `AGENTS.md` (lines 74, 128) all still state that v1 endpoints live in `src/Endpoints/v1/` "for reference". Those directories were deleted; the guidance is misleading for anyone (or any agent) reading the repo now.
+**Resolved.** `CLAUDE.md` and `AGENTS.md` no longer describe `src/Endpoints/v1/` as a reference; both now state that the v1 stack is removed and must not be reintroduced.
 
 ---
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented, grouped by section.
+Everything not yet implemented (193 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
-**Access & Authentication** (18 pending)
+**Access & Authentication** (16 pending)
 
 - `DELETE /v2/domainAssignments`
 - `POST /v2/domainAssignments`
@@ -645,15 +655,13 @@ Everything not yet implemented, grouped by section.
 - `PATCH /v2/localUsers/{identityId}`
 - `PATCH /v2/localUsers/{identityId}/password`
 - `POST /v2/localUsersLogs`
-- `GET /v2/me/role`
 - `GET /v2/passwordSettings`
 - `PATCH /v2/passwordSettings`
-- `GET /v2/requests`
-- `POST /v2/requests`
-- `PUT /v2/requests`
-- `DELETE /v2/requests/{requestId}`
-- `GET /v2/requests/{requestId}`
-- `GET /v2/roles`
+- `GET /v2/requests` — Planned for Development (#57)
+- `POST /v2/requests` — Planned for Development (#57)
+- `PUT /v2/requests` — Planned for Development (#57)
+- `DELETE /v2/requests/{requestId}` — Planned for Development (#57)
+- `GET /v2/requests/{requestId}` — Planned for Development (#57)
 
 **Blacklist** (2 pending)
 
@@ -721,7 +729,7 @@ Everything not yet implemented, grouped by section.
 
 **Interviewers Worklog** (1 pending)
 
-- `POST /v2/interviewersWorklog`
+- `POST /v2/interviewersWorklog` — Planned for Development (#58)
 
 **Language Translations (tenant)** (4 pending)
 
@@ -744,27 +752,27 @@ Everything not yet implemented, grouped by section.
 
 **Parent Surveys & Waves** (14 pending)
 
-- `GET /v2/parentSurveys`
-- `POST /v2/parentSurveys`
-- `GET /v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart`
-- `PUT /v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart`
-- `GET /v2/parentSurveys/{parentSurveyId}/waves`
-- `POST /v2/parentSurveys/{parentSurveyId}/waves`
-- `POST /v2/parentSurveys/{parentSurveyId}/waves/{waveId}`
-- `DELETE /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart`
-- `GET /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart`
-- `PUT /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart`
-- `GET /v2/surveyWaves/{waveId}/startDate`
-- `PUT /v2/surveyWaves/{waveId}/startDate`
-- `GET /v2/surveyWaves/{waveId}/stopDate`
-- `PUT /v2/surveyWaves/{waveId}/stopDate`
+- `GET /v2/parentSurveys` — Planned for Development (#67)
+- `POST /v2/parentSurveys` — Planned for Development (#67)
+- `GET /v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` — Planned for Development (#67)
+- `PUT /v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` — Planned for Development (#67)
+- `GET /v2/parentSurveys/{parentSurveyId}/waves` — Planned for Development (#67)
+- `POST /v2/parentSurveys/{parentSurveyId}/waves` — Planned for Development (#67)
+- `POST /v2/parentSurveys/{parentSurveyId}/waves/{waveId}` — Planned for Development (#67)
+- `DELETE /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` — Planned for Development (#67)
+- `GET /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` — Planned for Development (#67)
+- `PUT /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` — Planned for Development (#67)
+- `GET /v2/surveyWaves/{waveId}/startDate` — Planned for Development (#67)
+- `PUT /v2/surveyWaves/{waveId}/startDate` — Planned for Development (#67)
+- `GET /v2/surveyWaves/{waveId}/stopDate` — Planned for Development (#67)
+- `PUT /v2/surveyWaves/{waveId}/stopDate` — Planned for Development (#67)
 
 **Response Codes (tenant)** (4 pending)
 
-- `GET /v2/responseCodes`
-- `POST /v2/responseCodes`
-- `DELETE /v2/responseCodes/{responseCodeId}`
-- `PATCH /v2/responseCodes/{responseCodeId}`
+- `GET /v2/responseCodes` — Planned for Development (#59)
+- `POST /v2/responseCodes` — Planned for Development (#59)
+- `DELETE /v2/responseCodes/{responseCodeId}` — Planned for Development (#59)
+- `PATCH /v2/responseCodes/{responseCodeId}` — Planned for Development (#59)
 
 **Screeners** (10 pending)
 
@@ -786,30 +794,30 @@ Everything not yet implemented, grouped by section.
 
 **Survey Groups** (12 pending)
 
-- `GET /v2/surveyGroups`
+- `GET /v2/surveyGroups` — Planned for Development (#60)
 - `POST /v2/surveyGroups`
 - `DELETE /v2/surveyGroups/{surveyGroupId}`
-- `GET /v2/surveyGroups/{surveyGroupId}`
+- `GET /v2/surveyGroups/{surveyGroupId}` — Planned for Development (#60)
 - `PATCH /v2/surveyGroups/{surveyGroupId}`
 - `PUT /v2/surveyGroups/{surveyGroupId}/assignDirectory`
 - `PUT /v2/surveyGroups/{surveyGroupId}/assignLocal`
-- `GET /v2/surveyGroups/{surveyGroupId}/directoryAssignments`
-- `GET /v2/surveyGroups/{surveyGroupId}/localAssignments`
-- `GET /v2/surveyGroups/{surveyGroupId}/surveys`
+- `GET /v2/surveyGroups/{surveyGroupId}/directoryAssignments` — Planned for Development (#60)
+- `GET /v2/surveyGroups/{surveyGroupId}/localAssignments` — Planned for Development (#60)
+- `GET /v2/surveyGroups/{surveyGroupId}/surveys` — Planned for Development (#60)
 - `PUT /v2/surveyGroups/{surveyGroupId}/unassignDirectory`
 - `PUT /v2/surveyGroups/{surveyGroupId}/unassignLocal`
 
 **Survey Resources** (1 pending)
 
-- `GET /v2/surveyResources`
+- `GET /v2/surveyResources` — Planned for Development (#61)
 
 **Surveys — Core** (5 pending)
 
-- `GET /v2/surveys/{surveyId}/dataRetentionSettings`
-- `PUT /v2/surveys/{surveyId}/dataRetentionSettings`
+- `GET /v2/surveys/{surveyId}/dataRetentionSettings` — Planned for Development (#62)
+- `PUT /v2/surveys/{surveyId}/dataRetentionSettings` — Planned for Development (#62)
 - `POST /v2/surveys/{surveyId}/respondentDataEncrypt`
-- `PUT /v2/surveys/{surveyId}/surveyGroup`
-- `GET /v2/surveys/{surveyId}/versions`
+- `PUT /v2/surveys/{surveyId}/surveyGroup` — Planned for Development (#62)
+- `GET /v2/surveys/{surveyId}/versions` — Planned for Development (#62)
 
 **Surveys — Interviewers & Assignments** (7 pending)
 
@@ -821,7 +829,7 @@ Everything not yet implemented, grouped by section.
 - `PUT /v2/surveys/{surveyId}/interviewers/{interviewerId}/quotaLevelTargets`
 - `PUT /v2/surveys/{surveyId}/interviewers/{interviewerId}/unassign`
 
-**Surveys — Interviews & Data** (13 pending)
+**Surveys — Interviews & Data** (10 pending)
 
 - `GET /v2/surveys/interviewSimulations`
 - `GET /v2/surveys/{surveyId}/interviewInteractionsSettings`
@@ -831,8 +839,8 @@ Everything not yet implemented, grouped by section.
 - `POST /v2/surveys/{surveyId}/interviewSimulations/startInterviewSimulations`
 - `GET /v2/surveys/{surveyId}/manualTests`
 - `POST /v2/surveys/{surveyId}/manualTests`
-- `GET /v2/surveys/{surveyId}/performance/metrics/live`
-- `GET /v2/surveys/{surveyId}/performance/metrics/test`
+- `GET /v2/surveys/{surveyId}/performance/metrics/live` — Planned for Development (#63)
+- `GET /v2/surveys/{surveyId}/performance/metrics/test` — Planned for Development (#63)
 
 **Surveys — Invitations & Distribution** (16 pending)
 
@@ -855,16 +863,16 @@ Everything not yet implemented, grouped by section.
 
 **Surveys — Publishing & Script** (10 pending)
 
-- `GET /v2/surveys/{surveyId}/package`
-- `GET /v2/surveys/{surveyId}/script`
-- `POST /v2/surveys/{surveyId}/script`
-- `GET /v2/surveys/{surveyId}/script/{eTag}`
+- `GET /v2/surveys/{surveyId}/package` — Planned for Development (#64)
+- `GET /v2/surveys/{surveyId}/script` — Planned for Development (#64)
+- `POST /v2/surveys/{surveyId}/script` — Planned for Development (#64)
+- `GET /v2/surveys/{surveyId}/script/{eTag}` — Planned for Development (#64)
 - `GET /v2/surveys/{surveyId}/scriptFragments`
 - `DELETE /v2/surveys/{surveyId}/scriptFragments/{fragmentName}`
 - `GET /v2/surveys/{surveyId}/scriptFragments/{fragmentName}`
 - `POST /v2/surveys/{surveyId}/scriptFragments/{fragmentName}`
-- `GET /v2/surveys/{surveyId}/varFile`
-- `GET /v2/surveys/{surveyId}/varFile/{eTag}`
+- `GET /v2/surveys/{surveyId}/varFile` — Planned for Development (#64)
+- `GET /v2/surveys/{surveyId}/varFile/{eTag}` — Planned for Development (#64)
 
 **Surveys — Sample** (2 pending)
 
@@ -891,11 +899,11 @@ Everything not yet implemented, grouped by section.
 - `DELETE /v2/surveys/{surveyId}/mediaFiles/{fileName}`
 - `GET /v2/surveys/{surveyId}/mediaFiles/{fileName}`
 - `POST /v2/surveys/{surveyId}/mediaFiles/{fileName}`
-- `GET /v2/surveys/{surveyId}/responseCodes`
-- `POST /v2/surveys/{surveyId}/responseCodes`
-- `DELETE /v2/surveys/{surveyId}/responseCodes/{responseCode}`
-- `GET /v2/surveys/{surveyId}/responseCodes/{responseCode}`
-- `PATCH /v2/surveys/{surveyId}/responseCodes/{responseCode}`
+- `GET /v2/surveys/{surveyId}/responseCodes` — Planned for Development (#65)
+- `POST /v2/surveys/{surveyId}/responseCodes` — Planned for Development (#65)
+- `DELETE /v2/surveys/{surveyId}/responseCodes/{responseCode}` — Planned for Development (#65)
+- `GET /v2/surveys/{surveyId}/responseCodes/{responseCode}` — Planned for Development (#65)
+- `PATCH /v2/surveys/{surveyId}/responseCodes/{responseCode}` — Planned for Development (#65)
 
 **Templates** (1 pending)
 
@@ -903,6 +911,6 @@ Everything not yet implemented, grouped by section.
 
 **Themes** (3 pending)
 
-- `GET /v2/themes`
-- `PUT /v2/themes`
-- `DELETE /v2/themes/{themeId}`
+- `GET /v2/themes` — Planned for Development (#66)
+- `PUT /v2/themes` — Planned for Development (#66)
+- `DELETE /v2/themes/{themeId}` — Planned for Development (#66)
