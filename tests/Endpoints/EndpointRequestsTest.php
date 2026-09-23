@@ -33,6 +33,16 @@ beforeEach(function () {
 function endpointCallCases(): array
 {
     return [
+        // ── Access & Authentication ──────────────────────────────────────────
+        'Roles::list' => [
+            Contracts\RolesEndpointInterface::class, 'list', [],
+            'GET', 'v2/roles', [],
+        ],
+        'UserRole::get' => [
+            Contracts\UserRoleEndpointInterface::class, 'get', [],
+            'GET', 'v2/me/role', [],
+        ],
+
         // ── Background activities ────────────────────────────────────────────
         'BackgroundActivities::get' => [
             Contracts\BackgroundActivitiesEndpointInterface::class, 'get', ['activity-1'],

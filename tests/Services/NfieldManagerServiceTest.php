@@ -20,6 +20,7 @@ use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
+use Nikoleesg\NfieldAdmin\Services\RoleService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
 
 afterEach(function () {
@@ -32,6 +33,7 @@ function managerWith(SurveyService $surveyService, ?BackgroundActivitiesService 
         $surveyService,
         app(CapiInterviewerService::class),
         $activities ?? app(BackgroundActivitiesService::class),
+        Mockery::mock(RoleService::class),
     );
 }
 

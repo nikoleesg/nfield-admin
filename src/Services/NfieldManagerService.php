@@ -9,6 +9,8 @@ use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseMo
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Roles\PermissionModel;
+use Nikoleesg\NfieldAdmin\Data\Roles\UserRoleModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
@@ -38,6 +40,7 @@ class NfieldManagerService
         protected SurveyService $surveyService,
         protected CapiInterviewerService $capiInterviewerService,
         protected BackgroundActivitiesService $backgroundActivitiesService,
+        protected RoleService $roleService,
     ) {}
 
     // ========================================
@@ -186,5 +189,27 @@ class NfieldManagerService
             ->forSurvey($surveyId)
             ->samplingPoints()
             ->forSamplingPoint($samplingPoint);
+    }
+
+    // ========================================
+    // Role Methods
+    // ========================================
+
+    /**
+     * Get the current user's role and permissions.
+     */
+    public function getUserRole(): UserRoleModel
+    {
+        return $this->roleService->getUserRole();
+    }
+
+    /**
+     * Get all roles and their associated permissions.
+     *
+     * @return Collection<string, Collection<int, PermissionModel>>
+     */
+    public function listRoles(): Collection
+    {
+        return $this->roleService->listRoles();
     }
 }

@@ -22,6 +22,8 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
  * @method static \Nikoleesg\NfieldAdmin\Resources\SurveyResource withSurvey(string $surveyId)
  * @method static \Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource withBlueprintSurvey(string $blueprintId)
  * @method static \Nikoleesg\NfieldAdmin\Resources\SamplingPointResource withSurveySamplingPoint(string $surveyId, string $samplingPoint)
+ * @method static \Nikoleesg\NfieldAdmin\Data\Roles\UserRoleModel getUserRole()
+ * @method static \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \Nikoleesg\NfieldAdmin\Data\Roles\PermissionModel>> listRoles()
  *
  * @see NfieldManagerService
  */
