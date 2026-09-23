@@ -78,10 +78,7 @@
         "laravel": {
             "providers": [
                 "Nikoleesg\\NfieldAdmin\\NfieldAdminServiceProvider"
-            ],
-            "aliases": {
-                "NfieldManager": "Nikoleesg\\NfieldAdmin\\Facades\\NfieldManager"
-            }
+            ]
         }
     },
     "minimum-stability": "stable",
