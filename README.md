@@ -259,17 +259,17 @@ $survey->data()->deleteInterviewData('interview-id');
 ### CAPI interviewers
 
 ```php
-NfieldManager::listCapiInterviewers();                 // Collection<CapiInterviewerModel>
-NfieldManager::findCapiInterviewers(['officeId' => 'office-id']);
-NfieldManager::getByClientId('client-interviewer-id');
+NfieldManager::capiInterviewers()->list();                 // Collection<CapiInterviewerModel>
+NfieldManager::capiInterviewers()->find(['officeId' => 'office-id']);
+NfieldManager::capiInterviewers()->getByClientId('client-interviewer-id');
 
-NfieldManager::createCapiInterviewer([
+NfieldManager::capiInterviewers()->create([
     'userName' => 'ada',
     'password' => '...',
     'emailAddress' => 'ada@example.com',
 ]);
 
-$interviewer = NfieldManager::withCapiInterviewer('interviewer-id');
+$interviewer = NfieldManager::capiInterviewers()->forInterviewer('interviewer-id');
 
 $interviewer->get();                                   // CapiInterviewerModel
 $interviewer->update(['firstName' => 'Ada']);

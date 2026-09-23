@@ -6,12 +6,8 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseModel;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Roles\PermissionModel;
 use Nikoleesg\NfieldAdmin\Data\Roles\UserRoleModel;
-use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 
 /**
  * NfieldManagerService - Main entry point for Nfield Admin SDK
@@ -24,7 +20,7 @@ use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
  * $manager = app(NfieldManagerService::class);
  * $surveys = $manager->surveys()->list();
  * $manager->surveys()->forSurvey('survey-id')->fieldwork()->start();
- * $interviewers = $manager->listCapiInterviewers();
+ * $interviewers = $manager->capiInterviewers()->list();
  * ```
  */
 class NfieldManagerService
@@ -63,58 +59,9 @@ class NfieldManagerService
     // CAPI Interviewer Methods
     // ========================================
 
-    /**
-     * List all CAPI interviewers.
-     *
-     * @return Collection<int, CapiInterviewerModel> Collection of all CAPI interviewers
-     */
-    public function listCapiInterviewers(): Collection
+    public function capiInterviewers(): CapiInterviewerService
     {
-        return $this->capiInterviewerService->listCapiInterviewers();
-    }
-
-    /**
-     * Find CAPI interviewers matching filter criteria.
-     *
-     * @param  array  $filter  Filter criteria
-     * @return Collection<int, CapiInterviewerModel> Filtered collection of CAPI interviewers
-     */
-    public function findCapiInterviewers(array $filter = []): Collection
-    {
-        return $this->capiInterviewerService->findCapiInterviewers($filter);
-    }
-
-    /**
-     * Create a new CAPI interviewer.
-     *
-     * @param  array|NewCapiInterviewerRequestModel  $data  CAPI interviewer data
-     * @return CapiInterviewerResponseModel Created CAPI interviewer
-     */
-    public function createCapiInterviewer(array|NewCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
-    {
-        return $this->capiInterviewerService->createCapiInterviewer($data);
-    }
-
-    /**
-     * Get a CAPI interviewer by client interviewer ID.
-     *
-     * @param  string  $clientInterviewerId  Client interviewer ID
-     * @return CapiInterviewerModel CAPI interviewer data
-     */
-    public function getByClientId(string $clientInterviewerId): CapiInterviewerModel
-    {
-        return $this->capiInterviewerService->getByClientId($clientInterviewerId);
-    }
-
-    /**
-     * Get fluent resource for a specific CAPI interviewer.
-     *
-     * @param  string  $interviewerId  CAPI interviewer ID
-     * @return CapiInterviewerResource Fluent resource for chaining operations
-     */
-    public function withCapiInterviewer(string $interviewerId): CapiInterviewerResource
-    {
-        return $this->capiInterviewerService->forInterviewer($interviewerId);
+        return $this->capiInterviewerService;
     }
 
     // ========================================

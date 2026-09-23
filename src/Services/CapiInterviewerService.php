@@ -41,7 +41,7 @@ class CapiInterviewerService
      * List all CAPI interviewers
      */
     /** @return Collection<int, CapiInterviewerModel> */
-    public function listCapiInterviewers(): Collection
+    public function list(): Collection
     {
         return CapiInterviewerModel::collect(
             $this->capiInterviewersCollectionEndpoint->list(),
@@ -53,7 +53,7 @@ class CapiInterviewerService
      * Find CAPI interviewers with filter criteria
      */
     /** @return Collection<int, CapiInterviewerModel> */
-    public function findCapiInterviewers(array $filter = []): Collection
+    public function find(array $filter = []): Collection
     {
         return CapiInterviewerModel::collect(
             $this->capiInterviewersCollectionEndpoint->find($filter),
@@ -64,7 +64,7 @@ class CapiInterviewerService
     /**
      * Create a new CAPI interviewer
      */
-    public function createCapiInterviewer(array|NewCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
+    public function create(array|NewCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
         $payload = NewCapiInterviewerRequestModel::from($data)->toArray();
 
@@ -86,7 +86,7 @@ class CapiInterviewerService
     /**
      * Get a specific CAPI interviewer by interviewer ID
      */
-    public function getCapiInterviewer(string $interviewerId): CapiInterviewerModel
+    public function get(string $interviewerId): CapiInterviewerModel
     {
         return CapiInterviewerModel::from($this->capiInterviewersEndpoint->get($interviewerId));
     }
@@ -94,7 +94,7 @@ class CapiInterviewerService
     /**
      * Update (partial) a CAPI interviewer
      */
-    public function updateCapiInterviewer(string $interviewerId, array|EditCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
+    public function update(string $interviewerId, array|EditCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
         $payload = EditCapiInterviewerRequestModel::from($data)->toArray();
 
@@ -118,7 +118,7 @@ class CapiInterviewerService
     /**
      * Delete a CAPI interviewer
      */
-    public function deleteCapiInterviewer(string $interviewerId): void
+    public function delete(string $interviewerId): void
     {
         $this->capiInterviewersEndpoint->delete($interviewerId);
     }

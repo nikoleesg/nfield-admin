@@ -173,8 +173,8 @@ it('delegates the background activity lookup', function () {
 it('opens the CAPI interviewer chain from the service and the manager', function () {
     $manager = app(NfieldManagerService::class);
 
-    expect($manager->withCapiInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerResource::class)
-        ->and(app(CapiInterviewerService::class)->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerResource::class);
+    expect($manager->capiInterviewers())->toBeInstanceOf(CapiInterviewerService::class)
+        ->and($manager->capiInterviewers()->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerResource::class);
 });
 
 it('exposes the event subscriptions service', function () {

@@ -96,7 +96,7 @@ it('lists capi interviewers as DTO collection', function () {
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
-    $result = $service->listCapiInterviewers();
+    $result = $service->list();
 
     expect($result)->toBeInstanceOf(Collection::class);
     expect($result->first())->toBeInstanceOf(CapiInterviewerModel::class);
@@ -120,7 +120,7 @@ it('finds capi interviewers as DTO collection', function () {
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
-    $result = $service->findCapiInterviewers($filter);
+    $result = $service->find($filter);
 
     expect($result)->toBeInstanceOf(Collection::class);
     expect($result->first())->toBeInstanceOf(CapiInterviewerModel::class);
@@ -152,7 +152,7 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
-    $result = $service->createCapiInterviewer($dto);
+    $result = $service->create($dto);
 
     expect($result)->toBeInstanceOf(CapiInterviewerResponseModel::class);
     expect($result->isSupervisor)->toBeTrue();
@@ -193,7 +193,7 @@ it('gets an interviewer by id and returns DTO', function () {
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
-    $result = $service->getCapiInterviewer('int-1');
+    $result = $service->get('int-1');
 
     expect($result)->toBeInstanceOf(CapiInterviewerModel::class);
     expect($result->interviewerId)->toBe('int-1');
@@ -215,7 +215,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
-    $result = $service->updateCapiInterviewer('int-1', $dto);
+    $result = $service->update('int-1', $dto);
 
     expect($result)->toBeInstanceOf(CapiInterviewerResponseModel::class);
     expect($result->firstName)->toBe('Jane');
@@ -256,7 +256,7 @@ it('deletes an interviewer', function () {
 
     $service = new CapiInterviewerService($collectionEndpoint, $endpoint, $assignmentsEndpoint, $officesEndpoint);
 
-    $service->deleteCapiInterviewer('int-1');
+    $service->delete('int-1');
 });
 
 it('gets assignments as DTO collection', function () {
