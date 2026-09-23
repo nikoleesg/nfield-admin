@@ -41,6 +41,7 @@ class NfieldManagerService
         protected CapiInterviewerService $capiInterviewerService,
         protected BackgroundActivitiesService $backgroundActivitiesService,
         protected RoleService $roleService,
+        protected EventSubscriptionService $eventSubscriptionService,
     ) {}
 
     // ========================================
@@ -189,6 +190,15 @@ class NfieldManagerService
             ->forSurvey($surveyId)
             ->samplingPoints()
             ->forSamplingPoint($samplingPoint);
+    }
+
+    // ========================================
+    // Event Subscriptions
+    // ========================================
+
+    public function eventSubscriptions(): EventSubscriptionService
+    {
+        return $this->eventSubscriptionService;
     }
 
     // ========================================

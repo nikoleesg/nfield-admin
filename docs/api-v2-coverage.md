@@ -2,7 +2,7 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`), verified against `src/` on branch `dev` (HEAD `3c5d8aa`).
 
-**Overall: 79 of 282 operations implemented (28%), across 182 paths.**
+**Overall: 84 of 282 operations implemented (30%), across 182 paths.**
 
 Counting is per *operation* (method + path), not per path. "Implemented" means a class in `src/Endpoints/v2/` (or `HttpClient`) issues that exact request.
 
@@ -15,6 +15,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Surveys — Fieldwork | 4 | 4 | 100% |
 | Background Activities | 1 | 1 | 100% |
 | Survey Blueprints | 1 | 1 | 100% |
+| Event Subscriptions | 5 | 5 | 100% |
 | Surveys — Sampling Points | 22 | 25 | 88% |
 | Surveys — Sample | 10 | 12 | 83% |
 | Surveys — Core | 9 | 14 | 64% |
@@ -29,7 +30,6 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Screeners | 0 | 10 | 0% |
 | Surveys — Interviewers & Assignments | 0 | 7 | 0% |
 | CATI Interviewers | 0 | 5 | 0% |
-| Event Subscriptions | 0 | 5 | 0% |
 | Offices | 0 | 5 | 0% |
 | Language Translations (tenant) | 0 | 4 | 0% |
 | Response Codes (tenant) | 0 | 4 | 0% |
@@ -432,15 +432,15 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 ### Event Subscriptions
 
-*0/5 implemented.*
+*5/5 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ❌ | GET | `/v2/events/subscriptions` | — |
-| ❌ | POST | `/v2/events/subscriptions` | — |
-| ❌ | DELETE | `/v2/events/subscriptions/{name}` | — |
-| ❌ | GET | `/v2/events/subscriptions/{name}` | — |
-| ❌ | PATCH | `/v2/events/subscriptions/{name}` | — |
+| ✅ | GET | `/v2/events/subscriptions` | `SubscriptionCollectionEndpoint::list` |
+| ✅ | POST | `/v2/events/subscriptions` | `SubscriptionCollectionEndpoint::create` |
+| ✅ | DELETE | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::destroy` |
+| ✅ | GET | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::get` |
+| ✅ | PATCH | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::updatePartial` |
 
 ### Offices
 
@@ -718,14 +718,6 @@ Everything not yet implemented, grouped by section.
 
 - `GET /v2/emailSettings`
 - `PUT /v2/emailSettings`
-
-**Event Subscriptions** (5 pending)
-
-- `GET /v2/events/subscriptions`
-- `POST /v2/events/subscriptions`
-- `DELETE /v2/events/subscriptions/{name}`
-- `GET /v2/events/subscriptions/{name}`
-- `PATCH /v2/events/subscriptions/{name}`
 
 **Interviewers Worklog** (1 pending)
 

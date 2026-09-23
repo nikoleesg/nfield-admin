@@ -19,6 +19,7 @@ use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
+use Nikoleesg\NfieldAdmin\Services\EventSubscriptionService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Nikoleesg\NfieldAdmin\Services\RoleService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
@@ -34,6 +35,7 @@ function managerWith(SurveyService $surveyService, ?BackgroundActivitiesService 
         app(CapiInterviewerService::class),
         $activities ?? app(BackgroundActivitiesService::class),
         Mockery::mock(RoleService::class),
+        Mockery::mock(EventSubscriptionService::class)
     );
 }
 
@@ -203,4 +205,10 @@ it('opens the CAPI interviewer chain from the service and the manager', function
 
     expect($manager->withCapiInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerResource::class)
         ->and(app(CapiInterviewerService::class)->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerResource::class);
+});
+
+it('exposes the event subscriptions service', function () {
+    $manager = app(NfieldManagerService::class);
+
+    expect($manager->eventSubscriptions())->toBeInstanceOf(EventSubscriptionService::class);
 });

@@ -33,6 +33,27 @@ beforeEach(function () {
 function endpointCallCases(): array
 {
     return [
+        // ── Event Subscriptions ──────────────────────────────────────────────
+        'SubscriptionCollection::list' => [
+            Contracts\SubscriptionCollectionEndpointInterface::class, 'list', [],
+            'GET', 'v2/events/subscriptions', [],
+        ],
+        'SubscriptionCollection::create' => [
+            Contracts\SubscriptionCollectionEndpointInterface::class, 'create', [['name' => 'sub1']],
+            'POST', 'v2/events/subscriptions', ['name' => 'sub1'],
+        ],
+        'Subscription::get' => [
+            Contracts\SubscriptionEndpointInterface::class, 'get', ['sub1'],
+            'GET', 'v2/events/subscriptions/sub1', [],
+        ],
+        'Subscription::updatePartial' => [
+            Contracts\SubscriptionEndpointInterface::class, 'updatePartial', ['sub1', ['name' => 'sub1']],
+            'PATCH', 'v2/events/subscriptions/sub1', ['name' => 'sub1'],
+        ],
+        'Subscription::destroy' => [
+            Contracts\SubscriptionEndpointInterface::class, 'destroy', ['sub1'],
+            'DELETE', 'v2/events/subscriptions/sub1', [],
+        ],
         // ── Access & Authentication ──────────────────────────────────────────
         'Roles::list' => [
             Contracts\RolesEndpointInterface::class, 'list', [],

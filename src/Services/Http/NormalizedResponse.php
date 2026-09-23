@@ -28,9 +28,9 @@ final class NormalizedResponse extends Response
     /**
      * {@inheritDoc}
      *
-     * @param string|null $key
-     * @param mixed $default
-     * @param int|null $flags
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @param  int|null  $flags
      */
     public function json($key = null, $default = null, $flags = null)
     {
