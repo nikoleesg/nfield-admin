@@ -121,7 +121,7 @@ it('hydrates a mapper-free DTO straight from a real PascalCase payload', functio
         ], 200),
     ]);
 
-    $survey = app(SurveyService::class)->listSurveys()->first();
+    $survey = app(SurveyService::class)->list()->first();
 
     expect($survey)->toBeInstanceOf(SurveyModel::class)
         ->and($survey->surveyId)->toBe('survey-1')

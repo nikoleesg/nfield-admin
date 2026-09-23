@@ -24,25 +24,25 @@ class SurveyService
     ) {}
 
     /** @return Collection<int, SurveyModel> */
-    public function listSurveys(): Collection
+    public function list(): Collection
     {
         return SurveyModel::collect($this->surveyCollectionEndpoint->list(), Collection::class);
     }
 
     /** @return Collection<int, SurveyModel> */
-    public function findSurveys(array $filter): Collection
+    public function find(array $filter): Collection
     {
         return SurveyModel::collect($this->surveyCollectionEndpoint->find($filter), Collection::class);
     }
 
-    public function createSurvey(array|SurveyCreateModel $data): SurveyModel
+    public function create(array|SurveyCreateModel $data): SurveyModel
     {
         $payload = SurveyCreateModel::from($data)->toArray();
 
         return SurveyModel::from($this->surveyCollectionEndpoint->create($payload));
     }
 
-    public function createSurveyFromBlueprint(array|SurveyFromBlueprintModel $data): SurveyModel
+    public function createFromBlueprint(array|SurveyFromBlueprintModel $data): SurveyModel
     {
         $payload = SurveyFromBlueprintModel::from($data)->toArray();
 
@@ -50,7 +50,7 @@ class SurveyService
     }
 
     /** @return Collection<int, SurveyBaseModel> */
-    public function findSurveysByRespondent(string $value): Collection
+    public function searchRespondent(string $value): Collection
     {
         return SurveyBaseModel::collect($this->surveyCollectionEndpoint->search($value), Collection::class);
     }

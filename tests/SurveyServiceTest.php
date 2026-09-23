@@ -41,7 +41,7 @@ it('creates a survey sending camelCase keys', function () {
             'surveyType' => 'Capi',
         ]);
 
-    $result = $service->createSurvey($createModel);
+    $result = $service->create($createModel);
 
     expect($result->surveyId)->toBe('test-id')
         ->and($result->surveyName)->toBe('Test Survey');

@@ -15,7 +15,6 @@ use Nikoleesg\NfieldAdmin\Enums\ActivityStatusEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
-use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
@@ -53,12 +52,12 @@ it('lists and filters surveys as models', function () {
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 
-    $all = $service->listSurveys();
+    $all = $service->list();
 
     expect($all)->toBeInstanceOf(Collection::class)
         ->and($all->first())->toBeInstanceOf(SurveyModel::class)
         ->and($all->first()->surveyState)->toBe(SurveyStateEnum::Started)
-        ->and($service->findSurveys(['surveyName' => 'Demo'])->first()->surveyName)->toBe('Demo');
+        ->and($service->find(['surveyName' => 'Demo'])->first()->surveyName)->toBe('Demo');
 });
 
 it('creates a survey from a blueprint', function () {
@@ -75,7 +74,7 @@ it('creates a survey from a blueprint', function () {
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 
-    $survey = $service->createSurveyFromBlueprint(new SurveyFromBlueprintModel('Wave 2', 'bp-1'));
+    $survey = $service->createFromBlueprint(new SurveyFromBlueprintModel('Wave 2', 'bp-1'));
 
     expect($survey->surveyName)->toBe('Wave 2');
 });
@@ -94,7 +93,7 @@ it('searches surveys by respondent and returns the slim model', function () {
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 
-    $found = $service->findSurveysByRespondent('ada@example.test');
+    $found = $service->searchRespondent('ada@example.test');
 
     expect($found->first())->toBeInstanceOf(SurveyBaseModel::class)
         ->and($found->first()->surveyId)->toBe('survey-1');
@@ -141,25 +140,10 @@ it('hydrates a background activity, dates and status included', function () {
 
 // ── NfieldManagerService ─────────────────────────────────────────────────
 
-it('delegates the survey calls it exposes', function () {
-    $surveyService = Mockery::mock(SurveyService::class);
+it('exposes the surveys domain service', function () {
+    $manager = managerWith(app(SurveyService::class));
 
-    $surveyService->shouldReceive('listSurveys')->once()->andReturn(collect(['listed']));
-    $surveyService->shouldReceive('findSurveys')->with(['surveyName' => 'Demo'])->once()->andReturn(collect(['found']));
-    $created = SurveyModel::from(surveyPayload(['surveyName' => 'Created']));
-    $fromBlueprint = SurveyModel::from(surveyPayload(['surveyName' => 'From blueprint']));
-
-    $surveyService->shouldReceive('createSurvey')->with(['surveyName' => 'Demo'])->once()->andReturn($created);
-    $surveyService->shouldReceive('createSurveyFromBlueprint')->with(['blueprintSurveyId' => 'bp-1'])->once()->andReturn($fromBlueprint);
-    $surveyService->shouldReceive('findSurveysByRespondent')->with('ada')->once()->andReturn(collect(['searched']));
-
-    $manager = managerWith($surveyService);
-
-    expect($manager->listSurveys()->all())->toBe(['listed'])
-        ->and($manager->findSurveys(['surveyName' => 'Demo'])->all())->toBe(['found'])
-        ->and($manager->createSurvey(['surveyName' => 'Demo']))->toBe($created)
-        ->and($manager->createSurveyFromBlueprint(['blueprintSurveyId' => 'bp-1']))->toBe($fromBlueprint)
-        ->and($manager->searchRespondent('ada')->all())->toBe(['searched']);
+    expect($manager->surveys())->toBeInstanceOf(SurveyService::class);
 });
 
 it('delegates the background activity lookup', function () {
@@ -184,20 +168,6 @@ it('delegates the background activity lookup', function () {
     $manager = managerWith(app(SurveyService::class), $activities);
 
     expect($manager->getBackgroundActivity('activity-1'))->toBe($activity);
-});
-
-it('opens the fluent chain at each of its entry points', function () {
-    $manager = app(NfieldManagerService::class);
-
-    $survey = $manager->withSurvey('survey-1');
-    $samplingPoint = $manager->withSurveySamplingPoint('survey-1', 'sp-1');
-
-    expect($survey)->toBeInstanceOf(SurveyResource::class)
-        ->and($survey->getSurveyId())->toBe('survey-1')
-        ->and($manager->withBlueprintSurvey('bp-1'))->toBeInstanceOf(BlueprintSurveyResource::class)
-        ->and($samplingPoint)->toBeInstanceOf(SamplingPointResource::class)
-        ->and($samplingPoint->getSurveyId())->toBe('survey-1')
-        ->and($samplingPoint->getSamplingPointId())->toBe('sp-1');
 });
 
 it('opens the CAPI interviewer chain from the service and the manager', function () {
