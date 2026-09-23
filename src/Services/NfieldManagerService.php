@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseModel;
-use Nikoleesg\NfieldAdmin\Data\Roles\PermissionModel;
-use Nikoleesg\NfieldAdmin\Data\Roles\UserRoleModel;
 
 /**
  * NfieldManagerService - Main entry point for Nfield Admin SDK
@@ -77,21 +74,8 @@ class NfieldManagerService
     // Role Methods
     // ========================================
 
-    /**
-     * Get the current user's role and permissions.
-     */
-    public function getUserRole(): UserRoleModel
+    public function roles(): RoleService
     {
-        return $this->roleService->getUserRole();
-    }
-
-    /**
-     * Get all roles and their associated permissions.
-     *
-     * @return Collection<string, Collection<int, PermissionModel>>
-     */
-    public function listRoles(): Collection
-    {
-        return $this->roleService->listRoles();
+        return $this->roleService;
     }
 }

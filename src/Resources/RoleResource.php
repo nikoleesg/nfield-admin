@@ -35,8 +35,8 @@ class RoleResource
      *
      * @return Collection<string, Collection<int, PermissionModel>>
      */
-    public function listRoles(): Collection
+    public function list(): Collection
     {
-        return $this->resolveService()->listRoles();
+        return $this->resolveService()->list();
     }
 }

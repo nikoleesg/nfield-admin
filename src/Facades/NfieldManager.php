@@ -11,8 +11,7 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyService surveys()
  * @method static \Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseModel getBackgroundActivity(string $activityId)
  * @method static \Nikoleesg\NfieldAdmin\Services\CapiInterviewerService capiInterviewers()
- * @method static \Nikoleesg\NfieldAdmin\Data\Roles\UserRoleModel getUserRole()
- * @method static \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \Nikoleesg\NfieldAdmin\Data\Roles\PermissionModel>> listRoles()
+ * @method static \Nikoleesg\NfieldAdmin\Services\RoleService roles()
  *
  * @see NfieldManagerService
  */

@@ -182,3 +182,9 @@ it('exposes the event subscriptions service', function () {
 
     expect($manager->eventSubscriptions())->toBeInstanceOf(EventSubscriptionService::class);
 });
+
+it('exposes the roles service', function () {
+    $manager = app(NfieldManagerService::class);
+
+    expect($manager->roles())->toBeInstanceOf(RoleService::class);
+});

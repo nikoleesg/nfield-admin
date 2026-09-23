@@ -35,7 +35,7 @@ class RoleService
      *
      * @return Collection<string, Collection<int, PermissionModel>>
      */
-    public function listRoles(): Collection
+    public function list(): Collection
     {
         /** @var array<string, array<int, array<string, mixed>>> $response */
         $response = $this->rolesEndpoint->list();
