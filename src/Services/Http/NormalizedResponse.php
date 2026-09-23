@@ -27,11 +27,15 @@ final class NormalizedResponse extends Response
 
     /**
      * {@inheritDoc}
+     *
+     * @param string|null $key
+     * @param mixed $default
+     * @param int|null $flags
      */
-    public function json($key = null, $default = null)
+    public function json($key = null, $default = null, $flags = null)
     {
         if (! $this->decoded) {
-            $this->decoded = ResponseKeyNormalizer::normalize(json_decode($this->body(), true));
+            $this->decoded = ResponseKeyNormalizer::normalize(json_decode($this->body(), true, 512, $flags ?? 0));
         }
 
         if (is_null($key)) {
