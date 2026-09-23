@@ -20,19 +20,14 @@ return [
 
     /*
     |-------------------------------------------------------------------------
-    | Database table prefix
-    |-------------------------------------------------------------------------
-    |
-    */
-    'table_prefix' => 'nfield_',
-
-    /*
-    |-------------------------------------------------------------------------
     | Token Caching
     |-------------------------------------------------------------------------
     |
     */
     'cache' => [
+        /*
+        | Set to false to re-authenticate on every request.
+        */
         'enabled' => env('NFIELD_CACHE_ENABLED', true),
 
         /*
@@ -42,6 +37,11 @@ return [
         'store' => env('NFIELD_CACHE_STORE'),
 
         'prefix' => env('NFIELD_CACHE_KEY_PREFIX', 'nfield_'),
+
+        /*
+        | Upper bound on the token TTL, in seconds. The API's own `expiresIn`
+        | caps it further.
+        */
         'ttl' => 60 * 10,
     ],
 

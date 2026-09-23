@@ -8,12 +8,12 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpoin
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestModel;
 use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 
@@ -99,7 +99,7 @@ it('lists capi interviewers as DTO collection', function () {
     $result = $service->listCapiInterviewers();
 
     expect($result)->toBeInstanceOf(Collection::class);
-    expect($result->first())->toBeInstanceOf(CapiInterviewerData::class);
+    expect($result->first())->toBeInstanceOf(CapiInterviewerModel::class);
     expect($result->first()->interviewerId)->toBe('int-1');
     expect($result->first()->lastPasswordChangeTime)->toBeInstanceOf(Carbon::class);
 });
@@ -123,7 +123,7 @@ it('finds capi interviewers as DTO collection', function () {
     $result = $service->findCapiInterviewers($filter);
 
     expect($result)->toBeInstanceOf(Collection::class);
-    expect($result->first())->toBeInstanceOf(CapiInterviewerData::class);
+    expect($result->first())->toBeInstanceOf(CapiInterviewerModel::class);
     expect($result->first()->interviewerId)->toBe('int-99');
 });
 
@@ -133,7 +133,7 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
     $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
     $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
-    $dto = new NewCapiInterviewerRequestData(
+    $dto = new NewCapiInterviewerRequestModel(
         firstName: 'John',
         lastName: 'Doe',
         emailAddress: null,
@@ -154,7 +154,7 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
 
     $result = $service->createCapiInterviewer($dto);
 
-    expect($result)->toBeInstanceOf(CapiInterviewerResponseData::class);
+    expect($result)->toBeInstanceOf(CapiInterviewerResponseModel::class);
     expect($result->isSupervisor)->toBeTrue();
     expect($result->userName)->toBe('user-1');
 });
@@ -175,7 +175,7 @@ it('gets an interviewer by client id and returns DTO', function () {
 
     $result = $service->getByClientId('C0000001');
 
-    expect($result)->toBeInstanceOf(CapiInterviewerData::class);
+    expect($result)->toBeInstanceOf(CapiInterviewerModel::class);
     expect($result->clientInterviewerId)->toBe('C0000001');
 });
 
@@ -195,7 +195,7 @@ it('gets an interviewer by id and returns DTO', function () {
 
     $result = $service->getCapiInterviewer('int-1');
 
-    expect($result)->toBeInstanceOf(CapiInterviewerData::class);
+    expect($result)->toBeInstanceOf(CapiInterviewerModel::class);
     expect($result->interviewerId)->toBe('int-1');
 });
 
@@ -205,7 +205,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
     $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
     $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
-    $dto = new EditCapiInterviewerRequestData(firstName: 'Jane');
+    $dto = new EditCapiInterviewerRequestModel(firstName: 'Jane');
 
     $endpoint
         ->shouldReceive('update')
@@ -217,7 +217,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
 
     $result = $service->updateCapiInterviewer('int-1', $dto);
 
-    expect($result)->toBeInstanceOf(CapiInterviewerResponseData::class);
+    expect($result)->toBeInstanceOf(CapiInterviewerResponseModel::class);
     expect($result->firstName)->toBe('Jane');
 });
 
@@ -227,7 +227,7 @@ it('resets password and returns response DTO', function () {
     $assignmentsEndpoint = Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class);
     $officesEndpoint = Mockery::mock(CapiInterviewersOfficesEndpointInterface::class);
 
-    $dto = new ResetCapiInterviewerPasswordRequestData('new-password');
+    $dto = new ResetCapiInterviewerPasswordRequestModel('new-password');
 
     $endpoint
         ->shouldReceive('resetPassword')
@@ -239,7 +239,7 @@ it('resets password and returns response DTO', function () {
 
     $result = $service->resetPassword('int-1', $dto);
 
-    expect($result)->toBeInstanceOf(CapiInterviewerResponseData::class);
+    expect($result)->toBeInstanceOf(CapiInterviewerResponseModel::class);
 });
 
 it('deletes an interviewer', function () {
@@ -279,7 +279,7 @@ it('gets assignments as DTO collection', function () {
     $result = $service->getAssignments('int-1');
 
     expect($result)->toBeInstanceOf(Collection::class);
-    expect($result->first())->toBeInstanceOf(CapiInterviewerAssignmentData::class);
+    expect($result->first())->toBeInstanceOf(CapiInterviewerAssignmentModel::class);
     expect($result->first()->lastSyncDate)->toBeInstanceOf(Carbon::class);
 });
 
@@ -382,11 +382,11 @@ it('provides a fluent resource that proxies to endpoint', function () {
 
     $resource = (new CapiInterviewerResource($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
-    expect($resource->get())->toBeInstanceOf(CapiInterviewerData::class);
-    expect($resource->update(new EditCapiInterviewerRequestData(firstName: 'Jane')))->toBeInstanceOf(CapiInterviewerResponseData::class);
-    expect($resource->resetPassword(new ResetCapiInterviewerPasswordRequestData('pw')))->toBeInstanceOf(CapiInterviewerResponseData::class);
+    expect($resource->get())->toBeInstanceOf(CapiInterviewerModel::class);
+    expect($resource->update(new EditCapiInterviewerRequestModel(firstName: 'Jane')))->toBeInstanceOf(CapiInterviewerResponseModel::class);
+    expect($resource->resetPassword(new ResetCapiInterviewerPasswordRequestModel('pw')))->toBeInstanceOf(CapiInterviewerResponseModel::class);
     $resource->delete();
-    expect($resource->getAssignments()->first())->toBeInstanceOf(CapiInterviewerAssignmentData::class);
+    expect($resource->getAssignments()->first())->toBeInstanceOf(CapiInterviewerAssignmentModel::class);
     expect($resource->getOffices()->all())->toBe(['office-1']);
     $resource->updateOffice('office-1');
     $resource->deleteOffice('office-1');

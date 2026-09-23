@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Http;
 use Nikoleesg\NfieldAdmin\NfieldAdminServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -15,10 +14,6 @@ class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Nikoleesg\\NfieldAdmin\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
 
         // No test may reach the real NField API: an unfaked request throws
         // instead of leaving the suite dependent on a network and credentials.
@@ -36,10 +31,5 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_nfield-admin_table.php.stub';
-        $migration->up();
-        */
     }
 }

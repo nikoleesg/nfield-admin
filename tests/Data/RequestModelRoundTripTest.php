@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyCreateSampleColumnModel;
@@ -185,7 +185,7 @@ function requestModelCases(): array
         ]],
 
         // ── CAPI interviewers ────────────────────────────────────────────
-        NewCapiInterviewerRequestData::class => [NewCapiInterviewerRequestData::class, [
+        NewCapiInterviewerRequestModel::class => [NewCapiInterviewerRequestModel::class, [
             'firstName' => 'Ada',
             'lastName' => 'Lovelace',
             'emailAddress' => 'ada@example.test',
@@ -195,14 +195,14 @@ function requestModelCases(): array
             'password' => 'hunter2',
             'clientInterviewerId' => 'client-1',
         ]],
-        EditCapiInterviewerRequestData::class => [EditCapiInterviewerRequestData::class, [
+        EditCapiInterviewerRequestModel::class => [EditCapiInterviewerRequestModel::class, [
             'firstName' => 'Ada',
             'lastName' => 'Lovelace',
             'emailAddress' => 'ada@example.test',
             'telephoneNumber' => '555',
             'isSupervisor' => false,
         ]],
-        ResetCapiInterviewerPasswordRequestData::class => [ResetCapiInterviewerPasswordRequestData::class, [
+        ResetCapiInterviewerPasswordRequestModel::class => [ResetCapiInterviewerPasswordRequestModel::class, [
             'password' => 'hunter2',
         ]],
     ];

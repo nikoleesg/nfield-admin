@@ -9,12 +9,12 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpoin
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestModel;
 use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 
 /**
@@ -40,10 +40,10 @@ class CapiInterviewerService
     /**
      * List all CAPI interviewers
      */
-    /** @return Collection<int, CapiInterviewerData> */
+    /** @return Collection<int, CapiInterviewerModel> */
     public function listCapiInterviewers(): Collection
     {
-        return CapiInterviewerData::collect(
+        return CapiInterviewerModel::collect(
             $this->capiInterviewersCollectionEndpoint->list(),
             Collection::class
         );
@@ -52,10 +52,10 @@ class CapiInterviewerService
     /**
      * Find CAPI interviewers with filter criteria
      */
-    /** @return Collection<int, CapiInterviewerData> */
+    /** @return Collection<int, CapiInterviewerModel> */
     public function findCapiInterviewers(array $filter = []): Collection
     {
-        return CapiInterviewerData::collect(
+        return CapiInterviewerModel::collect(
             $this->capiInterviewersCollectionEndpoint->find($filter),
             Collection::class
         );
@@ -64,11 +64,11 @@ class CapiInterviewerService
     /**
      * Create a new CAPI interviewer
      */
-    public function createCapiInterviewer(array|NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function createCapiInterviewer(array|NewCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
-        $payload = NewCapiInterviewerRequestData::from($data)->toArray();
+        $payload = NewCapiInterviewerRequestModel::from($data)->toArray();
 
-        return CapiInterviewerResponseData::from(
+        return CapiInterviewerResponseModel::from(
             $this->capiInterviewersCollectionEndpoint->create($payload)
         );
     }
@@ -76,9 +76,9 @@ class CapiInterviewerService
     /**
      * Get a CAPI interviewer by client interviewer ID
      */
-    public function getByClientId(string $clientInterviewerId): CapiInterviewerData
+    public function getByClientId(string $clientInterviewerId): CapiInterviewerModel
     {
-        return CapiInterviewerData::from(
+        return CapiInterviewerModel::from(
             $this->capiInterviewersCollectionEndpoint->getByClientId($clientInterviewerId)
         );
     }
@@ -86,19 +86,19 @@ class CapiInterviewerService
     /**
      * Get a specific CAPI interviewer by interviewer ID
      */
-    public function getCapiInterviewer(string $interviewerId): CapiInterviewerData
+    public function getCapiInterviewer(string $interviewerId): CapiInterviewerModel
     {
-        return CapiInterviewerData::from($this->capiInterviewersEndpoint->get($interviewerId));
+        return CapiInterviewerModel::from($this->capiInterviewersEndpoint->get($interviewerId));
     }
 
     /**
      * Update (partial) a CAPI interviewer
      */
-    public function updateCapiInterviewer(string $interviewerId, array|EditCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function updateCapiInterviewer(string $interviewerId, array|EditCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
-        $payload = EditCapiInterviewerRequestData::from($data)->toArray();
+        $payload = EditCapiInterviewerRequestModel::from($data)->toArray();
 
-        return CapiInterviewerResponseData::from(
+        return CapiInterviewerResponseModel::from(
             $this->capiInterviewersEndpoint->update($interviewerId, $payload)
         );
     }
@@ -106,11 +106,11 @@ class CapiInterviewerService
     /**
      * Reset a CAPI interviewer's password
      */
-    public function resetPassword(string $interviewerId, array|ResetCapiInterviewerPasswordRequestData $data): CapiInterviewerResponseData
+    public function resetPassword(string $interviewerId, array|ResetCapiInterviewerPasswordRequestModel $data): CapiInterviewerResponseModel
     {
-        $payload = ResetCapiInterviewerPasswordRequestData::from($data)->toArray();
+        $payload = ResetCapiInterviewerPasswordRequestModel::from($data)->toArray();
 
-        return CapiInterviewerResponseData::from(
+        return CapiInterviewerResponseModel::from(
             $this->capiInterviewersEndpoint->resetPassword($interviewerId, $payload)
         );
     }
@@ -126,10 +126,10 @@ class CapiInterviewerService
     /**
      * Get assignments for a CAPI interviewer
      */
-    /** @return Collection<int, CapiInterviewerAssignmentData> */
+    /** @return Collection<int, CapiInterviewerAssignmentModel> */
     public function getAssignments(string $interviewerId): Collection
     {
-        return CapiInterviewerAssignmentData::collect(
+        return CapiInterviewerAssignmentModel::collect(
             $this->capiInterviewersAssignmentsEndpoint->list($interviewerId),
             Collection::class
         );

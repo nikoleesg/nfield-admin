@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Data\CapiInterviewers;
 
 use Spatie\LaravelData\Data;
 
-final class EditCapiInterviewerRequestData extends Data
+final class EditCapiInterviewerRequestModel extends Data
 {
     public function __construct(
         public ?string $firstName = null,

@@ -9,7 +9,7 @@ use Nikoleesg\NfieldAdmin\Data\Casts\CarbonCast;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
-final class CapiInterviewerAssignmentData extends Data
+final class CapiInterviewerAssignmentModel extends Data
 {
     public function __construct(
         public ?string $surveyName = null,

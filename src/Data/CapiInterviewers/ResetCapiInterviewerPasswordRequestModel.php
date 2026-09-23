@@ -6,7 +6,7 @@ namespace Nikoleesg\NfieldAdmin\Data\CapiInterviewers;
 
 use Spatie\LaravelData\Data;
 
-final class ResetCapiInterviewerPasswordRequestData extends Data
+final class ResetCapiInterviewerPasswordRequestModel extends Data
 {
     public function __construct(
         public string $password,

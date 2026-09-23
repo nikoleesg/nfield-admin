@@ -23,8 +23,7 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('nfield-admin')
-            ->hasConfigFile()
-            ->hasViews();
+            ->hasConfigFile();
     }
 
     public function registeringPackage(): void

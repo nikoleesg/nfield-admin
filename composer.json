@@ -1,11 +1,15 @@
 {
     "name": "nikoleesg/nfield-admin",
-    "version": "1.0.0",
-    "description": "This is my package nfield-admin",
+    "description": "A Laravel SDK for the NField v2 Admin API: surveys, fieldwork, sample, sampling points, quota and CAPI interviewers behind a fluent, typed interface.",
     "keywords": [
         "nikoleesg",
         "laravel",
-        "nfield-admin"
+        "nfield",
+        "nfield-admin",
+        "nipo",
+        "survey",
+        "market-research",
+        "sdk"
     ],
     "homepage": "https://github.com/nikoleesg/nfield-admin",
     "license": "MIT",
@@ -18,7 +22,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^10.0|^11.0",
+        "illuminate/contracts": "^10.0|^11.0|^12.0",
         "spatie/laravel-data": "^4.23",
         "spatie/laravel-package-tools": "^1.14.0"
     },
@@ -36,8 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Nikoleesg\\NfieldAdmin\\": "src/",
-            "Nikoleesg\\NfieldAdmin\\Database\\Factories\\": "database/factories/"
+            "Nikoleesg\\NfieldAdmin\\": "src/"
         }
     },
     "autoload-dev": {
@@ -81,6 +84,6 @@
             }
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

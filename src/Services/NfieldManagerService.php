@@ -6,9 +6,9 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseModel;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestData;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
@@ -118,7 +118,7 @@ class NfieldManagerService
     /**
      * List all CAPI interviewers.
      *
-     * @return Collection<int, CapiInterviewerData> Collection of all CAPI interviewers
+     * @return Collection<int, CapiInterviewerModel> Collection of all CAPI interviewers
      */
     public function listCapiInterviewers(): Collection
     {
@@ -129,7 +129,7 @@ class NfieldManagerService
      * Find CAPI interviewers matching filter criteria.
      *
      * @param  array  $filter  Filter criteria
-     * @return Collection<int, CapiInterviewerData> Filtered collection of CAPI interviewers
+     * @return Collection<int, CapiInterviewerModel> Filtered collection of CAPI interviewers
      */
     public function findCapiInterviewers(array $filter = []): Collection
     {
@@ -139,10 +139,10 @@ class NfieldManagerService
     /**
      * Create a new CAPI interviewer.
      *
-     * @param  array|NewCapiInterviewerRequestData  $data  CAPI interviewer data
-     * @return CapiInterviewerResponseData Created CAPI interviewer
+     * @param  array|NewCapiInterviewerRequestModel  $data  CAPI interviewer data
+     * @return CapiInterviewerResponseModel Created CAPI interviewer
      */
-    public function createCapiInterviewer(array|NewCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function createCapiInterviewer(array|NewCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
         return $this->capiInterviewerService->createCapiInterviewer($data);
     }
@@ -151,9 +151,9 @@ class NfieldManagerService
      * Get a CAPI interviewer by client interviewer ID.
      *
      * @param  string  $clientInterviewerId  Client interviewer ID
-     * @return CapiInterviewerData CAPI interviewer data
+     * @return CapiInterviewerModel CAPI interviewer data
      */
-    public function getByClientId(string $clientInterviewerId): CapiInterviewerData
+    public function getByClientId(string $clientInterviewerId): CapiInterviewerModel
     {
         return $this->capiInterviewerService->getByClientId($clientInterviewerId);
     }

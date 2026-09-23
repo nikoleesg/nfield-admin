@@ -425,3 +425,28 @@ it('leaves no unfinished work marked in src', function () {
 
     expect($offenders)->toBe([]);
 });
+
+it('names every model with the Model suffix', function () {
+    // #28: `*DTO` and `*Data` were used interchangeably with `*Model` and no
+    // rule. `*Model` is the v2 name for a shape the API defines; the casts and
+    // the few classes that are not spec schemas keep a plain noun.
+    $offenders = [];
+
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(__DIR__.'/../src/Data', FilesystemIterator::SKIP_DOTS)
+    );
+
+    foreach ($files as $file) {
+        if ($file->getExtension() !== 'php') {
+            continue;
+        }
+
+        $name = basename($file->getPathname(), '.php');
+
+        if (str_ends_with($name, 'DTO') || str_ends_with($name, 'Data')) {
+            $offenders[] = $name.' uses a retired suffix; name it *Model';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});

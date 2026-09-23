@@ -9,7 +9,7 @@ use Nikoleesg\NfieldAdmin\Data\Casts\CarbonCast;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
-final class CapiInterviewerData extends Data
+final class CapiInterviewerModel extends Data
 {
     public function __construct(
         public ?string $interviewerId = null,

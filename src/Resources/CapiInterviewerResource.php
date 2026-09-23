@@ -8,11 +8,11 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestData;
-use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestData;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestModel;
 
 /**
  * CapiInterviewerResource - Fluent interface for individual CAPI interviewer operations
@@ -43,9 +43,9 @@ class CapiInterviewerResource
     /**
      * Get the interviewer details
      */
-    public function get(): CapiInterviewerData
+    public function get(): CapiInterviewerModel
     {
-        return CapiInterviewerData::from(
+        return CapiInterviewerModel::from(
             $this->capiInterviewersEndpoint->get($this->interviewerId)
         );
     }
@@ -53,11 +53,11 @@ class CapiInterviewerResource
     /**
      * Update (partial) the interviewer
      */
-    public function update(array|EditCapiInterviewerRequestData $data): CapiInterviewerResponseData
+    public function update(array|EditCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
-        $payload = EditCapiInterviewerRequestData::from($data)->toArray();
+        $payload = EditCapiInterviewerRequestModel::from($data)->toArray();
 
-        return CapiInterviewerResponseData::from(
+        return CapiInterviewerResponseModel::from(
             $this->capiInterviewersEndpoint->update($this->interviewerId, $payload)
         );
     }
@@ -65,11 +65,11 @@ class CapiInterviewerResource
     /**
      * Reset the interviewer's password
      */
-    public function resetPassword(array|ResetCapiInterviewerPasswordRequestData $data): CapiInterviewerResponseData
+    public function resetPassword(array|ResetCapiInterviewerPasswordRequestModel $data): CapiInterviewerResponseModel
     {
-        $payload = ResetCapiInterviewerPasswordRequestData::from($data)->toArray();
+        $payload = ResetCapiInterviewerPasswordRequestModel::from($data)->toArray();
 
-        return CapiInterviewerResponseData::from(
+        return CapiInterviewerResponseModel::from(
             $this->capiInterviewersEndpoint->resetPassword($this->interviewerId, $payload)
         );
     }
@@ -85,10 +85,10 @@ class CapiInterviewerResource
     /**
      * Get interviewer assignments (surveys/tasks)
      */
-    /** @return Collection<int, CapiInterviewerAssignmentData> */
+    /** @return Collection<int, CapiInterviewerAssignmentModel> */
     public function getAssignments(): Collection
     {
-        return CapiInterviewerAssignmentData::collect(
+        return CapiInterviewerAssignmentModel::collect(
             $this->capiInterviewersAssignmentsEndpoint->list($this->interviewerId),
             Collection::class
         );
