@@ -13,7 +13,15 @@ class BackgroundActivitiesService
         protected BackgroundActivitiesEndpointInterface $backgroundActivitiesEndpoint,
     ) {}
 
-    public function getBackgroundActivity(string $activityId): BackgroundActivityResponseModel
+    /**
+     * Get status of a background activity (async operation).
+     *
+     * Used to track long-running operations like data downloads.
+     *
+     * @param  string  $activityId  Background activity ID
+     * @return BackgroundActivityResponseModel Activity status and details
+     */
+    public function get(string $activityId): BackgroundActivityResponseModel
     {
         return BackgroundActivityResponseModel::from($this->backgroundActivitiesEndpoint->get($activityId));
     }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseModel;
-
 /**
  * NfieldManagerService - Main entry point for Nfield Admin SDK
  *
@@ -39,17 +37,9 @@ class NfieldManagerService
         return $this->surveyService;
     }
 
-    /**
-     * Get status of a background activity (async operation).
-     *
-     * Used to track long-running operations like data downloads.
-     *
-     * @param  string  $activityId  Background activity ID
-     * @return BackgroundActivityResponseModel Activity status and details
-     */
-    public function getBackgroundActivity(string $activityId): BackgroundActivityResponseModel
+    public function backgroundActivities(): BackgroundActivitiesService
     {
-        return $this->backgroundActivitiesService->getBackgroundActivity($activityId);
+        return $this->backgroundActivitiesService;
     }
 
     // ========================================

@@ -250,7 +250,7 @@ $activity = $survey->data()->downloadData([
     'includeSuccessful' => true,
 ]);
 
-NfieldManager::getBackgroundActivity($activity->activityId)->status;  // ActivityStatusEnum
+NfieldManager::backgroundActivities()->get($activity->activityId)->status;  // ActivityStatusEnum
 
 $survey->data()->downloadInterviewData('interview-id', 'one.zip');
 $survey->data()->deleteInterviewData('interview-id');

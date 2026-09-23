@@ -130,7 +130,7 @@ it('hydrates a background activity, dates and status included', function () {
         'downloadDataUrl' => null,
     ]);
 
-    $activity = (new BackgroundActivitiesService($endpoint))->getBackgroundActivity('activity-1');
+    $activity = (new BackgroundActivitiesService($endpoint))->get('activity-1');
 
     expect($activity)->toBeInstanceOf(BackgroundActivityResponseModel::class)
         ->and($activity->status)->toBe(ActivityStatusEnum::cases()[0])
@@ -146,28 +146,10 @@ it('exposes the surveys domain service', function () {
     expect($manager->surveys())->toBeInstanceOf(SurveyService::class);
 });
 
-it('delegates the background activity lookup', function () {
-    $activities = Mockery::mock(BackgroundActivitiesService::class);
+it('exposes the background activities domain service', function () {
+    $manager = managerWith(app(SurveyService::class));
 
-    $activity = BackgroundActivityResponseModel::from([
-        'id' => 'activity-1',
-        'activityType' => 1,
-        'activityTypeName' => 'DataDownload',
-        'activityName' => 'Download data',
-        'status' => ActivityStatusEnum::Started->value,
-        'statusName' => 'Started',
-        'userId' => 'user-1',
-        'creationTime' => null,
-        'startTime' => null,
-        'finishTime' => null,
-        'downloadDataUrl' => null,
-    ]);
-
-    $activities->shouldReceive('getBackgroundActivity')->with('activity-1')->once()->andReturn($activity);
-
-    $manager = managerWith(app(SurveyService::class), $activities);
-
-    expect($manager->getBackgroundActivity('activity-1'))->toBe($activity);
+    expect($manager->backgroundActivities())->toBeInstanceOf(BackgroundActivitiesService::class);
 });
 
 it('opens the CAPI interviewer chain from the service and the manager', function () {
