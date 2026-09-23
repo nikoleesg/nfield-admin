@@ -279,6 +279,18 @@ function endpointCallCases(): array
             Contracts\SurveyInterviewEndpointInterface::class, 'deleteInterviewData', ['survey-1', 'interview-1'],
             'DELETE', 'v2/surveys/survey-1/interviews/interview-1', [],
         ],
+        'SurveyInterviewQualityCollection::get' => [
+            Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'get', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/interviewQuality', [],
+        ],
+        'SurveyInterviewQualityCollection::updateQuality' => [
+            Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'updateQuality', ['survey-1', ['interviewId' => 'int-1', 'newState' => 1]],
+            'PUT', 'v2/surveys/survey-1/interviewQuality', ['interviewId' => 'int-1', 'newState' => 1],
+        ],
+        'SurveyInterviewQuality::get' => [
+            Contracts\SurveyInterviewQualityEndpointInterface::class, 'get', ['survey-1', 'int-1'],
+            'GET', 'v2/surveys/survey-1/interviewQuality/int-1', [],
+        ],
 
         // ── Sample ───────────────────────────────────────────────────────────
         'SurveySampleCollection::download' => [

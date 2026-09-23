@@ -2,7 +2,7 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`), verified against `src/` on branch `dev` (HEAD `3c5d8aa`).
 
-**Overall: 84 of 282 operations implemented (30%), across 182 paths.**
+**Overall: 89 of 282 operations implemented (32%), across 182 paths.**
 
 Counting is per *operation* (method + path), not per path. "Implemented" means a class in `src/Endpoints/v2/` (or `HttpClient`) issues that exact request.
 
@@ -21,7 +21,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Surveys — Core | 9 | 14 | 64% |
 | Surveys — Settings & Content | 6 | 23 | 26% |
 | Surveys — Publishing & Script | 3 | 13 | 23% |
-| Surveys — Interviews & Data | 3 | 16 | 18% |
+| Surveys — Interviews & Data | 6 | 16 | 38% |
 | Access & Authentication | 4 | 20 | 20% |
 | Data Delivery | 0 | 38 | 0% |
 | Surveys — Invitations & Distribution | 0 | 16 | 0% |
@@ -42,7 +42,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Manual Tests (tenant) | 0 | 1 | 0% |
 | Survey Resources | 0 | 1 | 0% |
 | Templates | 0 | 1 | 0% |
-| **Total** | **81** | **282** | **29%** |
+| **Total** | **89** | **282** | **32%** |
 
 ---
 
@@ -231,7 +231,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 ### Surveys — Interviews & Data
 
-*3/16 implemented.*
+*6/16 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
@@ -240,9 +240,9 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | ✅ | POST | `/v2/surveys/{surveyId}/dataDownload/{interviewId}` | `SurveyDataEndpoint::downloadInterviewData` |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewInteractionsSettings` | — |
 | ❌ | PATCH | `/v2/surveys/{surveyId}/interviewInteractionsSettings` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/interviewQuality` | — |
-| ❌ | PUT | `/v2/surveys/{surveyId}/interviewQuality` | — |
-| ❌ | GET | `/v2/surveys/{surveyId}/interviewQuality/{interviewId}` | — |
+| ✅ | GET | `/v2/surveys/{surveyId}/interviewQuality` | `SurveyInterviewQualityCollectionEndpoint::get` |
+| ✅ | PUT | `/v2/surveys/{surveyId}/interviewQuality` | `SurveyInterviewQualityCollectionEndpoint::updateQuality` |
+| ✅ | GET | `/v2/surveys/{surveyId}/interviewQuality/{interviewId}` | `SurveyInterviewQualityEndpoint::get` |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewSimulation` | — |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewSimulations/downloadHints` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/interviewSimulations/startInterviewSimulations` | — |
@@ -826,9 +826,6 @@ Everything not yet implemented, grouped by section.
 - `GET /v2/surveys/interviewSimulations`
 - `GET /v2/surveys/{surveyId}/interviewInteractionsSettings`
 - `PATCH /v2/surveys/{surveyId}/interviewInteractionsSettings`
-- `GET /v2/surveys/{surveyId}/interviewQuality`
-- `PUT /v2/surveys/{surveyId}/interviewQuality`
-- `GET /v2/surveys/{surveyId}/interviewQuality/{interviewId}`
 - `GET /v2/surveys/{surveyId}/interviewSimulation`
 - `GET /v2/surveys/{surveyId}/interviewSimulations/downloadHints`
 - `POST /v2/surveys/{surveyId}/interviewSimulations/startInterviewSimulations`

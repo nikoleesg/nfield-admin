@@ -55,6 +55,9 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
         $this->app->singleton(Contracts\SurveySampleEndpointInterface::class, Endpoints\SurveySampleEndpoint::class);
         $this->app->singleton(Contracts\SurveySampleDataDownloadEndpointInterface::class, Endpoints\SurveySampleDataDownloadEndpoint::class);
 
+        $this->app->singleton(Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, Endpoints\SurveyInterviewQualityCollectionEndpoint::class);
+        $this->app->singleton(Contracts\SurveyInterviewQualityEndpointInterface::class, Endpoints\SurveyInterviewQualityEndpoint::class);
+
         $this->app->singleton(Contracts\SamplingPointCollectionEndpointInterface::class, Endpoints\SamplingPointCollectionEndpoint::class);
         $this->app->singleton(Contracts\SamplingPointEndpointInterface::class, Endpoints\SamplingPointEndpoint::class);
         $this->app->singleton(Contracts\SamplingPointAddressCollectionEndpointInterface::class, Endpoints\SamplingPointAddressCollectionEndpoint::class);

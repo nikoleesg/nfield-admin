@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
+use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Nikoleesg\NfieldAdmin\Data\Surveys\InterviewDetailsModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\ManagerInterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
+use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
@@ -167,4 +171,67 @@ it('hydrates the fieldwork counts DTO, nested list included', function () {
         ->and($counts->surveyId)->toBe('survey-1')
         ->and($counts->successfulLast24Hours)->toBe(4)
         ->and($counts->screenedOutOverview[0]->responseCode)->toBe(21);
+});
+
+it('hydrates the interview quality DTOs from real PascalCase payloads', function () {
+    Http::fake([
+        '*/v2/surveys/survey-1/interviewQuality/int-1' => Http::response([
+            'Id' => 'int-1',
+            'InterviewQuality' => 2,
+            'InterviewerId' => 'usr-1',
+            'SamplingPointId' => 'sp-1',
+            'OfficeId' => 'off-1',
+        ], 200),
+        '*/v2/surveys/survey-1/interviewQuality' => function (Request $request) {
+            if ($request->method() === 'PUT') {
+                return Http::response([
+                    'InterviewId' => 'int-1',
+                    'SurveyId' => 'survey-1',
+                    'InterviewQuality' => 1,
+                    'ClientInterviewerId' => 'ext-1',
+                    'Interviewer' => 'Bob',
+                    'SamplingPointName' => 'North',
+                    'SamplingPointId' => 'sp-1',
+                    'OfficeId' => 'off-1',
+                    'OfficeName' => 'HQ',
+                    'InterviewDuration' => 300,
+                    'AverageInterviewDuration' => 250,
+                    'InterviewMedianQuestionDuration' => 5,
+                    'InterviewStartTime' => '2023-01-01T10:00:00Z',
+                    'InterviewEndTime' => '2023-01-01T10:05:00Z',
+                    'ResponseCode' => 20,
+                    'InterviewResult' => 1,
+                    'IsScreenedOut' => false,
+                ], 200);
+            }
+
+            return Http::response([
+                [
+                    'Id' => 'int-1',
+                    'InterviewQuality' => 1,
+                    'InterviewerId' => 'usr-1',
+                    'SamplingPointId' => 'sp-1',
+                    'OfficeId' => 'off-1',
+                ],
+            ], 200);
+        },
+    ]);
+
+    $service = NfieldManager::surveys()->forSurvey('survey-1')->interviewQuality();
+
+    $collection = $service->getInterviews();
+    expect($collection->first())->toBeInstanceOf(InterviewDetailsModel::class)
+        ->and($collection->first()->id)->toBe('int-1')
+        ->and($collection->first()->interviewQuality->value)->toBe(1);
+
+    $item = $service->getInterview('int-1');
+    expect($item)->toBeInstanceOf(InterviewDetailsModel::class)
+        ->and($item->id)->toBe('int-1')
+        ->and($item->interviewQuality->value)->toBe(2);
+
+    $updated = $service->updateQuality(['interviewId' => 'int-1', 'newState' => 1]);
+    expect($updated)->toBeInstanceOf(ManagerInterviewDetailsModel::class)
+        ->and($updated->interviewDuration)->toBe(300)
+        ->and($updated->isScreenedOut)->toBeFalse()
+        ->and($updated->interviewStartTime)->toBeInstanceOf(Carbon::class);
 });
