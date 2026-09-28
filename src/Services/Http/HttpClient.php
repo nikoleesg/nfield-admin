@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services\Http;
 
+use Illuminate\Contracts\Cache\Lock;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
 use Nikoleesg\NfieldAdmin\Exceptions\ApiRequestException;
 use Nikoleesg\NfieldAdmin\Exceptions\AuthenticationException;
@@ -50,9 +54,50 @@ class HttpClient implements HttpClientInterface
     {
         $request = $this->factory
             ->baseUrl($this->baseUrl)
-            ->withHeader('Content-Type', 'application/json');
+            ->acceptJson()
+            ->timeout((int) config('nfield-admin.http.timeout', 30))
+            ->connectTimeout((int) config('nfield-admin.http.connect_timeout', 10));
 
-        if (! in_array($uri, $this->skipAuth)) {
+        $retries = (int) config('nfield-admin.http.retries', 3);
+        $retryDelay = (int) config('nfield-admin.http.retry_delay', 100);
+
+        if ($retries > 1) {
+            $request->retry(
+                $retries,
+                function (int $attempt, ?\Throwable $exception) use ($retryDelay): int {
+                    if ($exception instanceof RequestException && $exception->response !== null) {
+                        $retryAfter = $exception->response->header('Retry-After');
+                        if ($retryAfter !== null && $retryAfter !== '') {
+                            if (is_numeric($retryAfter)) {
+                                return (int) $retryAfter * 1000;
+                            }
+                            $time = strtotime($retryAfter);
+                            if ($time !== false) {
+                                return max(0, ($time - time()) * 1000);
+                            }
+                        }
+                    }
+
+                    return (int) ($retryDelay * (2 ** ($attempt - 1)));
+                },
+                function (\Throwable $exception): bool {
+                    if ($exception instanceof ConnectionException) {
+                        return true;
+                    }
+
+                    if ($exception instanceof RequestException) {
+                        $status = $exception->response->status();
+
+                        return $status === 429 || ($status >= 500 && $status < 600);
+                    }
+
+                    return false;
+                },
+                throw: false
+            );
+        }
+
+        if (! in_array($uri, $this->skipAuth, true)) {
             $request->withToken($this->token());
         }
 
@@ -86,32 +131,18 @@ class HttpClient implements HttpClientInterface
 
     public function postRaw(string $uri, string $body, string $contentType): Response
     {
-        return $this->request($uri, function () use ($uri, $body, $contentType) {
-            $request = $this->factory
-                ->baseUrl($this->baseUrl)
-                ->withBody($body, $contentType);
-
-            if (! in_array($uri, $this->skipAuth)) {
-                $request->withToken($this->token());
-            }
-
-            return $request->post($uri);
-        });
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)
+            ->withBody($body, $contentType)
+            ->post($uri)
+        );
     }
 
     public function postMultipart(string $uri, string $name, string $contents, string $filename): Response
     {
-        return $this->request($uri, function () use ($uri, $name, $contents, $filename) {
-            $request = $this->factory
-                ->baseUrl($this->baseUrl)
-                ->attach($name, $contents, $filename);
-
-            if (! in_array($uri, $this->skipAuth)) {
-                $request->withToken($this->token());
-            }
-
-            return $request->post($uri);
-        });
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)
+            ->attach($name, $contents, $filename)
+            ->post($uri)
+        );
     }
 
     private function request(string $uri, callable $call, bool $retry = true): Response
@@ -125,12 +156,19 @@ class HttpClient implements HttpClientInterface
                 ? NormalizedResponse::wrap($response)
                 : $response;
 
+        } catch (ConnectionException $exception) {
+            throw new ApiRequestException(
+                $exception->getMessage(),
+                0,
+                null,
+                $exception
+            );
         } catch (RequestException $exception) {
             $response = $exception->response;
             $status = $response->status();
 
             if ($status === 401) {
-                if ($retry) {
+                if ($retry && ! in_array($uri, $this->skipAuth, true)) {
                     $this->forgetToken();
 
                     return $this->request($uri, $call, false);
@@ -185,6 +223,29 @@ class HttpClient implements HttpClientInterface
             return $cached['accessToken'];
         }
 
+        $lock = $this->acquireLock($cache, $this->cacheKey('lock:token'));
+
+        if ($lock !== null) {
+            try {
+                return $lock->block(10, function () use ($cache, $cacheKey): string {
+                    $cached = $cache->get($cacheKey);
+
+                    if ($cached && isset($cached['accessToken'])) {
+                        return $cached['accessToken'];
+                    }
+
+                    return $this->fetchAndCacheToken($cache, $cacheKey);
+                });
+            } catch (LockTimeoutException) {
+                // If lock timed out, fall back to fetching token directly
+            }
+        }
+
+        return $this->fetchAndCacheToken($cache, $cacheKey);
+    }
+
+    private function fetchAndCacheToken(Repository $cache, string $cacheKey): string
+    {
         $tokenData = $this->getAccessToken();
 
         $expiresIn = $tokenData['expiresIn'] ?? 3600;
@@ -198,6 +259,19 @@ class HttpClient implements HttpClientInterface
         }
 
         return $tokenData['accessToken'];
+    }
+
+    private function acquireLock(Repository $cache, string $key, int $seconds = 15): ?Lock
+    {
+        try {
+            if (method_exists($cache, 'lock')) {
+                return $cache->lock($key, $seconds);
+            }
+        } catch (\BadMethodCallException) {
+            // Cache store does not support locking (e.g. file driver)
+        }
+
+        return null;
     }
 
     private function getAccessToken(): array
@@ -220,8 +294,9 @@ class HttpClient implements HttpClientInterface
                     'refreshToken' => $data['refreshToken'] ?? '',
                     'expiresIn' => $data['expiresIn'] ?? 3600,
                 ];
-            } catch (\Exception $e) {
-                // Ignore and fall back to normal token
+            } catch (ApiRequestException $e) {
+                Log::warning('Nfield token refresh failed, falling back to credentials: '.$e->getMessage());
+                $cache->forget($this->cacheKey('refresh_token'));
             }
         }
 
@@ -260,9 +335,15 @@ class HttpClient implements HttpClientInterface
         return Cache::store(config('nfield-admin.cache.store'));
     }
 
-    private function cacheKey(string $name): string
+    public function cacheKey(string $name): string
     {
-        return config('nfield-admin.cache.prefix', 'nfield_').$name;
+        $domain = (string) config('nfield-admin.domain');
+        $username = (string) config('nfield-admin.username');
+        $baseUrl = (string) config('nfield-admin.base_url', $this->baseUrl);
+
+        $hash = substr(hash('sha256', "{$domain}|{$username}|{$baseUrl}"), 0, 16);
+
+        return config('nfield-admin.cache.prefix', 'nfield_').$hash.':'.$name;
     }
 
     private function getCredentials(): array

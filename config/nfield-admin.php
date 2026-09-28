@@ -45,4 +45,34 @@ return [
         'ttl' => 60 * 10,
     ],
 
+    /*
+    |-------------------------------------------------------------------------
+    | HTTP Client Configuration
+    |-------------------------------------------------------------------------
+    |
+    */
+    'http' => [
+        /*
+        | Total request timeout in seconds.
+        */
+        'timeout' => env('NFIELD_HTTP_TIMEOUT', 30),
+
+        /*
+        | Connection timeout in seconds.
+        */
+        'connect_timeout' => env('NFIELD_HTTP_CONNECT_TIMEOUT', 10),
+
+        /*
+        | Maximum number of attempts for transient errors (429, 5xx, connection).
+        | Set to 1 to disable retries.
+        */
+        'retries' => env('NFIELD_HTTP_RETRIES', 3),
+
+        /*
+        | Base delay between retries in milliseconds. Uses exponential backoff
+        | unless the server responds with a Retry-After header.
+        */
+        'retry_delay' => env('NFIELD_HTTP_RETRY_DELAY', 100),
+    ],
+
 ];

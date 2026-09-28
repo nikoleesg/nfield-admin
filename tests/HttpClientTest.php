@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Nikoleesg\NfieldAdmin\Exceptions\ApiRequestException;
 use Nikoleesg\NfieldAdmin\Exceptions\AuthenticationException;
 use Nikoleesg\NfieldAdmin\Exceptions\NotFoundException;
@@ -53,6 +54,11 @@ it('works with Http::fake', function () {
     expect($response->json())->toBe(['success' => true]);
 
     Http::assertSent(function (Request $request) {
+        if (str_ends_with($request->url(), '/v2/test')) {
+            expect($request->header('Accept')[0])->toBe('application/json');
+            expect($request->hasHeader('Content-Type'))->toBeFalse();
+        }
+
         return str_ends_with($request->url(), '/v2/test')
             && $request->header('Authorization')[0] === 'Bearer fake-token';
     });
@@ -72,7 +78,7 @@ it('caches the access token on the default store, whatever the driver', function
     $client->get('/v2/test');
     $client->get('/v2/test');
 
-    expect(Cache::get('nfield_access_token'))->toBe(['accessToken' => 'cached-token']);
+    expect(Cache::get($client->cacheKey('access_token')))->toBe(['accessToken' => 'cached-token']);
 
     Http::assertSentCount(3); // one token request, two API calls
 });
@@ -90,7 +96,7 @@ it('honours an explicitly configured cache store', function () {
     $client->get('/v2/test');
     $client->get('/v2/test');
 
-    expect(Cache::store('array')->get('nfield_access_token'))->toBe(['accessToken' => 'store-token']);
+    expect(Cache::store('array')->get($client->cacheKey('access_token')))->toBe(['accessToken' => 'store-token']);
 
     Http::assertSentCount(3);
 });
@@ -158,7 +164,7 @@ it('retries once with a fresh token after a 401, then gives up', function () {
     Http::assertSentCount(4);
 
     // The stale token was forgotten and the retry cached its replacement.
-    expect(Cache::store('array')->get('nfield_access_token'))->toBe(['accessToken' => 'fresh-token']);
+    expect(Cache::store('array')->get($client->cacheKey('access_token')))->toBe(['accessToken' => 'fresh-token']);
 
     $tokens = collect(Http::recorded())
         ->map(fn (array $pair): Request => $pair[0])
@@ -229,7 +235,9 @@ it('spends a cached refresh token before re-authenticating', function () {
     config()->set('cache.default', 'array');
     config()->set('nfield-admin.cache.enabled', true);
 
-    Cache::store('array')->put('nfield_refresh_token', 'refresh-me');
+    $client = app(HttpClient::class);
+
+    Cache::store('array')->put($client->cacheKey('refresh_token'), 'refresh-me');
 
     Http::fake([
         '*/v2/token/refresh' => Http::response(['AccessToken' => 'refreshed-token', 'ExpiresIn' => 3600], 200),
@@ -237,19 +245,21 @@ it('spends a cached refresh token before re-authenticating', function () {
         '*/v2/surveys' => Http::response(['ok' => true], 200),
     ]);
 
-    app(HttpClient::class)->get('/v2/surveys');
+    $client->get('/v2/surveys');
 
     Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/v2/token/refresh'));
     Http::assertNotSent(fn (Request $request) => str_ends_with($request->url(), '/v2/token'));
 
-    expect(Cache::store('array')->get('nfield_access_token'))->toBe(['accessToken' => 'refreshed-token']);
+    expect(Cache::store('array')->get($client->cacheKey('access_token')))->toBe(['accessToken' => 'refreshed-token']);
 });
 
 it('falls back to the credentials when the refresh token is rejected', function () {
     config()->set('cache.default', 'array');
     config()->set('nfield-admin.cache.enabled', true);
 
-    Cache::store('array')->put('nfield_refresh_token', 'expired');
+    $client = app(HttpClient::class);
+
+    Cache::store('array')->put($client->cacheKey('refresh_token'), 'expired');
 
     Http::fake([
         '*/v2/token/refresh' => Http::response(['message' => 'expired'], 401),
@@ -257,9 +267,9 @@ it('falls back to the credentials when the refresh token is rejected', function 
         '*/v2/surveys' => Http::response(['ok' => true], 200),
     ]);
 
-    app(HttpClient::class)->get('/v2/surveys');
+    $client->get('/v2/surveys');
 
-    expect(Cache::store('array')->get('nfield_access_token'))->toBe(['accessToken' => 'password-token']);
+    expect(Cache::store('array')->get($client->cacheKey('access_token')))->toBe(['accessToken' => 'password-token']);
 });
 
 it('sends the configured credentials to the token endpoint', function () {
@@ -289,10 +299,11 @@ it('caps the token TTL at the configured maximum', function () {
         '*' => Http::response(['ok' => true], 200),
     ]);
 
-    app(HttpClient::class)->get('/v2/surveys');
+    $client = app(HttpClient::class);
+    $client->get('/v2/surveys');
 
     // A 24h `expiresIn` must not pin a token in the cache for 24h.
-    expect(Cache::store('array')->getStore()->get('nfield_access_token'))->not->toBeNull();
+    expect(Cache::store('array')->getStore()->get($client->cacheKey('access_token')))->not->toBeNull();
 
     Cache::store('array')->clear();
 
@@ -314,4 +325,135 @@ it('leaves the raw response alone on the exempted dictionary paths', function ()
 
     expect($client->get('/v2/roles')->json())->toBe(['Administrator' => ['SurveyRead']])
         ->and($client->get('/v2/surveys')->json())->toBe(['surveyId' => 'survey-1']);
+});
+
+it('scopes the token cache key to credentials and base url', function () {
+    $client = app(HttpClient::class);
+    $defaultKey = $client->cacheKey('access_token');
+
+    config()->set('nfield-admin.domain', 'different-domain');
+    $domainKey = $client->cacheKey('access_token');
+    expect($domainKey)->not->toBe($defaultKey);
+
+    config()->set('nfield-admin.username', 'different-user');
+    $userKey = $client->cacheKey('access_token');
+    expect($userKey)->not->toBe($domainKey)
+        ->and($userKey)->not->toBe($defaultKey);
+
+    config()->set('nfield-admin.base_url', 'https://eu.nfieldmr.com');
+    $urlKey = $client->cacheKey('access_token');
+    expect($urlKey)->not->toBe($userKey)
+        ->and($urlKey)->not->toBe($defaultKey);
+});
+
+it('retries on 429 and honours Retry-After header', function () {
+    config()->set('nfield-admin.cache.enabled', false);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
+        '*/v2/surveys' => Http::sequence()
+            ->push(['message' => 'rate limited'], 429, ['Retry-After' => '0'])
+            ->push(['SurveyId' => 'survey-1'], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $response = $client->get('/v2/surveys');
+
+    expect($response->json())->toBe(['surveyId' => 'survey-1']);
+    Http::assertSentCount(3); // token + 2 survey calls
+});
+
+it('retries on 503 server error and succeeds', function () {
+    config()->set('nfield-admin.cache.enabled', false);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
+        '*/v2/surveys' => Http::sequence()
+            ->push(['message' => 'service unavailable'], 503)
+            ->push(['SurveyId' => 'survey-1'], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $response = $client->get('/v2/surveys');
+
+    expect($response->json())->toBe(['surveyId' => 'survey-1']);
+    Http::assertSentCount(3);
+});
+
+it('retries on connection exception', function () {
+    config()->set('nfield-admin.cache.enabled', false);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
+        '*/v2/surveys' => Http::sequence()
+            ->pushFailedConnection('Connection timed out')
+            ->push(['SurveyId' => 'survey-1'], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $response = $client->get('/v2/surveys');
+
+    expect($response->json())->toBe(['surveyId' => 'survey-1']);
+    Http::assertSentCount(3);
+});
+
+it('wraps terminal connection exception in ApiRequestException', function () {
+    config()->set('nfield-admin.cache.enabled', false);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
+        '*/v2/surveys' => Http::failedConnection('Failed to connect'),
+    ]);
+
+    $client = app(HttpClient::class);
+    expect(fn () => $client->get('/v2/surveys'))->toThrow(ApiRequestException::class, 'Failed to connect');
+});
+
+it('logs a warning when token refresh fails and clears the stale refresh token', function () {
+    config()->set('cache.default', 'array');
+    config()->set('nfield-admin.cache.enabled', true);
+
+    Log::spy();
+    $client = app(HttpClient::class);
+    Cache::store('array')->put($client->cacheKey('refresh_token'), 'bad-refresh');
+
+    Http::fake([
+        '*/v2/token/refresh' => Http::response(['message' => 'invalid refresh token'], 400),
+        '*/v2/token' => Http::response(['AccessToken' => 'password-token'], 200),
+        '*/v2/surveys' => Http::response(['ok' => true], 200),
+    ]);
+
+    $client->get('/v2/surveys');
+
+    Log::shouldHaveReceived('warning')
+        ->once()
+        ->withArgs(fn (string $message) => str_contains($message, 'Nfield token refresh failed'));
+
+    expect(Cache::store('array')->get($client->cacheKey('refresh_token')))->toBeNull()
+        ->and(Cache::store('array')->get($client->cacheKey('access_token')))->toBe(['accessToken' => 'password-token']);
+});
+
+it('locks token acquisition to prevent stampede', function () {
+    config()->set('cache.default', 'array');
+    config()->set('nfield-admin.cache.enabled', true);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'first-token'], 200),
+        '*/v2/test' => Http::response(['ok' => true], 200),
+    ]);
+
+    $client = app(HttpClient::class);
+    $cache = Cache::store('array');
+
+    // Simulate another worker that acquired the lock and populated the cache
+    $lock = $cache->lock($client->cacheKey('lock:token'), 10);
+    $lock->get(function () use ($cache, $client) {
+        $cache->put($client->cacheKey('access_token'), ['accessToken' => 'locked-token'], 600);
+    });
+
+    $client->get('/v2/test');
+
+    Http::assertNotSent(fn (Request $request) => str_ends_with($request->url(), '/v2/token'));
+    Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/v2/test')
+        && $request->header('Authorization')[0] === 'Bearer locked-token');
 });
