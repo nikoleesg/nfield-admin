@@ -33,5 +33,8 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
         config()->set('cache.default', 'array');
         config()->set('nfield-admin.http.retry_delay', 0);
+        config()->set('nfield-admin.domain', 'test-domain');
+        config()->set('nfield-admin.username', 'test-user');
+        config()->set('nfield-admin.password', 'test-password');
     }
 }

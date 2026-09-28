@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Nikoleesg\NfieldAdmin\Contracts\Http\HttpClientInterface;
 use Nikoleesg\NfieldAdmin\Exceptions\ApiRequestException;
 use Nikoleesg\NfieldAdmin\Exceptions\AuthenticationException;
+use Nikoleesg\NfieldAdmin\Exceptions\InvalidConfigurationException;
 use Nikoleesg\NfieldAdmin\Exceptions\NotFoundException;
 use Nikoleesg\NfieldAdmin\Exceptions\ValidationException;
 
@@ -346,12 +347,34 @@ class HttpClient implements HttpClientInterface
         return config('nfield-admin.cache.prefix', 'nfield_').$hash.':'.$name;
     }
 
+    /**
+     * @return array{domainName: string, userName: string, password: string}
+     */
     private function getCredentials(): array
     {
+        $domain = config('nfield-admin.domain');
+        $username = config('nfield-admin.username');
+        $password = config('nfield-admin.password');
+
+        $missing = [];
+        if (! is_string($domain) || trim($domain) === '') {
+            $missing[] = 'domain';
+        }
+        if (! is_string($username) || trim($username) === '') {
+            $missing[] = 'username';
+        }
+        if (! is_string($password) || trim($password) === '') {
+            $missing[] = 'password';
+        }
+
+        if ($missing !== []) {
+            throw InvalidConfigurationException::missingCredentials($missing);
+        }
+
         return [
-            'domainName' => config('nfield-admin.domain'),
-            'userName' => config('nfield-admin.username'),
-            'password' => config('nfield-admin.password'),
+            'domainName' => $domain,
+            'userName' => $username,
+            'password' => $password,
         ];
     }
 }

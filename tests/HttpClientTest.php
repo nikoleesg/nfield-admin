@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Nikoleesg\NfieldAdmin\Exceptions\ApiRequestException;
 use Nikoleesg\NfieldAdmin\Exceptions\AuthenticationException;
+use Nikoleesg\NfieldAdmin\Exceptions\InvalidConfigurationException;
 use Nikoleesg\NfieldAdmin\Exceptions\NotFoundException;
 use Nikoleesg\NfieldAdmin\Exceptions\ValidationException;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
@@ -456,4 +457,47 @@ it('locks token acquisition to prevent stampede', function () {
     Http::assertNotSent(fn (Request $request) => str_ends_with($request->url(), '/v2/token'));
     Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/v2/test')
         && $request->header('Authorization')[0] === 'Bearer locked-token');
+});
+
+it('fails fast with InvalidConfigurationException when credentials are missing', function (?string $domain, ?string $username, ?string $password) {
+    config()->set('nfield-admin.domain', $domain);
+    config()->set('nfield-admin.username', $username);
+    config()->set('nfield-admin.password', $password);
+
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'auth-token'], 200),
+        '*' => Http::response(['ok' => true], 200),
+    ]);
+
+    expect(fn () => app(HttpClient::class)->get('/v2/surveys'))
+        ->toThrow(InvalidConfigurationException::class);
+
+    Http::assertNothingSent();
+})->with([
+    'all credentials null' => [null, null, null],
+    'missing domain' => [null, 'ada', 'hunter2'],
+    'missing username' => ['acme', null, 'hunter2'],
+    'missing password' => ['acme', 'ada', null],
+    'empty string credentials' => ['', '  ', ''],
+]);
+
+it('includes the missing keys and environment variable names in the exception message', function () {
+    config()->set('nfield-admin.domain', null);
+    config()->set('nfield-admin.username', null);
+    config()->set('nfield-admin.password', 'hunter2');
+
+    expect(fn () => app(HttpClient::class)->get('/v2/surveys'))
+        ->toThrow(
+            InvalidConfigurationException::class,
+            'Nfield credentials are not configured. Missing: domain, username. Set the NFIELD_DOMAIN, NFIELD_USERNAME environment variables in your .env file.'
+        );
+});
+
+it('defaults credentials to null in the published config file', function () {
+    $config = require __DIR__.'/../config/nfield-admin.php';
+
+    expect($config['domain'])->toBeNull()
+        ->and($config['username'])->toBeNull()
+        ->and($config['password'])->toBeNull()
+        ->and($config['base_url'])->toBe('https://apiap.nfieldmr.com');
 });

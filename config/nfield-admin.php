@@ -10,11 +10,11 @@ return [
     |-------------------------------------------------------------------------
     |
     */
-    'domain' => env('NFIELD_DOMAIN', 'Nfield'),
+    'domain' => env('NFIELD_DOMAIN'),
 
-    'username' => env('NFIELD_USERNAME', 'username'),
+    'username' => env('NFIELD_USERNAME'),
 
-    'password' => env('NFIELD_PASSWORD', 'password'),
+    'password' => env('NFIELD_PASSWORD'),
 
     'base_url' => env('NFIELD_BASE_URL', 'https://apiap.nfieldmr.com'),
 

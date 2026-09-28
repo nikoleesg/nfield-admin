@@ -37,7 +37,7 @@ Publish the config file:
 php artisan vendor:publish --tag="nfield-admin-config"
 ```
 
-Then set your NField credentials in `.env`:
+Then set your NField credentials in `.env` (`NFIELD_DOMAIN`, `NFIELD_USERNAME`, and `NFIELD_PASSWORD` are required):
 
 ```dotenv
 NFIELD_DOMAIN=your-domain
@@ -46,13 +46,13 @@ NFIELD_PASSWORD=your-password
 NFIELD_BASE_URL=https://apiap.nfieldmr.com
 ```
 
-The published config also controls token caching:
+The published config defaults credentials to `null` so missing configuration fails fast at first use with an `InvalidConfigurationException`, and controls token caching:
 
 ```php
 return [
-    'domain' => env('NFIELD_DOMAIN', 'Nfield'),
-    'username' => env('NFIELD_USERNAME', 'username'),
-    'password' => env('NFIELD_PASSWORD', 'password'),
+    'domain' => env('NFIELD_DOMAIN'),
+    'username' => env('NFIELD_USERNAME'),
+    'password' => env('NFIELD_PASSWORD'),
     'base_url' => env('NFIELD_BASE_URL', 'https://apiap.nfieldmr.com'),
 
     'cache' => [
@@ -316,6 +316,8 @@ every other failing status throws.
 
 Calling a scoped service before its scope is set throws
 `MissingScopeException` rather than sending a request to a malformed URL.
+Missing credentials (`domain`, `username`, or `password`) throw
+`InvalidConfigurationException` before any network request is attempted.
 
 ## Conventions
 
