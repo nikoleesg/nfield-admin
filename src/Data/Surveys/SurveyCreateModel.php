@@ -14,7 +14,6 @@ final class SurveyCreateModel extends Data
         public string $surveyName,
         #[WithCast(StrictNullCast::class)]
         public ?string $clientName,
-        #[WithCast(StrictNullCast::class)]
         public string $surveyType,
         #[WithCast(StrictNullCast::class)]
         public ?string $description = null,

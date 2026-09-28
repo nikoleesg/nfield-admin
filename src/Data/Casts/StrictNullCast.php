@@ -13,6 +13,14 @@ class StrictNullCast implements Cast
 {
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): string|Uncastable|null
     {
-        return empty(trim($value)) ? null : $value;
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            return trim($value) === '' ? null : $value;
+        }
+
+        return Uncastable::create();
     }
 }
