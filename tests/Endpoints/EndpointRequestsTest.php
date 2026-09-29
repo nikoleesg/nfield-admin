@@ -293,6 +293,14 @@ function endpointCallCases(): array
             Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'update', ['survey-1', ['interviewId' => 'int-1', 'newState' => 1]],
             'PUT', 'v2/surveys/survey-1/interviewQuality', ['interviewId' => 'int-1', 'newState' => 1],
         ],
+        'SurveyPerformance::live' => [
+            Contracts\SurveyPerformanceEndpointInterface::class, 'live', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/performance/metrics/live', [],
+        ],
+        'SurveyPerformance::test' => [
+            Contracts\SurveyPerformanceEndpointInterface::class, 'test', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/performance/metrics/test', [],
+        ],
         'SurveyInterviewQuality::get' => [
             Contracts\SurveyInterviewQualityEndpointInterface::class, 'get', ['survey-1', 'int-1'],
             'GET', 'v2/surveys/survey-1/interviewQuality/int-1', [],

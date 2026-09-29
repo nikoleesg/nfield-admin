@@ -240,6 +240,9 @@ $survey->samplingMethod()->update(['samplingMethod' => 'Random']);
 
 $survey->publicIds()->list();                          // Collection<SurveyPublicIdModel>
 $survey->publicIds()->update($models);
+
+$survey->performance()->live();                        // SurveyMetricsModel: warn/block counts per metric
+$survey->performance()->test();
 ```
 
 ### Data delivery

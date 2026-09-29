@@ -7,6 +7,9 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Nikoleesg\NfieldAdmin\Data\Surveys\InterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\ManagerInterviewDetailsModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\MetricCountsModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricCountsModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
@@ -234,4 +237,34 @@ it('hydrates the interview quality DTOs from real PascalCase payloads', function
         ->and($updated->interviewDuration)->toBe(300)
         ->and($updated->isScreenedOut)->toBeFalse()
         ->and($updated->interviewStartTime)->toBeInstanceOf(Carbon::class);
+});
+
+it('normalises the nested metric counts of a performance response', function () {
+    // #63: a list of objects, each holding two further objects.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'token'], 200),
+        '*/performance/metrics/*' => Http::response([
+            'Id' => 'survey-1',
+            'PublishedCount' => 40,
+            'TotalCount' => 55,
+            'Counts' => [
+                [
+                    'MetricName' => 'Page Complexity',
+                    'All' => ['Warn' => 3, 'Block' => 1],
+                    'Published' => ['Warn' => 2, 'Block' => 0],
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $metrics = NfieldManager::surveys()->forSurvey('survey-1')->performance()->live();
+
+    expect($metrics)->toBeInstanceOf(SurveyMetricsModel::class)
+        ->and($metrics->publishedCount)->toBe(40)
+        ->and($metrics->totalCount)->toBe(55)
+        ->and($metrics->counts[0])->toBeInstanceOf(SurveyMetricCountsModel::class)
+        ->and($metrics->counts[0]->metricName)->toBe('Page Complexity')
+        ->and($metrics->counts[0]->all)->toBeInstanceOf(MetricCountsModel::class)
+        ->and($metrics->counts[0]->all->warn)->toBe(3)
+        ->and($metrics->counts[0]->published->block)->toBe(0);
 });
