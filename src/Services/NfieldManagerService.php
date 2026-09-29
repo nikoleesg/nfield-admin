@@ -30,6 +30,7 @@ class NfieldManagerService
         protected SurveyResourceUsageService $surveyResourceUsageService,
         protected ResponseCodeCollectionService $responseCodeCollectionService,
         protected SurveyGroupCollectionService $surveyGroupCollectionService,
+        protected RequestConfigurationCollectionService $requestConfigurationCollectionService,
     ) {}
 
     // ========================================
@@ -49,6 +50,11 @@ class NfieldManagerService
     public function surveyResourceUsage(): SurveyResourceUsageService
     {
         return $this->surveyResourceUsageService;
+    }
+
+    public function requestConfigurations(): RequestConfigurationCollectionService
+    {
+        return $this->requestConfigurationCollectionService;
     }
 
     public function responseCodes(): ResponseCodeCollectionService

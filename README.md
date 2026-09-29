@@ -361,6 +361,28 @@ $subscription->update(['eventTypes' => ['...']]);      // only the fields you pa
 $subscription->delete();
 ```
 
+### Request configurations
+
+Configurations for the scripting `*REQUEST` command (`/v2/requests` in the API).
+
+```php
+$configs = NfieldManager::requestConfigurations();
+
+$configs->list();                                      // Collection<RequestConfigurationModel>
+$configs->findByName('crm');                           // ?RequestConfigurationModel
+$configs->create([
+    'name' => 'crm',
+    'uri' => 'https://crm.example.com/hook',
+    'requestHttpMethod' => RequestHttpMethodEnum::Post,
+]);                                                    // the API returns no body
+
+$config = $configs->forRequestConfiguration(12);
+
+$config->get();
+$config->update([...]);                                // full replace; the id comes from the scope
+$config->delete();
+```
+
 ### Response codes (domain)
 
 ```php

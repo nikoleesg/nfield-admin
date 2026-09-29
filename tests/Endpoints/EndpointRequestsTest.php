@@ -80,6 +80,28 @@ function endpointCallCases(): array
             'GET', 'v2/surveyResources?%24top=5', ['$top' => 5],
         ],
 
+        // ── Request configurations (/requests) ───────────────────────────────
+        'RequestConfigurationCollection::list' => [
+            Contracts\RequestConfigurationCollectionEndpointInterface::class, 'list', [['name' => 'crm']],
+            'GET', 'v2/requests?name=crm', ['name' => 'crm'],
+        ],
+        'RequestConfigurationCollection::create' => [
+            Contracts\RequestConfigurationCollectionEndpointInterface::class, 'create', [['name' => 'crm', 'uri' => 'https://example.com']],
+            'POST', 'v2/requests', ['name' => 'crm', 'uri' => 'https://example.com'],
+        ],
+        'RequestConfigurationCollection::update' => [
+            Contracts\RequestConfigurationCollectionEndpointInterface::class, 'update', [['id' => 12, 'name' => 'crm', 'uri' => 'https://example.com']],
+            'PUT', 'v2/requests', ['id' => 12, 'name' => 'crm', 'uri' => 'https://example.com'],
+        ],
+        'RequestConfiguration::get' => [
+            Contracts\RequestConfigurationEndpointInterface::class, 'get', [12],
+            'GET', 'v2/requests/12', [],
+        ],
+        'RequestConfiguration::delete' => [
+            Contracts\RequestConfigurationEndpointInterface::class, 'delete', [12],
+            'DELETE', 'v2/requests/12', [],
+        ],
+
         // ── Response codes (domain) ──────────────────────────────────────────
         'ResponseCodeCollection::list' => [
             Contracts\ResponseCodeCollectionEndpointInterface::class, 'list', [],

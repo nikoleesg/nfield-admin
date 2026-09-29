@@ -10,6 +10,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Scoping\CapiInterviewerScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\EventSubscriptionScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\QuotaVersionScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\RequestConfigurationScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\ResponseCodeScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyGroupScopedInterface;
@@ -76,6 +77,10 @@ trait ResolvesScopedServices
             $service->setSurveyGroupId($this->getSurveyGroupId());
         }
 
+        if ($service instanceof RequestConfigurationScopedInterface && $this instanceof RequestConfigurationScopedInterface) {
+            $service->setRequestConfigurationId($this->getRequestConfigurationId());
+        }
+
         if ($service instanceof BlueprintScopedInterface && $this instanceof BlueprintScopedInterface) {
             $service->setBlueprintId($this->getBlueprintId());
         }
@@ -128,6 +133,10 @@ trait ResolvesScopedServices
 
         if ($this instanceof SurveyGroupScopedInterface) {
             $key .= '|'.$this->getSurveyGroupId();
+        }
+
+        if ($this instanceof RequestConfigurationScopedInterface) {
+            $key .= '|'.$this->getRequestConfigurationId();
         }
 
         if ($this instanceof BlueprintScopedInterface) {

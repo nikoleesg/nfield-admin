@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 111 of 282 operations implemented (39%), across 182 paths.**
+**Overall: 116 of 282 operations implemented (41%), across 182 paths.**
 
-**Planned for development: 28 operations across 4 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 23 operations across 3 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -29,7 +29,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Surveys — Settings & Content | 11 | — | 23 | 48% |
 | Surveys — Publishing & Script | 3 | 6 | 13 | 23% |
 | Surveys — Interviews & Data | 8 | — | 16 | 50% |
-| Access & Authentication | 4 | 5 | 20 | 20% |
+| Access & Authentication | 9 | — | 20 | 45% |
 | Data Delivery | 0 | — | 38 | 0% |
 | Surveys — Invitations & Distribution | 0 | — | 16 | 0% |
 | Parent Surveys & Waves | 0 | 14 | 14 | 0% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **111** | **28** | **282** | **39%** |
+| **Total** | **116** | **23** | **282** | **41%** |
 
 ---
 
@@ -56,11 +56,10 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 
 | Section | Operations | Tracking issue |
 |---|---:|---|
-| Access & Authentication | 5 | [#57](https://github.com/nikoleesg/nfield-admin/issues/57) |
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
 | Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **28** | |
+| **Total** | **23** | |
 
 Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -274,7 +273,7 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 
 ### Access & Authentication
 
-*4/20 implemented.*
+*9/20 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
@@ -290,11 +289,11 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 | ✅ | GET | `/v2/me/role` | `UserRoleEndpoint::get` |
 | ❌ | GET | `/v2/passwordSettings` | — |
 | ❌ | PATCH | `/v2/passwordSettings` | — |
-| 🗓️ | GET | `/v2/requests` | Planned for Development (#57) |
-| 🗓️ | POST | `/v2/requests` | Planned for Development (#57) |
-| 🗓️ | PUT | `/v2/requests` | Planned for Development (#57) |
-| 🗓️ | DELETE | `/v2/requests/{requestId}` | Planned for Development (#57) |
-| 🗓️ | GET | `/v2/requests/{requestId}` | Planned for Development (#57) |
+| ✅ | GET | `/v2/requests` | `RequestConfigurationCollectionEndpoint::list` |
+| ✅ | POST | `/v2/requests` | `RequestConfigurationCollectionEndpoint::create` |
+| ✅ | PUT | `/v2/requests` | `RequestConfigurationCollectionEndpoint::update` |
+| ✅ | DELETE | `/v2/requests/{requestId}` | `RequestConfigurationEndpoint::delete` |
+| ✅ | GET | `/v2/requests/{requestId}` | `RequestConfigurationEndpoint::get` |
 | ✅ | GET | `/v2/roles` | `RolesEndpoint::list` |
 | ✅ | POST | `/v2/token` | `Services\Http\HttpClient::getAccessToken` |
 | ✅ | POST | `/v2/token/refresh` | `Services\Http\HttpClient::getAccessToken (refresh flow)` |
@@ -635,9 +634,9 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (171 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (166 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
-**Access & Authentication** (16 pending)
+**Access & Authentication** (11 pending)
 
 - `DELETE /v2/domainAssignments`
 - `POST /v2/domainAssignments`
@@ -650,11 +649,6 @@ Everything not yet implemented (171 operations), grouped by section. Items marke
 - `POST /v2/localUsersLogs`
 - `GET /v2/passwordSettings`
 - `PATCH /v2/passwordSettings`
-- `GET /v2/requests` — Planned for Development (#57)
-- `POST /v2/requests` — Planned for Development (#57)
-- `PUT /v2/requests` — Planned for Development (#57)
-- `DELETE /v2/requests/{requestId}` — Planned for Development (#57)
-- `GET /v2/requests/{requestId}` — Planned for Development (#57)
 
 **Blacklist** (2 pending)
 

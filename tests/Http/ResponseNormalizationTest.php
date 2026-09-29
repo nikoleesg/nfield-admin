@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Nikoleesg\NfieldAdmin\Data\Domain\SurveyResources\SurveyResourceUsageModel;
+use Nikoleesg\NfieldAdmin\Data\Requests\RequestConfigurationHeaderModel;
+use Nikoleesg\NfieldAdmin\Data\Requests\RequestConfigurationModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\InterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\ManagerInterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\MetricCountsModel;
@@ -15,6 +17,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResp
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGroups\SurveyGroupDirectoryAssignmentModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Enums\DirectoryObjectTypeEnum;
+use Nikoleesg\NfieldAdmin\Enums\RequestHttpMethodEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyChannelEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
@@ -325,4 +328,30 @@ it('hydrates survey group directory assignments from an OData envelope', functio
         ->and($assignment->surveyGroupId)->toBe(7)
         ->and($assignment->objectType)->toBe(DirectoryObjectTypeEnum::User)
         ->and($assignment->tenantId)->toBe('5f2c1f0e-0000-4000-8000-000000000001');
+});
+
+it('hydrates a request configuration with its headers from a real PascalCase payload', function () {
+    // #57: an enum and a nested list of header objects.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'token'], 200),
+        '*/v2/requests/12' => Http::response([
+            'Id' => 12,
+            'Name' => 'crm',
+            'Description' => null,
+            'Uri' => 'https://crm.example.com/hook',
+            'PayloadTemplate' => '{"id":"{{RespondentKey}}"}',
+            'RequestHttpMethod' => 2,
+            'HelpUri' => null,
+            'Headers' => [['Id' => 1, 'RequestId' => 12, 'IsObfuscated' => true, 'Name' => 'Authorization', 'Value' => '***']],
+        ], 200),
+    ]);
+
+    $config = NfieldManager::requestConfigurations()->forRequestConfiguration(12)->get();
+
+    expect($config)->toBeInstanceOf(RequestConfigurationModel::class)
+        ->and($config->id)->toBe(12)
+        ->and($config->requestHttpMethod)->toBe(RequestHttpMethodEnum::Post)
+        ->and($config->headers[0])->toBeInstanceOf(RequestConfigurationHeaderModel::class)
+        ->and($config->headers[0]->name)->toBe('Authorization')
+        ->and($config->headers[0]->isObfuscated)->toBeTrue();
 });

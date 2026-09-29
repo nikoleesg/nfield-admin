@@ -37,6 +37,25 @@ it('accepts the OData envelope on the survey response code list', function () {
         ->and($endpoint->list('bare'))->toBe([['responseCode' => 211]]);
 });
 
+it('always returns a list from the request configurations endpoint', function () {
+    // #57: the spec documents GET /v2/requests as returning a single
+    // RequestModel, yet describes it as a list with an optional ?name filter.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'endpoint-test-token'], 200),
+        '*/v2/requests?name=single' => Http::response(['Id' => 1, 'Name' => 'single'], 200),
+        '*/v2/requests?name=envelope' => Http::response(['value' => [['Id' => 2, 'Name' => 'envelope']]], 200),
+        '*/v2/requests?name=none' => Http::response([], 200),
+        '*/v2/requests' => Http::response([['Id' => 3, 'Name' => 'a'], ['Id' => 4, 'Name' => 'b']], 200),
+    ]);
+
+    $endpoint = app(Contracts\RequestConfigurationCollectionEndpointInterface::class);
+
+    expect($endpoint->list(['name' => 'single']))->toBe([['id' => 1, 'name' => 'single']])
+        ->and($endpoint->list(['name' => 'envelope']))->toBe([['id' => 2, 'name' => 'envelope']])
+        ->and($endpoint->list(['name' => 'none']))->toBe([])
+        ->and($endpoint->list())->toHaveCount(2);
+});
+
 it('returns the sample download untouched by the key normalizer', function () {
     // A sample download is TSV, not JSON: `body()` must survive the response
     // wrapper the normalization added in #36.
