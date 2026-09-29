@@ -306,6 +306,21 @@ $activity = NfieldManager::interviewersWorklog()->download([
 NfieldManager::backgroundActivities()->get($activity->activityId)->status;
 ```
 
+### Survey groups
+
+```php
+$groups = NfieldManager::surveyGroups();
+
+$groups->list();                                       // Collection<SurveyGroupModel>
+
+$group = $groups->forSurveyGroup(7);
+
+$group->get();                                         // SurveyGroupModel
+$group->surveys(['$top' => 10]);                       // Collection<SurveyModel>, OData query optional
+$group->directoryAssignments();                        // Collection<SurveyGroupDirectoryAssignmentModel>
+$group->localAssignments();                            // Collection<SurveyGroupLocalAssignmentModel>
+```
+
 ### Survey resource usage
 
 ```php

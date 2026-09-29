@@ -12,7 +12,9 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\MetricCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGroups\SurveyGroupDirectoryAssignmentModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
+use Nikoleesg\NfieldAdmin\Enums\DirectoryObjectTypeEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyChannelEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
@@ -302,4 +304,25 @@ it('hydrates survey resource usage from a real PascalCase payload', function () 
         ->and($usage->state)->toBe(SurveyStateEnum::Paused)
         ->and($usage->creationDate->format('Y-m-d'))->toBe('2024-12-25')
         ->and($usage->isExcludedFromAutomaticCleanup)->toBeTrue();
+});
+
+it('hydrates survey group directory assignments from an OData envelope', function () {
+    // #60: enum, UUIDs and a date inside the {"value": [...]} envelope.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'token'], 200),
+        '*/v2/surveyGroups/7/directoryAssignments*' => Http::response(['value' => [[
+            'SurveyGroupId' => 7,
+            'TenantId' => '5f2c1f0e-0000-4000-8000-000000000001',
+            'ObjectId' => '5f2c1f0e-0000-4000-8000-000000000002',
+            'ObjectType' => 1,
+            'DateAdded' => '2026-09-01T00:00:00Z',
+        ]]], 200),
+    ]);
+
+    $assignment = NfieldManager::surveyGroups()->forSurveyGroup(7)->directoryAssignments()->first();
+
+    expect($assignment)->toBeInstanceOf(SurveyGroupDirectoryAssignmentModel::class)
+        ->and($assignment->surveyGroupId)->toBe(7)
+        ->and($assignment->objectType)->toBe(DirectoryObjectTypeEnum::User)
+        ->and($assignment->tenantId)->toBe('5f2c1f0e-0000-4000-8000-000000000001');
 });

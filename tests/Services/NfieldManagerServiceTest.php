@@ -23,6 +23,7 @@ use Nikoleesg\NfieldAdmin\Services\ResponseCodeCollectionService;
 use Nikoleesg\NfieldAdmin\Services\RoleService;
 use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
+use Nikoleesg\NfieldAdmin\Services\SurveyGroupCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService;
 
 afterEach(function () {
@@ -40,6 +41,7 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
         app(InterviewersWorklogService::class),
         app(SurveyResourceUsageService::class),
         app(ResponseCodeCollectionService::class),
+        app(SurveyGroupCollectionService::class),
     );
 }
 

@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 102 of 282 operations implemented (36%), across 182 paths.**
+**Overall: 107 of 282 operations implemented (38%), across 182 paths.**
 
-**Planned for development: 37 operations across 6 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 32 operations across 5 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -33,7 +33,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Data Delivery | 0 | — | 38 | 0% |
 | Surveys — Invitations & Distribution | 0 | — | 16 | 0% |
 | Parent Surveys & Waves | 0 | 14 | 14 | 0% |
-| Survey Groups | 0 | 5 | 12 | 0% |
+| Survey Groups | 5 | — | 12 | 42% |
 | Screeners | 0 | — | 10 | 0% |
 | Surveys — Interviewers & Assignments | 0 | — | 7 | 0% |
 | CATI Interviewers | 0 | — | 5 | 0% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **102** | **37** | **282** | **36%** |
+| **Total** | **107** | **32** | **282** | **38%** |
 
 ---
 
@@ -58,13 +58,12 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 |---|---:|---|
 | Access & Authentication | 5 | [#57](https://github.com/nikoleesg/nfield-admin/issues/57) |
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
-| Survey Groups | 5 | [#60](https://github.com/nikoleesg/nfield-admin/issues/60) |
 | Surveys — Core | 4 | [#62](https://github.com/nikoleesg/nfield-admin/issues/62) |
 | Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **37** | |
+| **Total** | **32** | |
 
-Survey Groups is only partly planned: the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
+Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
 ---
 
@@ -392,20 +391,20 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 
 ### Survey Groups
 
-*0/12 implemented.*
+*5/12 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| 🗓️ | GET | `/v2/surveyGroups` | Planned for Development (#60) |
+| ✅ | GET | `/v2/surveyGroups` | `SurveyGroupCollectionEndpoint::list` |
 | ❌ | POST | `/v2/surveyGroups` | — |
 | ❌ | DELETE | `/v2/surveyGroups/{surveyGroupId}` | — |
-| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}` | Planned for Development (#60) |
+| ✅ | GET | `/v2/surveyGroups/{surveyGroupId}` | `SurveyGroupEndpoint::get` |
 | ❌ | PATCH | `/v2/surveyGroups/{surveyGroupId}` | — |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/assignDirectory` | — |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/assignLocal` | — |
-| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}/directoryAssignments` | Planned for Development (#60) |
-| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}/localAssignments` | Planned for Development (#60) |
-| 🗓️ | GET | `/v2/surveyGroups/{surveyGroupId}/surveys` | Planned for Development (#60) |
+| ✅ | GET | `/v2/surveyGroups/{surveyGroupId}/directoryAssignments` | `SurveyGroupDirectoryAssignmentsEndpoint::list` |
+| ✅ | GET | `/v2/surveyGroups/{surveyGroupId}/localAssignments` | `SurveyGroupLocalAssignmentsEndpoint::list` |
+| ✅ | GET | `/v2/surveyGroups/{surveyGroupId}/surveys` | `SurveyGroupSurveysEndpoint::list` |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/unassignDirectory` | — |
 | ❌ | PUT | `/v2/surveyGroups/{surveyGroupId}/unassignLocal` | — |
 
@@ -637,7 +636,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (180 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (175 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (16 pending)
 
@@ -776,18 +775,13 @@ Everything not yet implemented (180 operations), grouped by section. Items marke
 - `GET /v2/searchFieldsSetting`
 - `PUT /v2/searchFieldsSetting`
 
-**Survey Groups** (12 pending)
+**Survey Groups** (7 pending)
 
-- `GET /v2/surveyGroups` — Planned for Development (#60)
 - `POST /v2/surveyGroups`
 - `DELETE /v2/surveyGroups/{surveyGroupId}`
-- `GET /v2/surveyGroups/{surveyGroupId}` — Planned for Development (#60)
 - `PATCH /v2/surveyGroups/{surveyGroupId}`
 - `PUT /v2/surveyGroups/{surveyGroupId}/assignDirectory`
 - `PUT /v2/surveyGroups/{surveyGroupId}/assignLocal`
-- `GET /v2/surveyGroups/{surveyGroupId}/directoryAssignments` — Planned for Development (#60)
-- `GET /v2/surveyGroups/{surveyGroupId}/localAssignments` — Planned for Development (#60)
-- `GET /v2/surveyGroups/{surveyGroupId}/surveys` — Planned for Development (#60)
 - `PUT /v2/surveyGroups/{surveyGroupId}/unassignDirectory`
 - `PUT /v2/surveyGroups/{surveyGroupId}/unassignLocal`
 

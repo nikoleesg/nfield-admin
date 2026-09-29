@@ -98,6 +98,28 @@ function endpointCallCases(): array
             'DELETE', 'v2/responseCodes/210', [],
         ],
 
+        // ── Survey groups ────────────────────────────────────────────────────
+        'SurveyGroupCollection::list' => [
+            Contracts\SurveyGroupCollectionEndpointInterface::class, 'list', [],
+            'GET', 'v2/surveyGroups', [],
+        ],
+        'SurveyGroup::get' => [
+            Contracts\SurveyGroupEndpointInterface::class, 'get', [7],
+            'GET', 'v2/surveyGroups/7', [],
+        ],
+        'SurveyGroupDirectoryAssignments::list' => [
+            Contracts\SurveyGroupDirectoryAssignmentsEndpointInterface::class, 'list', [7, ['$top' => 5]],
+            'GET', 'v2/surveyGroups/7/directoryAssignments?%24top=5', ['$top' => 5],
+        ],
+        'SurveyGroupLocalAssignments::list' => [
+            Contracts\SurveyGroupLocalAssignmentsEndpointInterface::class, 'list', [7],
+            'GET', 'v2/surveyGroups/7/localAssignments', [],
+        ],
+        'SurveyGroupSurveys::list' => [
+            Contracts\SurveyGroupSurveysEndpointInterface::class, 'list', [7],
+            'GET', 'v2/surveyGroups/7/surveys', [],
+        ],
+
         // ── Interviewers Worklog ─────────────────────────────────────────────
         'InterviewersWorklog::download' => [
             Contracts\InterviewersWorklogEndpointInterface::class, 'download', [['from' => '2026-09-01T00:00:00+00:00', 'to' => '2026-09-30T00:00:00+00:00']],
