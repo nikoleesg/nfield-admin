@@ -11,6 +11,9 @@ class QuotaLevel extends Data
 {
     use WithDeprecatedCollectionMethod;
 
+    /**
+     * @param  array<mixed>|null  $attributes
+     */
     public function __construct(
         public ?string $id,
         public ?string $name,

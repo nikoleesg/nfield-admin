@@ -8,6 +8,8 @@ interface UserRoleEndpointInterface
 {
     /**
      * Get the current user's role and permissions.
+     *
+     * @return array<string, mixed>
      */
     public function get(): array;
 }

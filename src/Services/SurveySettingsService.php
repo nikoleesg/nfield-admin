@@ -50,6 +50,9 @@ class SurveySettingsService implements SurveyScopedInterface
         return SurveyGeneralSettingsModel::from($data);
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyGeneralSettingsUpdateModel  $data
+     */
     public function updateGeneral(array|SurveyGeneralSettingsUpdateModel $data): void
     {
         $payload = SurveyGeneralSettingsUpdateModel::from($data)->toArray();

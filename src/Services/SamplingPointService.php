@@ -32,7 +32,10 @@ class SamplingPointService implements SurveyScopedInterface
         return $this->findSamplingPoints();
     }
 
-    /** @return Collection<int, SamplingPointResponseModel> */
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return Collection<int, SamplingPointResponseModel>
+     */
     public function findSamplingPoints(array $filter = []): Collection
     {
         return SamplingPointResponseModel::collect(
@@ -41,6 +44,9 @@ class SamplingPointService implements SurveyScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|SamplingPointCreateRequestModel  $data
+     */
     public function createSamplingPoint(array|SamplingPointCreateRequestModel $data): SamplingPointResponseModel
     {
         $payload = SamplingPointCreateRequestModel::from($data)->toArray();

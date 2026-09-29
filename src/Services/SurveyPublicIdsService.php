@@ -28,7 +28,7 @@ class SurveyPublicIdsService implements SurveyScopedInterface
     }
 
     /**
-     * @param  iterable<int, array|SurveyPublicIdModel>  $models
+     * @param  iterable<int, array<string, mixed>|SurveyPublicIdModel>  $models
      */
     public function update(iterable $models): void
     {

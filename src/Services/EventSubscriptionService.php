@@ -29,6 +29,9 @@ class EventSubscriptionService
         );
     }
 
+    /**
+     * @param  array<string, mixed>|CreateSubscriptionModel  $data
+     */
     public function create(array|CreateSubscriptionModel $data): SubscriptionModel
     {
         $payload = CreateSubscriptionModel::from($data)->toArray();

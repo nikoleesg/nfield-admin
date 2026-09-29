@@ -55,7 +55,7 @@ class SurveySampleService implements SurveyScopedInterface
     }
 
     /**
-     * @param  iterable<int, array|SampleFilterModel>  $filters
+     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
      */
     public function blockSampleData(iterable $filters): BackgroundActivityStatus
     {
@@ -67,7 +67,7 @@ class SurveySampleService implements SurveyScopedInterface
     /**
      * Create a survey sample (Online).
      *
-     * @param  iterable<int, array|SurveyCreateSampleColumnModel>  $columns
+     * @param  iterable<int, array<string, mixed>|SurveyCreateSampleColumnModel>  $columns
      * @return Collection<int, SurveyCreateSampleColumnModel>
      */
     public function createSampleData(iterable $columns): Collection
@@ -85,7 +85,7 @@ class SurveySampleService implements SurveyScopedInterface
     }
 
     /**
-     * @param  iterable<int, array|SampleFilterModel>  $filters
+     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
      */
     public function resetSampleData(iterable $filters): BackgroundActivityStatus
     {
@@ -94,6 +94,9 @@ class SurveySampleService implements SurveyScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|ClearSurveySampleModel  $data
+     */
     public function clearSampleDataColumns(array|ClearSurveySampleModel $data): BackgroundActivityStatus
     {
         $payload = ClearSurveySampleModel::from($data)->toArray();
@@ -127,8 +130,8 @@ class SurveySampleService implements SurveyScopedInterface
     /**
      * The sample filter endpoints take a bare JSON array of filter clauses.
      *
-     * @param  iterable<int, array|SampleFilterModel>  $filters
-     * @return array<int, array<string, mixed>>
+     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
+     * @return list<array<string, mixed>>
      */
     protected function normaliseFilters(iterable $filters): array
     {

@@ -8,11 +8,15 @@ interface SamplingPointAssignmentEndpointInterface
 {
     /**
      * Get the interviewers assigned to a sampling point
+     *
+     * @return list<array<string, mixed>>
      */
     public function list(string $surveyId, string $samplingPointId): array;
 
     /**
      * Assign an interviewer to a sampling point
+     *
+     * @return array<string, mixed>
      */
     public function assign(string $surveyId, string $samplingPointId, string $interviewerId): array;
 

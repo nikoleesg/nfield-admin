@@ -8,6 +8,8 @@ interface CapiInterviewersOfficesEndpointInterface
 {
     /**
      * Get the fieldwork offices a CAPI interviewer belongs to
+     *
+     * @return list<string>
      */
     public function list(string $interviewerId): array;
 

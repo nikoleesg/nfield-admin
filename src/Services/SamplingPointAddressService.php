@@ -29,7 +29,10 @@ class SamplingPointAddressService implements SamplingPointScopedInterface
         return $this->findAddresses();
     }
 
-    /** @return Collection<int, AddressModel> */
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return Collection<int, AddressModel>
+     */
     public function findAddresses(array $filter = []): Collection
     {
         return AddressModel::collect(
@@ -38,6 +41,9 @@ class SamplingPointAddressService implements SamplingPointScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|AddressModel  $data
+     */
     public function createAddress(array|AddressModel $data): AddressModel
     {
         $payload = AddressModel::from($data)->toArray();

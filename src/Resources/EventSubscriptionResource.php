@@ -30,6 +30,9 @@ class EventSubscriptionResource
         );
     }
 
+    /**
+     * @param  array<string, mixed>|UpdateSubscriptionModel  $data
+     */
     public function update(array|UpdateSubscriptionModel $data): void
     {
         $payload = UpdateSubscriptionModel::from($data)->toArray();

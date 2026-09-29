@@ -38,6 +38,9 @@ class SamplingPointQuotaTargetsService implements SamplingPointScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|SamplingPointQuotaLevelTargetUpdateRequestModel|SamplingPointQuotaLevelTargetModel  $data
+     */
     public function setQuotaTargets(string $quotaLevelId, array|SamplingPointQuotaLevelTargetUpdateRequestModel|SamplingPointQuotaLevelTargetModel $data): SamplingPointQuotaTargetModel
     {
         $payload = SamplingPointQuotaLevelTargetUpdateRequestModel::from($data)->toArray();

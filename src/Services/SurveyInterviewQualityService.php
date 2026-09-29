@@ -33,6 +33,9 @@ class SurveyInterviewQualityService implements SurveyScopedInterface
         return InterviewDetailsModel::from($this->itemEndpoint->get($this->getSurveyId(), $interviewId));
     }
 
+    /**
+     * @param  array<string, mixed>|QualityNewStateChangeModel  $data
+     */
     public function updateQuality(array|QualityNewStateChangeModel $data): ManagerInterviewDetailsModel
     {
         $payload = QualityNewStateChangeModel::from($data)->toArray();

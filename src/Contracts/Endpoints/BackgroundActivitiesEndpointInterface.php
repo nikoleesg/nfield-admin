@@ -8,6 +8,8 @@ interface BackgroundActivitiesEndpointInterface
 {
     /**
      * Retrieve details of a specific background activity.
+     *
+     * @return array<string, mixed>
      */
     public function get(string $activityId): array;
 }

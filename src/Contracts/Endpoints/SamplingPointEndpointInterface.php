@@ -8,6 +8,8 @@ interface SamplingPointEndpointInterface
 {
     /**
      * Get the details of a specific sampling point.
+     *
+     * @return array<string, mixed>
      */
     public function get(string $surveyId, string $samplingPointId): array;
 
@@ -18,16 +20,25 @@ interface SamplingPointEndpointInterface
 
     /**
      * Update a sampling point with the specified fields.
+     *
+     * @param  array<string, mixed>  $samplingPointUpdateRequestModel
+     * @return array<string, mixed>
      */
     public function update(string $surveyId, string $samplingPointId, array $samplingPointUpdateRequestModel): array;
 
     /**
      * Activate a spare sampling point so it can be assigned.
+     *
+     * @param  array<string, mixed>  $activateRequestModel
+     * @return array<string, mixed>
      */
     public function activate(string $surveyId, string $samplingPointId, array $activateRequestModel = []): array;
 
     /**
      * Replaces an active sampling point with a spare one.
+     *
+     * @param  array<string, mixed>  $replaceRequestModel
+     * @return array<string, mixed>
      */
     public function replace(string $surveyId, string $samplingPointId, array $replaceRequestModel): array;
 }

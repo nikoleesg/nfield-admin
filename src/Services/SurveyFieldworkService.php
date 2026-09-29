@@ -52,6 +52,9 @@ class SurveyFieldworkService implements SurveyScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|SurveysFieldworkStopRequestModel|InterviewingRestrictionTypeEnum  $data
+     */
     public function stop(
         array|SurveysFieldworkStopRequestModel|InterviewingRestrictionTypeEnum $data = InterviewingRestrictionTypeEnum::BlockEverything
     ): void {

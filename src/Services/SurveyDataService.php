@@ -30,6 +30,9 @@ class SurveyDataService implements SurveyScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyDataRequestModel  $data
+     */
     public function downloadData(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
         $payload = SurveyDataRequestModel::from($data)->toArray();

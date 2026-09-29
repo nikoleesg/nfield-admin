@@ -11,6 +11,10 @@ use Spatie\LaravelData\Support\DataProperty;
 
 class StrictNullCast implements Cast
 {
+    /**
+     * @param  array<string, mixed>  $properties
+     * @param  CreationContext<*>  $context
+     */
     public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): string|Uncastable|null
     {
         if ($value === null) {

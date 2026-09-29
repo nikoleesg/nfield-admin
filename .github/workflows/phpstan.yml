@@ -29,8 +29,12 @@ jobs:
       - name: Setup problem matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
+      # Larastan 3 (PHPStan 2) is required here; composer.json still allows
+      # Larastan 2 so the Laravel 10 test matrix can install.
       - name: Install dependencies
-        run: composer update --prefer-stable --prefer-dist --no-interaction
+        run: |
+          composer require "larastan/larastan:^3.0" --dev --no-interaction --no-update
+          composer update --prefer-stable --prefer-dist --no-interaction
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse

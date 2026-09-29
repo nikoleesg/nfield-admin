@@ -39,6 +39,9 @@ class SamplingPointResource implements SamplingPointScopedInterface
         $this->samplingPointEndpoint->delete($this->getSurveyId(), $this->getSamplingPointId());
     }
 
+    /**
+     * @param  array<string, mixed>|SamplingPointUpdateRequestModel  $data
+     */
     public function updateSamplingPoint(array|SamplingPointUpdateRequestModel $data): SamplingPointResponseModel
     {
         $payload = SamplingPointUpdateRequestModel::from($data)->toArray();
@@ -48,6 +51,9 @@ class SamplingPointResource implements SamplingPointScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|ActivateSpareSamplingPointRequestModel  $data
+     */
     public function activateSamplingPoint(array|ActivateSpareSamplingPointRequestModel $data = []): ActivateSpareSamplingPointsResponseModel
     {
         $payload = ActivateSpareSamplingPointRequestModel::from($data)->toArray();
@@ -57,6 +63,9 @@ class SamplingPointResource implements SamplingPointScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|ReplaceSamplingPointWithSpareRequestModel  $data
+     */
     public function replaceSamplingPoint(array|ReplaceSamplingPointWithSpareRequestModel $data): ReplaceSamplingPointWithSpareResponseModel
     {
         $payload = ReplaceSamplingPointWithSpareRequestModel::from($data)->toArray();

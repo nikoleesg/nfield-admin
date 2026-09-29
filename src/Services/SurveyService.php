@@ -29,12 +29,18 @@ class SurveyService
         return SurveyModel::collect($this->surveyCollectionEndpoint->list(), Collection::class);
     }
 
-    /** @return Collection<int, SurveyModel> */
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return Collection<int, SurveyModel>
+     */
     public function find(array $filter): Collection
     {
         return SurveyModel::collect($this->surveyCollectionEndpoint->find($filter), Collection::class);
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyCreateModel  $data
+     */
     public function create(array|SurveyCreateModel $data): SurveyModel
     {
         $payload = SurveyCreateModel::from($data)->toArray();
@@ -42,6 +48,9 @@ class SurveyService
         return SurveyModel::from($this->surveyCollectionEndpoint->create($payload));
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyFromBlueprintModel  $data
+     */
     public function createFromBlueprint(array|SurveyFromBlueprintModel $data): SurveyModel
     {
         $payload = SurveyFromBlueprintModel::from($data)->toArray();

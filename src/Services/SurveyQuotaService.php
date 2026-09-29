@@ -37,6 +37,9 @@ class SurveyQuotaService implements SurveyScopedInterface
         return SurveysQuotaFrameResponseModel::from($this->surveyQuotaFrameEndpoint->getQuotaFrame($this->getSurveyId()));
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyQuotaFrameRequestModel  $data
+     */
     public function setQuotaFrame(array|SurveyQuotaFrameRequestModel $data): SurveysQuotaFrameResponseModel
     {
         $payload = SurveyQuotaFrameRequestModel::from($data)->toArray();
@@ -46,6 +49,9 @@ class SurveyQuotaService implements SurveyScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyQuotaFrameEtagRequestModel  $data
+     */
     public function setQuotaLevelsTargets(string $eTag, array|SurveyQuotaFrameEtagRequestModel $data): SurveyQuotaFrameEtagResponseModel
     {
         $payload = SurveyQuotaFrameEtagRequestModel::from($data)->toArray();

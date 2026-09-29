@@ -8,6 +8,8 @@ interface CapiInterviewersAssignmentsEndpointInterface
 {
     /**
      * Get assignments for a CAPI interviewer
+     *
+     * @return list<array<string, mixed>>
      */
     public function list(string $interviewerId): array;
 }

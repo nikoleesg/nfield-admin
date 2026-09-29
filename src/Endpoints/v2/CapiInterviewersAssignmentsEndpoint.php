@@ -29,6 +29,8 @@ final class CapiInterviewersAssignmentsEndpoint extends BaseEndpoint implements 
      *
      * Key casing is already normalized at the HTTP boundary (see
      * {@see ResponseKeyNormalizer}).
+     *
+     * @return list<array<string, mixed>>
      */
     private function unwrapList(mixed $json): array
     {

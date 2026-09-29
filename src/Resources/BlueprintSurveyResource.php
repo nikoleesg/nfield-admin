@@ -22,6 +22,9 @@ class BlueprintSurveyResource
         return $this;
     }
 
+    /**
+     * @param  array<string, mixed>|UpdateBlueprintModel  $data
+     */
     public function update(array|UpdateBlueprintModel $data): void
     {
         $payload = UpdateBlueprintModel::from($data)->toArray();

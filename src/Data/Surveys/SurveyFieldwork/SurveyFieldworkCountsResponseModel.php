@@ -10,6 +10,9 @@ use Spatie\LaravelData\Data;
 
 final class SurveyFieldworkCountsResponseModel extends Data
 {
+    /**
+     * @param  list<ResponseCodeCount>|null  $screenedOutOverview
+     */
     public function __construct(
         public ?string $surveyId,
         public int $successful,

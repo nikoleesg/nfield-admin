@@ -8,6 +8,8 @@ interface SurveyInterviewEndpointInterface
 {
     /**
      * Delete all data for a specified interview of a specified survey
+     *
+     * @return array<string, mixed>
      */
     public function deleteInterviewData(string $surveyId, string $interviewId): array;
 }

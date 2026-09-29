@@ -39,8 +39,9 @@ class CapiInterviewerService
 
     /**
      * List all CAPI interviewers
+     *
+     * @return Collection<int, CapiInterviewerModel>
      */
-    /** @return Collection<int, CapiInterviewerModel> */
     public function list(): Collection
     {
         return CapiInterviewerModel::collect(
@@ -51,8 +52,10 @@ class CapiInterviewerService
 
     /**
      * Find CAPI interviewers with filter criteria
+     *
+     * @param  array<string, mixed>  $filter
+     * @return Collection<int, CapiInterviewerModel>
      */
-    /** @return Collection<int, CapiInterviewerModel> */
     public function find(array $filter = []): Collection
     {
         return CapiInterviewerModel::collect(
@@ -63,6 +66,8 @@ class CapiInterviewerService
 
     /**
      * Create a new CAPI interviewer
+     *
+     * @param  array<string, mixed>|NewCapiInterviewerRequestModel  $data
      */
     public function create(array|NewCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
@@ -93,6 +98,8 @@ class CapiInterviewerService
 
     /**
      * Update (partial) a CAPI interviewer
+     *
+     * @param  array<string, mixed>|EditCapiInterviewerRequestModel  $data
      */
     public function update(string $interviewerId, array|EditCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
@@ -105,6 +112,8 @@ class CapiInterviewerService
 
     /**
      * Reset a CAPI interviewer's password
+     *
+     * @param  array<string, mixed>|ResetCapiInterviewerPasswordRequestModel  $data
      */
     public function resetPassword(string $interviewerId, array|ResetCapiInterviewerPasswordRequestModel $data): CapiInterviewerResponseModel
     {
@@ -125,8 +134,9 @@ class CapiInterviewerService
 
     /**
      * Get assignments for a CAPI interviewer
+     *
+     * @return Collection<int, CapiInterviewerAssignmentModel>
      */
-    /** @return Collection<int, CapiInterviewerAssignmentModel> */
     public function getAssignments(string $interviewerId): Collection
     {
         return CapiInterviewerAssignmentModel::collect(
@@ -137,8 +147,9 @@ class CapiInterviewerService
 
     /**
      * Get offices for a CAPI interviewer
+     *
+     * @return Collection<int, string>
      */
-    /** @return Collection<int, string> */
     public function getOffices(string $interviewerId): Collection
     {
         return collect($this->capiInterviewersOfficesEndpoint->list($interviewerId));

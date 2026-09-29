@@ -8,6 +8,8 @@ interface SamplingPointAddressEndpointInterface
 {
     /**
      * Retrieve the details of a single address.
+     *
+     * @return array<string, mixed>
      */
     public function get(string $surveyId, string $samplingPointId, string $addressId): array;
 

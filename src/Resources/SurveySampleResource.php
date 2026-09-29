@@ -54,7 +54,7 @@ final class SurveySampleResource implements SurveyScopedInterface
     }
 
     /**
-     * @param  iterable<int, array|SampleFilterModel>  $filters
+     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
      */
     public function deleteSampleData(iterable $filters): BackgroundActivityStatus
     {
@@ -69,6 +69,9 @@ final class SurveySampleResource implements SurveyScopedInterface
         );
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyUpdateSampleRecordModel  $data
+     */
     public function updateSampleRecord(array|SurveyUpdateSampleRecordModel $data): SampleUpdateStatus
     {
         $payload = SurveyUpdateSampleRecordModel::from($data)->toArray();

@@ -8,6 +8,8 @@ interface SurveySampleDataDownloadEndpointInterface
 {
     /**
      * Create a request for a sample data download
+     *
+     * @return array<string, mixed>
      */
     public function requestDownload(string $surveyId, string $fileName): array;
 }

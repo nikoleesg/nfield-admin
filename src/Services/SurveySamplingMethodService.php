@@ -22,6 +22,9 @@ class SurveySamplingMethodService implements SurveyScopedInterface
         return SamplingMethodModel::from($this->surveySamplingMethodEndpoint->get($this->getSurveyId()));
     }
 
+    /**
+     * @param  array<string, mixed>|SamplingMethodModel  $data
+     */
     public function setSamplingMethod(array|SamplingMethodModel $data): void
     {
         $payload = SamplingMethodModel::from($data)->toArray();

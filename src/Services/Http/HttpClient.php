@@ -25,6 +25,7 @@ class HttpClient implements HttpClientInterface
 {
     private string $baseUrl;
 
+    /** @var list<string> */
     private array $skipAuth = [
         '/v2/token',
         '/v2/token/refresh',
@@ -68,7 +69,7 @@ class HttpClient implements HttpClientInterface
                 function (int $attempt, ?\Throwable $exception) use ($retryDelay): int {
                     if ($exception instanceof RequestException && $exception->response !== null) {
                         $retryAfter = $exception->response->header('Retry-After');
-                        if ($retryAfter !== null && $retryAfter !== '') {
+                        if ($retryAfter !== '') {
                             if (is_numeric($retryAfter)) {
                                 return (int) $retryAfter * 1000;
                             }
@@ -105,26 +106,41 @@ class HttpClient implements HttpClientInterface
         return $request;
     }
 
+    /**
+     * @param  array<string, mixed>  $query
+     */
     public function get(string $uri, array $query = []): Response
     {
         return $this->request($uri, fn () => $this->getPendingRequest($uri)->get($uri, $query));
     }
 
+    /**
+     * @param  array<mixed>  $data
+     */
     public function post(string $uri, array $data = []): Response
     {
         return $this->request($uri, fn () => $this->getPendingRequest($uri)->post($uri, $data));
     }
 
+    /**
+     * @param  array<mixed>  $data
+     */
     public function patch(string $uri, array $data = []): Response
     {
         return $this->request($uri, fn () => $this->getPendingRequest($uri)->patch($uri, $data));
     }
 
+    /**
+     * @param  array<mixed>  $data
+     */
     public function put(string $uri, array $data = []): Response
     {
         return $this->request($uri, fn () => $this->getPendingRequest($uri)->put($uri, $data));
     }
 
+    /**
+     * @param  array<mixed>  $data
+     */
     public function delete(string $uri, array $data = []): Response
     {
         return $this->request($uri, fn () => $this->getPendingRequest($uri)->delete($uri, $data));
@@ -249,7 +265,7 @@ class HttpClient implements HttpClientInterface
     {
         $tokenData = $this->getAccessToken();
 
-        $expiresIn = $tokenData['expiresIn'] ?? 3600;
+        $expiresIn = $tokenData['expiresIn'];
         $maxTtl = config('nfield-admin.cache.ttl', 600);
         $ttl = min(max($expiresIn - 30, 0), $maxTtl);
 
@@ -275,6 +291,9 @@ class HttpClient implements HttpClientInterface
         return null;
     }
 
+    /**
+     * @return array{accessToken: string, refreshToken: string, expiresIn: int}
+     */
     private function getAccessToken(): array
     {
         $cache = $this->cache();

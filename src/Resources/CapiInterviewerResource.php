@@ -52,6 +52,8 @@ class CapiInterviewerResource
 
     /**
      * Update (partial) the interviewer
+     *
+     * @param  array<string, mixed>|EditCapiInterviewerRequestModel  $data
      */
     public function update(array|EditCapiInterviewerRequestModel $data): CapiInterviewerResponseModel
     {
@@ -64,6 +66,8 @@ class CapiInterviewerResource
 
     /**
      * Reset the interviewer's password
+     *
+     * @param  array<string, mixed>|ResetCapiInterviewerPasswordRequestModel  $data
      */
     public function resetPassword(array|ResetCapiInterviewerPasswordRequestModel $data): CapiInterviewerResponseModel
     {
@@ -84,8 +88,9 @@ class CapiInterviewerResource
 
     /**
      * Get interviewer assignments (surveys/tasks)
+     *
+     * @return Collection<int, CapiInterviewerAssignmentModel>
      */
-    /** @return Collection<int, CapiInterviewerAssignmentModel> */
     public function getAssignments(): Collection
     {
         return CapiInterviewerAssignmentModel::collect(
@@ -96,8 +101,9 @@ class CapiInterviewerResource
 
     /**
      * Get interviewer's office assignments
+     *
+     * @return Collection<int, string>
      */
-    /** @return Collection<int, string> */
     public function getOffices(): Collection
     {
         return collect($this->capiInterviewersOfficesEndpoint->list($this->interviewerId));

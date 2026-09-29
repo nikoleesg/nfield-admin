@@ -45,6 +45,9 @@ class SurveyResource implements SurveyScopedInterface
         $this->surveyEndpoint->destroy($this->getSurveyId());
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyUpdateModel  $data
+     */
     public function updateSurvey(array|SurveyUpdateModel $data): SurveyModel
     {
         $payload = SurveyUpdateModel::from($data)->toArray();
@@ -63,6 +66,9 @@ class SurveyResource implements SurveyScopedInterface
         return collect($this->surveyEndpoint->getCustomColumns($this->getSurveyId()));
     }
 
+    /**
+     * @param  array<string, mixed>|SurveyDataRequestModel  $data
+     */
     public function requestDataDownload(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
         return $this->data()->downloadData($data);
