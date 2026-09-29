@@ -404,6 +404,15 @@ $codes->forResponseCode(210)->update(['url' => 'https://example.com']);  // only
 $codes->forResponseCode(210)->delete();
 ```
 
+### Themes
+
+```php
+NfieldManager::themes()->upload('template-id', 'Brand A', $zipContents, 'brand-a.zip');  // BackgroundActivityResponseModel
+
+NfieldManager::themes()->forTheme('theme-id')->downloadUrl()->url;
+NfieldManager::themes()->forTheme('theme-id')->delete();
+```
+
 ### Roles
 
 ```php

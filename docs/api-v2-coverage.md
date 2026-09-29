@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 122 of 282 operations implemented (43%), across 182 paths.**
+**Overall: 125 of 282 operations implemented (44%), across 182 paths.**
 
-**Planned for development: 17 operations across 2 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 14 operations across 1 section**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -23,6 +23,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Interviewers Worklog | 1 | — | 1 | 100% |
 | Survey Resources | 1 | — | 1 | 100% |
 | Response Codes (tenant) | 4 | — | 4 | 100% |
+| Themes | 3 | — | 3 | 100% |
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
 | Surveys — Core | 13 | — | 14 | 93% |
@@ -39,14 +40,13 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | CATI Interviewers | 0 | — | 5 | 0% |
 | Offices | 0 | — | 5 | 0% |
 | Language Translations (tenant) | 0 | — | 4 | 0% |
-| Themes | 0 | 3 | 3 | 0% |
 | Blacklist | 0 | — | 2 | 0% |
 | Default Texts | 0 | — | 2 | 0% |
 | Email Settings (tenant) | 0 | — | 2 | 0% |
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **122** | **17** | **282** | **43%** |
+| **Total** | **125** | **14** | **282** | **44%** |
 
 ---
 
@@ -57,8 +57,7 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 | Section | Operations | Tracking issue |
 |---|---:|---|
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
-| Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **17** | |
+| **Total** | **14** | |
 
 Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -512,13 +511,13 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 
 ### Themes
 
-*0/3 implemented.*
+*3/3 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| 🗓️ | GET | `/v2/themes` | Planned for Development (#66) |
-| 🗓️ | PUT | `/v2/themes` | Planned for Development (#66) |
-| 🗓️ | DELETE | `/v2/themes/{themeId}` | Planned for Development (#66) |
+| ✅ | GET | `/v2/themes` | `ThemeCollectionEndpoint::downloadUrl` |
+| ✅ | PUT | `/v2/themes` | `ThemeCollectionEndpoint::upload` (multipart) |
+| ✅ | DELETE | `/v2/themes/{themeId}` | `ThemeEndpoint::delete` |
 
 ### Blacklist
 
@@ -633,7 +632,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (160 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (157 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (11 pending)
 
@@ -857,9 +856,3 @@ Everything not yet implemented (160 operations), grouped by section. Items marke
 **Templates** (1 pending)
 
 - `GET /v2/templates`
-
-**Themes** (3 pending)
-
-- `GET /v2/themes` — Planned for Development (#66)
-- `PUT /v2/themes` — Planned for Development (#66)
-- `DELETE /v2/themes/{themeId}` — Planned for Development (#66)
