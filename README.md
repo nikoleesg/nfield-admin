@@ -12,7 +12,7 @@ It wraps surveys, fieldwork, sample, sampling points, addresses, quota, publishi
 ```php
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 
-$survey = NfieldManager::withSurvey('survey-id');
+$survey = NfieldManager::surveys()->forSurvey('survey-id');
 
 $survey->get()->surveyName;              // SurveyModel
 $survey->fieldwork()->start();
@@ -114,7 +114,7 @@ NfieldManager::createSurvey(new SurveyCreateModel(
 ### One survey
 
 ```php
-$survey = NfieldManager::withSurvey('survey-id');
+$survey = NfieldManager::surveys()->forSurvey('survey-id');
 
 $survey->get();                                        // SurveyModel
 $survey->update(['surveyName' => 'Wave 1 (rev)']);
@@ -166,34 +166,34 @@ comes back as a `Collection` of the parsed row rather than as a DTO.
 ```php
 $samplingPoints = $survey->samplingPoints();
 
-$samplingPoints->listSamplingPoints();                 // Collection<SamplingPointResponseModel>
-$samplingPoints->findSamplingPoints(['kind' => 1]);
-$samplingPoints->createSamplingPoint(['name' => 'SP 1']);
-$samplingPoints->activateSamplingPoints(['sp-1', 'sp-2']);
+$samplingPoints->list();                       // Collection<SamplingPointResponseModel>
+$samplingPoints->find(['kind' => 1]);
+$samplingPoints->create(['name' => 'SP 1']);
+$samplingPoints->activate(['sp-1', 'sp-2']);
 
 $samplingPoint = $samplingPoints->forSamplingPoint('sp-1');
 // or straight from the manager:
-$samplingPoint = NfieldManager::withSurveySamplingPoint('survey-id', 'sp-1');
+$samplingPoint = NfieldManager::surveys()->forSurvey('survey-id')->samplingPoints()->forSamplingPoint('sp-1');
 
-$samplingPoint->getSamplingPoint();
-$samplingPoint->updateSamplingPoint(['name' => 'SP 1 (rev)']);
-$samplingPoint->activateSamplingPoint(['target' => 5]);
-$samplingPoint->replaceSamplingPoint(['spareSamplingPointId' => 'sp-9']);
-$samplingPoint->deleteSamplingPoint();
+$samplingPoint->get();
+$samplingPoint->update(['name' => 'SP 1 (rev)']);
+$samplingPoint->activate(['target' => 5]);
+$samplingPoint->replace(['spareSamplingPointId' => 'sp-9']);
+$samplingPoint->delete();
 
-$samplingPoint->assignments()->listAssignments();
-$samplingPoint->assignments()->assignInterviewer('interviewer-id');
-$samplingPoint->assignments()->unassignInterviewer('interviewer-id');
+$samplingPoint->assignments()->list();
+$samplingPoint->assignments()->assign('interviewer-id');
+$samplingPoint->assignments()->unassign('interviewer-id');
 
-$samplingPoint->quotaTargets()->listQuotaTargets();
-$samplingPoint->quotaTargets()->setQuotaTargets('level-id', ['target' => 20]);
+$samplingPoint->quotaTargets()->list();
+$samplingPoint->quotaTargets()->update('level-id', ['target' => 20]);
 
 $addresses = $samplingPoint->addresses();
 
-$addresses->listAddresses();                           // Collection<AddressModel>
-$addresses->createAddress(['details' => '1 Example Street']);
-$addresses->forAddress('address-id')->getAddress();
-$addresses->forAddress('address-id')->deleteAddress();
+$addresses->list();                           // Collection<AddressModel>
+$addresses->create(['details' => '1 Example Street']);
+$addresses->forAddress('address-id')->get();
+$addresses->forAddress('address-id')->delete();
 ```
 
 Interviewers can also be assigned across many sampling points at once:
@@ -306,7 +306,7 @@ use Nikoleesg\NfieldAdmin\Exceptions\NotFoundException;
 use Nikoleesg\NfieldAdmin\Exceptions\ValidationException;
 
 try {
-    NfieldManager::withSurvey('does-not-exist')->get();
+    NfieldManager::surveys()->forSurvey('does-not-exist')->get();
 } catch (NotFoundException $e) {
     $e->getCode();  // 404
     $e->body();     // the raw response body

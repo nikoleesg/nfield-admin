@@ -7,7 +7,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressCollectionEndp
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAssignmentEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
@@ -17,12 +16,12 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTar
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaTargetModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
-use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
 
 afterEach(function () {
     Mockery::close();
@@ -43,18 +42,17 @@ it('lists and filters sampling points as models', function () {
         ->once()
         ->andReturn([samplingPointPayload(['samplingPointId' => 'sp-2'])]);
 
-    $service = (new SamplingPointService(
+    $service = (new SamplingPointCollectionService(
         $collection,
-        Mockery::mock(SamplingPointEndpointInterface::class),
         Mockery::mock(SurveyEndpointInterface::class),
     ))->setSurveyId('survey-1');
 
-    $all = $service->listSamplingPoints();
+    $all = $service->list();
 
     expect($all)->toBeInstanceOf(Collection::class)
         ->and($all->first())->toBeInstanceOf(SamplingPointResponseModel::class)
         ->and($all->first()->customDataItems[0]->name)->toBe('region')
-        ->and($service->findSamplingPoints(['kind' => 1])->first()->samplingPointId)->toBe('sp-2');
+        ->and($service->find(['kind' => 1])->first()->samplingPointId)->toBe('sp-2');
 });
 
 it('creates a sampling point from an array or a model', function () {
@@ -65,14 +63,13 @@ it('creates a sampling point from an array or a model', function () {
         ->twice()
         ->andReturn(samplingPointPayload());
 
-    $service = (new SamplingPointService(
+    $service = (new SamplingPointCollectionService(
         $collection,
-        Mockery::mock(SamplingPointEndpointInterface::class),
         Mockery::mock(SurveyEndpointInterface::class),
     ))->setSurveyId('survey-1');
 
-    expect($service->createSamplingPoint(['name' => 'SP 1'])->samplingPointId)->toBe('sp-1')
-        ->and($service->createSamplingPoint(new SamplingPointCreateRequestModel(name: 'SP 1'))->name)->toBe('SP 1');
+    expect($service->create(['name' => 'SP 1'])->samplingPointId)->toBe('sp-1')
+        ->and($service->create(new SamplingPointCreateRequestModel(name: 'SP 1'))->name)->toBe('SP 1');
 });
 
 it('wraps the ids when batch-activating spare sampling points', function () {
@@ -85,19 +82,17 @@ it('wraps the ids when batch-activating spare sampling points', function () {
         ->once()
         ->andReturn(['isActivated' => true]);
 
-    $service = (new SamplingPointService(
+    $service = (new SamplingPointCollectionService(
         Mockery::mock(SamplingPointCollectionEndpointInterface::class),
-        Mockery::mock(SamplingPointEndpointInterface::class),
         $surveyEndpoint,
     ))->setSurveyId('survey-1');
 
-    expect($service->activateSamplingPoints(['sp-1', 'sp-2'])->isActivated)->toBeTrue();
+    expect($service->activate(['sp-1', 'sp-2'])->isActivated)->toBeTrue();
 });
 
 it('hands its scope to the sampling point resource it returns', function () {
-    $service = (new SamplingPointService(
+    $service = (new SamplingPointCollectionService(
         Mockery::mock(SamplingPointCollectionEndpointInterface::class),
-        Mockery::mock(SamplingPointEndpointInterface::class),
         Mockery::mock(SurveyEndpointInterface::class),
     ))->setSurveyId('survey-1');
 
@@ -109,13 +104,12 @@ it('hands its scope to the sampling point resource it returns', function () {
 });
 
 it('refuses a sampling point call before the survey scope is set', function () {
-    $service = new SamplingPointService(
+    $service = new SamplingPointCollectionService(
         Mockery::mock(SamplingPointCollectionEndpointInterface::class),
-        Mockery::mock(SamplingPointEndpointInterface::class),
         Mockery::mock(SurveyEndpointInterface::class),
     );
 
-    expect(fn () => $service->listSamplingPoints())->toThrow(MissingScopeException::class);
+    expect(fn () => $service->list())->toThrow(MissingScopeException::class);
 });
 
 // ── Addresses ────────────────────────────────────────────────────────────
@@ -137,40 +131,39 @@ it('lists, filters and creates sampling point addresses', function () {
         ->once()
         ->andReturn(['addressId' => 'addr-2', 'details' => '2 Example Street', 'appointmentDate' => null, 'sampleData' => null]);
 
-    $service = (new SamplingPointAddressService($collection, Mockery::mock(SamplingPointAddressEndpointInterface::class)))
+    $service = (new SamplingPointAddressCollectionService($collection))
         ->setSurveyId('survey-1')
         ->setSamplingPointId('sp-1');
 
-    $list = $service->listAddresses();
+    $list = $service->list();
 
     expect($list->first())->toBeInstanceOf(AddressModel::class)
         ->and($list->first()->addressId)->toBe('addr-1')
         ->and($list->first()->appointmentDate->format('Y-m-d'))->toBe('2026-09-23')
-        ->and($service->findAddresses(['status' => 1]))->toHaveCount(0)
-        ->and($service->createAddress(['addressId' => null, 'details' => '2 Example Street', 'appointmentDate' => null, 'sampleData' => null])->addressId)
+        ->and($service->find(['status' => 1]))->toHaveCount(0)
+        ->and($service->create(['addressId' => null, 'details' => '2 Example Street', 'appointmentDate' => null, 'sampleData' => null])->addressId)
         ->toBe('addr-2');
 });
 
-it('hands both scopes to the address resource it returns', function () {
-    $service = (new SamplingPointAddressService(
+it('hands all three scopes to the address service it returns', function () {
+    $service = (new SamplingPointAddressCollectionService(
         Mockery::mock(SamplingPointAddressCollectionEndpointInterface::class),
-        Mockery::mock(SamplingPointAddressEndpointInterface::class),
     ))->setSurveyId('survey-1')->setSamplingPointId('sp-1');
 
-    $resource = $service->forAddress('addr-1');
+    $address = $service->forAddress('addr-1');
 
-    expect($resource)->toBeInstanceOf(SamplingPointAddressResource::class)
-        ->and($resource->getSurveyId())->toBe('survey-1')
-        ->and($resource->getSamplingPointId())->toBe('sp-1');
+    expect($address)->toBeInstanceOf(SamplingPointAddressService::class)
+        ->and($address->getSurveyId())->toBe('survey-1')
+        ->and($address->getSamplingPointId())->toBe('sp-1')
+        ->and($address->getAddressId())->toBe('addr-1');
 });
 
 it('refuses an address call before the sampling point scope is set', function () {
-    $service = (new SamplingPointAddressService(
+    $service = (new SamplingPointAddressCollectionService(
         Mockery::mock(SamplingPointAddressCollectionEndpointInterface::class),
-        Mockery::mock(SamplingPointAddressEndpointInterface::class),
     ))->setSurveyId('survey-1');
 
-    expect(fn () => $service->listAddresses())->toThrow(MissingScopeException::class);
+    expect(fn () => $service->list())->toThrow(MissingScopeException::class);
 });
 
 // ── Assignments ──────────────────────────────────────────────────────────
@@ -193,13 +186,13 @@ it('lists, assigns and unassigns interviewers on a sampling point', function () 
         ->setSurveyId('survey-1')
         ->setSamplingPointId('sp-1');
 
-    $list = $service->listAssignments();
+    $list = $service->list();
 
     expect($list->first())->toBeInstanceOf(InterviewerSamplingPointAssignmentModel::class)
         ->and($list->first()->assigned)->toBeTrue()
-        ->and($service->assignInterviewer('ivw-1')->interviewerIds)->toBe(['ivw-1']);
+        ->and($service->assign('ivw-1')->interviewerIds)->toBe(['ivw-1']);
 
-    $service->unassignInterviewer('ivw-1');
+    $service->unassign('ivw-1');
 });
 
 // ── Quota targets ────────────────────────────────────────────────────────
@@ -227,7 +220,39 @@ it('lists, reads and sets sampling point quota targets', function () {
         ->setSurveyId('survey-1')
         ->setSamplingPointId('sp-1');
 
-    expect($service->listQuotaTargets()->first())->toBeInstanceOf(SamplingPointQuotaTargetModel::class)
-        ->and($service->getQuotaTargets('level-1')->target)->toBe(10)
-        ->and($service->setQuotaTargets('level-1', new SamplingPointQuotaLevelTargetUpdateRequestModel(target: 20))->target)->toBe(20);
+    expect($service->list()->first())->toBeInstanceOf(SamplingPointQuotaTargetModel::class)
+        ->and($service->get('level-1')->target)->toBe(10)
+        ->and($service->update('level-1', new SamplingPointQuotaLevelTargetUpdateRequestModel(target: 20))->target)->toBe(20);
+});
+
+// ── SamplingPointAddressService ──────────────────────────────────────────
+
+it('reads the address it is scoped to', function () {
+    $endpoint = Mockery::mock(SamplingPointAddressEndpointInterface::class);
+
+    $endpoint->shouldReceive('get')
+        ->with('survey-1', 'sp-1', 'addr-1')
+        ->once()
+        ->andReturn(['addressId' => 'addr-1', 'details' => '1 Example Street', 'appointmentDate' => null, 'sampleData' => null]);
+
+    $address = (new SamplingPointAddressService($endpoint))
+        ->setSurveyId('survey-1')
+        ->setSamplingPointId('sp-1')
+        ->setAddressId('addr-1')
+        ->get();
+
+    expect($address)->toBeInstanceOf(AddressModel::class)
+        ->and($address->details)->toBe('1 Example Street');
+});
+
+it('deletes the address it is scoped to', function () {
+    $endpoint = Mockery::mock(SamplingPointAddressEndpointInterface::class);
+
+    $endpoint->shouldReceive('delete')->with('survey-1', 'sp-1', 'addr-1')->once();
+
+    (new SamplingPointAddressService($endpoint))
+        ->setSurveyId('survey-1')
+        ->setSamplingPointId('sp-1')
+        ->setAddressId('addr-1')
+        ->delete();
 });

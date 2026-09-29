@@ -15,7 +15,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInte
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleColumnUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUpdateStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequestModel;
@@ -28,10 +27,10 @@ use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Resources\EventSubscriptionResource;
-use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
@@ -135,25 +134,27 @@ it('reads, updates, deletes, activates and replaces its sampling point', functio
         ->once()
         ->andReturn(['success' => true]);
 
-    $resource = (new SamplingPointResource($endpoint))
+    app()->instance(SamplingPointEndpointInterface::class, $endpoint);
+
+    $resource = (new SamplingPointResource)
         ->setSurveyId('survey-1')
         ->setSamplingPointId('sp-1');
 
-    expect($resource->getSamplingPoint())->toBeInstanceOf(SamplingPointResponseModel::class)
-        ->and($resource->updateSamplingPoint(new SamplingPointUpdateRequestModel(name: 'Renamed'))->name)->toBe('SP 1')
-        ->and($resource->activateSamplingPoint(['target' => 5])->isActivated)->toBeTrue()
-        ->and($resource->replaceSamplingPoint(new ReplaceSamplingPointWithSpareRequestModel('sp-9'))->success)->toBeTrue();
+    expect($resource->get())->toBeInstanceOf(SamplingPointResponseModel::class)
+        ->and($resource->update(new SamplingPointUpdateRequestModel(name: 'Renamed'))->name)->toBe('SP 1')
+        ->and($resource->activate(['target' => 5])->isActivated)->toBeTrue()
+        ->and($resource->replace(new ReplaceSamplingPointWithSpareRequestModel('sp-9'))->success)->toBeTrue();
 
-    $resource->deleteSamplingPoint();
+    $resource->delete();
 });
 
 it('hands both scopes to every service it resolves', function () {
-    $resource = (new SamplingPointResource(Mockery::mock(SamplingPointEndpointInterface::class)))
+    $resource = (new SamplingPointResource)
         ->setSurveyId('survey-1')
         ->setSamplingPointId('sp-1');
 
     foreach ([
-        'addresses' => SamplingPointAddressService::class,
+        'addresses' => SamplingPointAddressCollectionService::class,
         'assignments' => SamplingPointAssignmentService::class,
         'quotaTargets' => SamplingPointQuotaTargetsService::class,
     ] as $accessor => $class) {
@@ -168,38 +169,6 @@ it('hands both scopes to every service it resolves', function () {
     }
 
     expect($resource->setSamplingPointId('sp-2')->addresses()->getSamplingPointId())->toBe('sp-2');
-});
-
-// ── SamplingPointAddressResource ─────────────────────────────────────────
-
-it('reads the address it is scoped to', function () {
-    $endpoint = Mockery::mock(SamplingPointAddressEndpointInterface::class);
-
-    $endpoint->shouldReceive('get')
-        ->with('survey-1', 'sp-1', 'addr-1')
-        ->once()
-        ->andReturn(['addressId' => 'addr-1', 'details' => '1 Example Street', 'appointmentDate' => null, 'sampleData' => null]);
-
-    $address = (new SamplingPointAddressResource($endpoint))
-        ->setSurveyId('survey-1')
-        ->setSamplingPointId('sp-1')
-        ->setAddressId('addr-1')
-        ->getAddress();
-
-    expect($address)->toBeInstanceOf(AddressModel::class)
-        ->and($address->details)->toBe('1 Example Street');
-});
-
-it('deletes the address it is scoped to', function () {
-    $endpoint = Mockery::mock(SamplingPointAddressEndpointInterface::class);
-
-    $endpoint->shouldReceive('delete')->with('survey-1', 'sp-1', 'addr-1')->once();
-
-    (new SamplingPointAddressResource($endpoint))
-        ->setSurveyId('survey-1')
-        ->setSamplingPointId('sp-1')
-        ->setAddressId('addr-1')
-        ->deleteAddress();
 });
 
 // ── SurveySampleResource ─────────────────────────────────────────────────
@@ -314,9 +283,9 @@ it('refuses an item call before its own scope is set', function (Closure $call) 
     'blueprint without blueprintId' => fn () => (new BlueprintSurveyResource(
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     ))->update(['surveyId' => 'survey-1']),
-    'address without addressId' => fn () => (new SamplingPointAddressResource(
+    'address without addressId' => fn () => (new SamplingPointAddressService(
         Mockery::mock(SamplingPointAddressEndpointInterface::class),
-    ))->setSurveyId('survey-1')->setSamplingPointId('sp-1')->getAddress(),
+    ))->setSurveyId('survey-1')->setSamplingPointId('sp-1')->get(),
     'CAPI interviewer without interviewerId' => fn () => (new CapiInterviewerResource(
         Mockery::mock(CapiInterviewersEndpointInterface::class),
         Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class),

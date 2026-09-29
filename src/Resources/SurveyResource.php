@@ -11,7 +11,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
@@ -69,9 +69,9 @@ class SurveyResource implements SurveyScopedInterface
         return $this->data()->download($data);
     }
 
-    public function samplingPoints(): SamplingPointService
+    public function samplingPoints(): SamplingPointCollectionService
     {
-        return $this->resolveService(SamplingPointService::class);
+        return $this->resolveService(SamplingPointCollectionService::class);
     }
 
     public function assignments(): SurveyAssignmentService

@@ -4,63 +4,40 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\AddressScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
-use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToAddress;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSamplingPoint;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SamplingPointAddressService implements SamplingPointScopedInterface
+/**
+ * One sampling-point address, reached through
+ * `$samplingPoint->addresses()->forAddress($addressId)`.
+ *
+ * Services mirror the endpoint naming: this pairs with
+ * SamplingPointAddressEndpoint, and {@see SamplingPointAddressCollectionService}
+ * with SamplingPointAddressCollectionEndpoint.
+ */
+class SamplingPointAddressService implements AddressScopedInterface
 {
+    use ScopedToAddress;
     use ScopedToSamplingPoint;
     use ScopedToSurvey;
 
     public function __construct(
-        protected SamplingPointAddressCollectionEndpointInterface $samplingPointCollectionEndpoint,
         protected SamplingPointAddressEndpointInterface $samplingPointAddressEndpoint,
     ) {}
 
-    /** @return Collection<int, AddressModel> */
-    public function listAddresses(): Collection
+    public function get(): AddressModel
     {
-        return $this->findAddresses();
-    }
-
-    /**
-     * @param  array<string, mixed>  $filter
-     * @return Collection<int, AddressModel>
-     */
-    public function findAddresses(array $filter = []): Collection
-    {
-        return AddressModel::collect(
-            $this->samplingPointCollectionEndpoint->find($this->getSurveyId(), $this->getSamplingPointId(), $filter),
-            Collection::class
-        );
-    }
-
-    /**
-     * @param  array<string, mixed>|AddressModel  $data
-     */
-    public function createAddress(array|AddressModel $data): AddressModel
-    {
-        $payload = AddressModel::from($data)->toArray();
-
         return AddressModel::from(
-            $this->samplingPointCollectionEndpoint->create($this->getSurveyId(), $this->getSamplingPointId(), $payload)
+            $this->samplingPointAddressEndpoint->get($this->getSurveyId(), $this->getSamplingPointId(), $this->getAddressId())
         );
     }
 
-    /**
-     * Return a SamplingPointAddressResource for a specific survey and sampling point
-     */
-    public function forAddress(string $addressId): SamplingPointAddressResource
+    public function delete(): void
     {
-        return (new SamplingPointAddressResource($this->samplingPointAddressEndpoint))
-            ->setSurveyId($this->getSurveyId())
-            ->setSamplingPointId($this->getSamplingPointId())
-            ->setAddressId($addressId);
+        $this->samplingPointAddressEndpoint->delete($this->getSurveyId(), $this->getSamplingPointId(), $this->getAddressId());
     }
 }

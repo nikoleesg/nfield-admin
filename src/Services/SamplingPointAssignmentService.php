@@ -22,7 +22,7 @@ class SamplingPointAssignmentService implements SamplingPointScopedInterface
     ) {}
 
     /** @return Collection<int, InterviewerSamplingPointAssignmentModel> */
-    public function listAssignments(): Collection
+    public function list(): Collection
     {
         return InterviewerSamplingPointAssignmentModel::collect(
             $this->samplingPointAssignmentEndpoint->list($this->getSurveyId(), $this->getSamplingPointId()),
@@ -30,14 +30,14 @@ class SamplingPointAssignmentService implements SamplingPointScopedInterface
         );
     }
 
-    public function assignInterviewer(string $interviewerId): SamplingPointInterviewerAssignmentsModel
+    public function assign(string $interviewerId): SamplingPointInterviewerAssignmentsModel
     {
         return SamplingPointInterviewerAssignmentsModel::from(
             $this->samplingPointAssignmentEndpoint->assign($this->getSurveyId(), $this->getSamplingPointId(), $interviewerId)
         );
     }
 
-    public function unassignInterviewer(string $interviewerId): void
+    public function unassign(string $interviewerId): void
     {
         $this->samplingPointAssignmentEndpoint->unassign($this->getSurveyId(), $this->getSamplingPointId(), $interviewerId);
     }

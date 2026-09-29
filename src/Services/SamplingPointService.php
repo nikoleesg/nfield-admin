@@ -4,79 +4,78 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointsRequestModel;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointsResponseModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointCreateRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSamplingPoint;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SamplingPointService implements SurveyScopedInterface
+/**
+ * Operations on one sampling point, exposed through {@see SamplingPointResource}.
+ *
+ * Services mirror the endpoint naming: this pairs with SamplingPointEndpoint,
+ * and {@see SamplingPointCollectionService} with SamplingPointCollectionEndpoint.
+ */
+class SamplingPointService implements SamplingPointScopedInterface
 {
+    use ScopedToSamplingPoint;
     use ScopedToSurvey;
 
     public function __construct(
-        protected SamplingPointCollectionEndpointInterface $samplingPointCollectionEndpoint,
         protected SamplingPointEndpointInterface $samplingPointEndpoint,
-        protected SurveyEndpointInterface $surveyEndpoint,
     ) {}
 
-    /** @return Collection<int, SamplingPointResponseModel> */
-    public function listSamplingPoints(): Collection
+    public function get(): SamplingPointResponseModel
     {
-        return $this->findSamplingPoints();
-    }
-
-    /**
-     * @param  array<string, mixed>  $filter
-     * @return Collection<int, SamplingPointResponseModel>
-     */
-    public function findSamplingPoints(array $filter = []): Collection
-    {
-        return SamplingPointResponseModel::collect(
-            $this->samplingPointCollectionEndpoint->find($this->getSurveyId(), $filter),
-            Collection::class
+        return SamplingPointResponseModel::from(
+            $this->samplingPointEndpoint->get($this->getSurveyId(), $this->getSamplingPointId())
         );
     }
 
     /**
-     * @param  array<string, mixed>|SamplingPointCreateRequestModel  $data
+     * @param  array<string, mixed>|SamplingPointUpdateRequestModel  $data
      */
-    public function createSamplingPoint(array|SamplingPointCreateRequestModel $data): SamplingPointResponseModel
+    public function update(array|SamplingPointUpdateRequestModel $data): SamplingPointResponseModel
     {
-        $payload = SamplingPointCreateRequestModel::from($data)->toArray();
+        $payload = SamplingPointUpdateRequestModel::from($data)->toArray();
 
         return SamplingPointResponseModel::from(
-            $this->samplingPointCollectionEndpoint->create($this->getSurveyId(), $payload)
+            $this->samplingPointEndpoint->update($this->getSurveyId(), $this->getSamplingPointId(), $payload)
         );
     }
 
-    /**
-     * @param  array<int, string>  $samplingPointIds
-     */
-    public function activateSamplingPoints(array $samplingPointIds = []): ActivateSpareSamplingPointsResponseModel
+    public function delete(): void
     {
-        $payload = ActivateSpareSamplingPointsRequestModel::from(
-            ['samplingPointIds' => $samplingPointIds]
-        )->toArray();
+        $this->samplingPointEndpoint->delete($this->getSurveyId(), $this->getSamplingPointId());
+    }
+
+    /**
+     * @param  array<string, mixed>|ActivateSpareSamplingPointRequestModel  $data
+     */
+    public function activate(array|ActivateSpareSamplingPointRequestModel $data = []): ActivateSpareSamplingPointsResponseModel
+    {
+        $payload = ActivateSpareSamplingPointRequestModel::from($data)->toArray();
 
         return ActivateSpareSamplingPointsResponseModel::from(
-            $this->surveyEndpoint->batchActivateSamplingPoints($this->getSurveyId(), $payload)
+            $this->samplingPointEndpoint->activate($this->getSurveyId(), $this->getSamplingPointId(), $payload)
         );
     }
 
     /**
-     * Return SamplingPointResource for a specific survey samplingPoint
+     * @param  array<string, mixed>|ReplaceSamplingPointWithSpareRequestModel  $data
      */
-    public function forSamplingPoint(string $samplingPointId): SamplingPointResource
+    public function replace(array|ReplaceSamplingPointWithSpareRequestModel $data): ReplaceSamplingPointWithSpareResponseModel
     {
-        return (new SamplingPointResource($this->samplingPointEndpoint))
-            ->setSurveyId($this->getSurveyId())
-            ->setSamplingPointId($samplingPointId);
+        $payload = ReplaceSamplingPointWithSpareRequestModel::from($data)->toArray();
+
+        return ReplaceSamplingPointWithSpareResponseModel::from(
+            $this->samplingPointEndpoint->replace($this->getSurveyId(), $this->getSamplingPointId(), $payload)
+        );
     }
 }

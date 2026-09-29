@@ -23,7 +23,7 @@ class SamplingPointQuotaTargetsService implements SamplingPointScopedInterface
     ) {}
 
     /** @return Collection<int, SamplingPointQuotaTargetModel> */
-    public function listQuotaTargets(): Collection
+    public function list(): Collection
     {
         return SamplingPointQuotaTargetModel::collect(
             $this->samplingPointQuotaTargetsEndpoint->list($this->getSurveyId(), $this->getSamplingPointId()),
@@ -31,7 +31,7 @@ class SamplingPointQuotaTargetsService implements SamplingPointScopedInterface
         );
     }
 
-    public function getQuotaTargets(string $quotaLevelId): SamplingPointQuotaTargetModel
+    public function get(string $quotaLevelId): SamplingPointQuotaTargetModel
     {
         return SamplingPointQuotaTargetModel::from(
             $this->samplingPointQuotaTargetsEndpoint->get($this->getSurveyId(), $this->getSamplingPointId(), $quotaLevelId)
@@ -41,7 +41,7 @@ class SamplingPointQuotaTargetsService implements SamplingPointScopedInterface
     /**
      * @param  array<string, mixed>|SamplingPointQuotaLevelTargetUpdateRequestModel|SamplingPointQuotaLevelTargetModel  $data
      */
-    public function setQuotaTargets(string $quotaLevelId, array|SamplingPointQuotaLevelTargetUpdateRequestModel|SamplingPointQuotaLevelTargetModel $data): SamplingPointQuotaTargetModel
+    public function update(string $quotaLevelId, array|SamplingPointQuotaLevelTargetUpdateRequestModel|SamplingPointQuotaLevelTargetModel $data): SamplingPointQuotaTargetModel
     {
         $payload = SamplingPointQuotaLevelTargetUpdateRequestModel::from($data)->toArray();
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
@@ -26,7 +25,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveySettingModel;
 use Nikoleesg\NfieldAdmin\Enums\InterviewingRestrictionTypeEnum;
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyFieldworkStatusEnum;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyQuotaTargetsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyQuotaVersionsService;
@@ -142,7 +141,6 @@ it('returns survey settings as an Illuminate collection of DTOs', function () {
 
 it('normalises a sampling point create payload through the request model', function () {
     $collectionEndpoint = Mockery::mock(SamplingPointCollectionEndpointInterface::class);
-    $endpoint = Mockery::mock(SamplingPointEndpointInterface::class);
     $surveyEndpoint = Mockery::mock(SurveyEndpointInterface::class);
 
     $collectionEndpoint->shouldReceive('create')
@@ -153,9 +151,9 @@ it('normalises a sampling point create payload through the request model', funct
         ->once()
         ->andReturn(['name' => 'SP 1', 'samplingPointId' => 'sp-1', 'kind' => 1]);
 
-    $service = (new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint))->setSurveyId('survey-1');
+    $service = (new SamplingPointCollectionService($collectionEndpoint, $surveyEndpoint))->setSurveyId('survey-1');
 
-    $result = $service->createSamplingPoint(['name' => 'SP 1', 'kind' => 1]);
+    $result = $service->create(['name' => 'SP 1', 'kind' => 1]);
 
     expect($result)->toBeInstanceOf(SamplingPointResponseModel::class)
         ->and($result->samplingPointId)->toBe('sp-1')
@@ -164,7 +162,6 @@ it('normalises a sampling point create payload through the request model', funct
 
 it('accepts a request model as well as an array', function () {
     $collectionEndpoint = Mockery::mock(SamplingPointCollectionEndpointInterface::class);
-    $endpoint = Mockery::mock(SamplingPointEndpointInterface::class);
     $surveyEndpoint = Mockery::mock(SurveyEndpointInterface::class);
 
     $collectionEndpoint->shouldReceive('create')
@@ -172,16 +169,15 @@ it('accepts a request model as well as an array', function () {
         ->once()
         ->andReturn(['name' => 'SP 2', 'samplingPointId' => 'sp-2']);
 
-    $service = (new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint))->setSurveyId('survey-1');
+    $service = (new SamplingPointCollectionService($collectionEndpoint, $surveyEndpoint))->setSurveyId('survey-1');
 
-    $result = $service->createSamplingPoint(new SamplingPointCreateRequestModel(name: 'SP 2'));
+    $result = $service->create(new SamplingPointCreateRequestModel(name: 'SP 2'));
 
     expect($result->samplingPointId)->toBe('sp-2');
 });
 
 it('lists sampling points as a collection of DTOs', function () {
     $collectionEndpoint = Mockery::mock(SamplingPointCollectionEndpointInterface::class);
-    $endpoint = Mockery::mock(SamplingPointEndpointInterface::class);
     $surveyEndpoint = Mockery::mock(SurveyEndpointInterface::class);
 
     $collectionEndpoint->shouldReceive('find')->with('survey-1', [])->once()->andReturn([
@@ -189,9 +185,9 @@ it('lists sampling points as a collection of DTOs', function () {
         ['name' => 'SP 2', 'samplingPointId' => 'sp-2'],
     ]);
 
-    $service = (new SamplingPointService($collectionEndpoint, $endpoint, $surveyEndpoint))->setSurveyId('survey-1');
+    $service = (new SamplingPointCollectionService($collectionEndpoint, $surveyEndpoint))->setSurveyId('survey-1');
 
-    $result = $service->listSamplingPoints();
+    $result = $service->list();
 
     expect($result)->toBeInstanceOf(Collection::class)
         ->and($result)->toHaveCount(2)
