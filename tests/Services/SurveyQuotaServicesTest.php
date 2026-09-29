@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaFrameEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
@@ -59,7 +58,7 @@ it('navigates to one service per quota resource', function () {
 });
 
 it('is reached from the survey with the survey scope handed on', function () {
-    $quota = (new SurveyResource(Mockery::mock(SurveyEndpointInterface::class)))
+    $quota = (new SurveyResource)
         ->setSurveyId('survey-9')
         ->quota();
 

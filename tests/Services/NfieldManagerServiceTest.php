@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\BackgroundActivitiesEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
@@ -48,7 +47,6 @@ it('lists and filters surveys as models', function () {
 
     $service = new SurveyService(
         $collection,
-        Mockery::mock(SurveyEndpointInterface::class),
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 
@@ -70,7 +68,6 @@ it('creates a survey from a blueprint', function () {
 
     $service = new SurveyService(
         $collection,
-        Mockery::mock(SurveyEndpointInterface::class),
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 
@@ -89,7 +86,6 @@ it('searches surveys by respondent and returns the slim model', function () {
 
     $service = new SurveyService(
         $collection,
-        Mockery::mock(SurveyEndpointInterface::class),
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 
@@ -102,7 +98,6 @@ it('searches surveys by respondent and returns the slim model', function () {
 it('returns scoped resources for a survey and a blueprint', function () {
     $service = new SurveyService(
         Mockery::mock(SurveyCollectionEndpointInterface::class),
-        Mockery::mock(SurveyEndpointInterface::class),
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     );
 

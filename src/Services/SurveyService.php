@@ -7,7 +7,6 @@ namespace Nikoleesg\NfieldAdmin\Services;
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
@@ -19,7 +18,6 @@ class SurveyService
 {
     public function __construct(
         private readonly SurveyCollectionEndpointInterface $surveyCollectionEndpoint,
-        private readonly SurveyEndpointInterface $surveyEndpoint,
         private readonly SurveyBlueprintsEndpointInterface $surveyBlueprintsEndpoint,
     ) {}
 
@@ -73,8 +71,6 @@ class SurveyService
 
     public function forSurvey(string $surveyId): SurveyResource
     {
-        $surveyResource = new SurveyResource($this->surveyEndpoint);
-
-        return $surveyResource->setSurveyId($surveyId);
+        return (new SurveyResource)->setSurveyId($surveyId);
     }
 }

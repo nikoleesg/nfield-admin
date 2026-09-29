@@ -48,6 +48,17 @@ afterEach(function () {
 
 // ── SurveyResource ───────────────────────────────────────────────────────
 
+/**
+ * #55: the resource no longer holds the endpoint; its item operations go
+ * through SurveyItemService, which the container builds with this mock.
+ */
+function surveyResourceWith(SurveyEndpointInterface $endpoint): SurveyResource
+{
+    app()->instance(SurveyEndpointInterface::class, $endpoint);
+
+    return (new SurveyResource)->setSurveyId('survey-1');
+}
+
 it('reads, updates and deletes the survey it is scoped to', function () {
     $endpoint = Mockery::mock(SurveyEndpointInterface::class);
 
@@ -60,12 +71,12 @@ it('reads, updates and deletes the survey it is scoped to', function () {
         ->andReturn($payload + ['surveyName' => 'Renamed']);
     $endpoint->shouldReceive('destroy')->with('survey-1')->once();
 
-    $resource = (new SurveyResource($endpoint))->setSurveyId('survey-1');
+    $resource = surveyResourceWith($endpoint);
 
-    expect($resource->getSurvey())->toBeInstanceOf(SurveyModel::class)
-        ->and($resource->updateSurvey(new SurveyUpdateModel(surveyName: 'Renamed'))->surveyName)->toBe('Demo');
+    expect($resource->get())->toBeInstanceOf(SurveyModel::class)
+        ->and($resource->update(new SurveyUpdateModel(surveyName: 'Renamed'))->surveyName)->toBe('Demo');
 
-    $resource->deleteSurvey();
+    $resource->delete();
 });
 
 it('returns the survey counts as a model', function () {
@@ -82,7 +93,7 @@ it('returns the survey counts as a model', function () {
         'activeTestCount' => 0,
     ]);
 
-    $counts = (new SurveyResource($endpoint))->setSurveyId('survey-1')->getSurveyCounts();
+    $counts = surveyResourceWith($endpoint)->counts();
 
     expect($counts)->toBeInstanceOf(SurveyCountsModel::class)
         ->and($counts->successfulCount)->toBe(10)
@@ -96,7 +107,7 @@ it('returns the custom columns as a collection of names', function () {
 
     $endpoint->shouldReceive('getCustomColumns')->with('survey-1')->once()->andReturn(['Phone', 'Email']);
 
-    $columns = (new SurveyResource($endpoint))->setSurveyId('survey-1')->getCustomColumns();
+    $columns = surveyResourceWith($endpoint)->customColumns();
 
     expect($columns)->toBeInstanceOf(Collection::class)
         ->and($columns->all())->toBe(['Phone', 'Email']);

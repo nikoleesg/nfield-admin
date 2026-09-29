@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
 
@@ -14,10 +13,9 @@ afterEach(function () {
 
 it('creates a survey sending camelCase keys', function () {
     $collectionEndpoint = Mockery::mock(SurveyCollectionEndpointInterface::class);
-    $endpoint = Mockery::mock(SurveyEndpointInterface::class);
     $blueprintsEndpoint = Mockery::mock(SurveyBlueprintsEndpointInterface::class);
 
-    $service = new SurveyService($collectionEndpoint, $endpoint, $blueprintsEndpoint);
+    $service = new SurveyService($collectionEndpoint, $blueprintsEndpoint);
 
     $createModel = new SurveyCreateModel(
         surveyName: 'Test Survey',

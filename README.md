@@ -14,7 +14,7 @@ use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 
 $survey = NfieldManager::withSurvey('survey-id');
 
-$survey->getSurvey()->surveyName;        // SurveyModel
+$survey->get()->surveyName;              // SurveyModel
 $survey->fieldwork()->start();
 $survey->fieldwork()->counts()->successful;
 $survey->samples()->download();          // Collection of sample rows
@@ -116,12 +116,12 @@ NfieldManager::createSurvey(new SurveyCreateModel(
 ```php
 $survey = NfieldManager::withSurvey('survey-id');
 
-$survey->getSurvey();                                  // SurveyModel
-$survey->updateSurvey(['surveyName' => 'Wave 1 (rev)']);
-$survey->deleteSurvey();
-$survey->getSurveyCounts();                            // SurveyCountsModel
-$survey->getCustomColumns();                           // Collection<string>
-$survey->requestDataDownload(['fileName' => 'wave-1.zip']);
+$survey->get();                                        // SurveyModel
+$survey->update(['surveyName' => 'Wave 1 (rev)']);
+$survey->delete();
+$survey->counts();                                     // SurveyCountsModel
+$survey->customColumns();                              // Collection<string>
+$survey->requestDownload(['fileName' => 'wave-1.zip']); // same as data()->download()
 ```
 
 ### Fieldwork
@@ -306,7 +306,7 @@ use Nikoleesg\NfieldAdmin\Exceptions\NotFoundException;
 use Nikoleesg\NfieldAdmin\Exceptions\ValidationException;
 
 try {
-    NfieldManager::withSurvey('does-not-exist')->getSurvey();
+    NfieldManager::withSurvey('does-not-exist')->get();
 } catch (NotFoundException $e) {
     $e->getCode();  // 404
     $e->body();     // the raw response body

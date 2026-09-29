@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
@@ -17,6 +16,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyInterviewQualityService;
+use Nikoleesg\NfieldAdmin\Services\SurveyItemService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
@@ -30,45 +30,41 @@ class SurveyResource implements SurveyScopedInterface
     use ResolvesScopedServices;
     use ScopedToSurvey;
 
-    public function __construct(
-        private readonly SurveyEndpointInterface $surveyEndpoint
-    ) {}
-
-    public function getSurvey(): SurveyModel
+    public function get(): SurveyModel
     {
-        return SurveyModel::from($this->surveyEndpoint->get($this->getSurveyId()));
-    }
-
-    public function deleteSurvey(): void
-    {
-        $this->surveyEndpoint->destroy($this->getSurveyId());
+        return $this->item()->get();
     }
 
     /**
      * @param  array<string, mixed>|SurveyUpdateModel  $data
      */
-    public function updateSurvey(array|SurveyUpdateModel $data): SurveyModel
+    public function update(array|SurveyUpdateModel $data): SurveyModel
     {
-        $payload = SurveyUpdateModel::from($data)->toArray();
-
-        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->getSurveyId(), $payload));
+        return $this->item()->update($data);
     }
 
-    public function getSurveyCounts(): SurveyCountsModel
+    public function delete(): void
     {
-        return SurveyCountsModel::from($this->surveyEndpoint->counts($this->getSurveyId()));
+        $this->item()->delete();
+    }
+
+    public function counts(): SurveyCountsModel
+    {
+        return $this->item()->counts();
     }
 
     /** @return Collection<int, string> */
-    public function getCustomColumns(): Collection
+    public function customColumns(): Collection
     {
-        return collect($this->surveyEndpoint->getCustomColumns($this->getSurveyId()));
+        return $this->item()->customColumns();
     }
 
     /**
+     * Shortcut for `data()->download()`.
+     *
      * @param  array<string, mixed>|SurveyDataRequestModel  $data
      */
-    public function requestDataDownload(array|SurveyDataRequestModel $data): BackgroundActivityStatus
+    public function requestDownload(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
         return $this->data()->download($data);
     }
@@ -126,5 +122,10 @@ class SurveyResource implements SurveyScopedInterface
     public function interviewQuality(): SurveyInterviewQualityService
     {
         return $this->resolveService(SurveyInterviewQualityService::class);
+    }
+
+    private function item(): SurveyItemService
+    {
+        return $this->resolveService(SurveyItemService::class);
     }
 }

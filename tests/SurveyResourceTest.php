@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
@@ -14,9 +13,8 @@ afterEach(function () {
     Mockery::close();
 });
 
-it('can request data download', function () {
-    $endpoint = Mockery::mock(SurveyEndpointInterface::class);
-    $resource = (new SurveyResource($endpoint))->setSurveyId('survey-1');
+it('requests a data download through the data service', function () {
+    $resource = (new SurveyResource)->setSurveyId('survey-1');
 
     $surveyDataService = Mockery::mock(SurveyDataService::class);
 
@@ -33,7 +31,7 @@ it('can request data download', function () {
 
     app()->bind(SurveyDataService::class, fn () => $surveyDataService);
 
-    $result = $resource->requestDataDownload($requestModel);
+    $result = $resource->requestDownload($requestModel);
 
     expect($result)->toBe($status);
 });
@@ -41,14 +39,14 @@ it('can request data download', function () {
 it('hands its scope to every service it resolves', function () {
     // #41: the scope used to travel as a container argument keyed by the
     // service's constructor parameter name. It now travels as a setter call.
-    $resource = (new SurveyResource(Mockery::mock(SurveyEndpointInterface::class)))
+    $resource = (new SurveyResource)
         ->setSurveyId('survey-1');
 
     expect($resource->fieldwork()->getSurveyId())->toBe('survey-1');
 });
 
 it('rescopes the services it has already resolved', function () {
-    $resource = (new SurveyResource(Mockery::mock(SurveyEndpointInterface::class)))
+    $resource = (new SurveyResource)
         ->setSurveyId('survey-1');
 
     $first = $resource->fieldwork();
