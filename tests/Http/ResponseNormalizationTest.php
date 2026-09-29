@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Nikoleesg\NfieldAdmin\Data\Domain\SurveyResources\SurveyResourceUsageModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\InterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\ManagerInterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\MetricCountsModel;
@@ -12,6 +13,8 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
+use Nikoleesg\NfieldAdmin\Enums\SurveyChannelEnum;
+use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
@@ -267,4 +270,36 @@ it('normalises the nested metric counts of a performance response', function () 
         ->and($metrics->counts[0]->all)->toBeInstanceOf(MetricCountsModel::class)
         ->and($metrics->counts[0]->all->warn)->toBe(3)
         ->and($metrics->counts[0]->published->block)->toBe(0);
+});
+
+it('hydrates survey resource usage from a real PascalCase payload', function () {
+    // #61: integer enums and nullable dates; the spec's example dates are
+    // not ISO 8601, so the cast must parse leniently.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'token'], 200),
+        '*/v2/surveyResources*' => Http::response([[
+            'SurveyId' => 'survey-1',
+            'Name' => 'Wave 1',
+            'Channel' => 2,
+            'CreationDate' => '12/25/2024 12:00:00 AM',
+            'ClientName' => 'Acme',
+            'State' => 3,
+            'Owner' => 'Ada',
+            'LastDataDownloadDate' => null,
+            'LastDataCollectionDate' => '2026-09-20T10:00:00Z',
+            'WillBeStoppedOn' => null,
+            'WillBeDeletedOn' => null,
+            'Size' => 1024,
+            'IsExcludedFromAutomaticCleanup' => true,
+        ]], 200),
+    ]);
+
+    $usage = NfieldManager::surveyResourceUsage()->list()->first();
+
+    expect($usage)->toBeInstanceOf(SurveyResourceUsageModel::class)
+        ->and($usage->surveyId)->toBe('survey-1')
+        ->and($usage->channel)->toBe(SurveyChannelEnum::Online)
+        ->and($usage->state)->toBe(SurveyStateEnum::Paused)
+        ->and($usage->creationDate->format('Y-m-d'))->toBe('2024-12-25')
+        ->and($usage->isExcludedFromAutomaticCleanup)->toBeTrue();
 });

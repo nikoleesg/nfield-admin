@@ -301,6 +301,14 @@ $activity = NfieldManager::interviewersWorklog()->download([
 NfieldManager::backgroundActivities()->get($activity->activityId)->status;
 ```
 
+### Survey resource usage
+
+```php
+// GET /v2/surveyResources: size and retention dates per survey
+NfieldManager::surveyResourceUsage()->list();          // Collection<SurveyResourceUsageModel>
+NfieldManager::surveyResourceUsage()->find(['$filter' => 'State eq 1']);
+```
+
 ### Blueprint surveys
 
 ```php

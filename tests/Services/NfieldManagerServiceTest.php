@@ -22,6 +22,7 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Nikoleesg\NfieldAdmin\Services\RoleService;
 use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
+use Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService;
 
 afterEach(function () {
     Mockery::close();
@@ -36,6 +37,7 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
         Mockery::mock(RoleService::class),
         Mockery::mock(EventSubscriptionCollectionService::class),
         app(InterviewersWorklogService::class),
+        app(SurveyResourceUsageService::class),
     );
 }
 

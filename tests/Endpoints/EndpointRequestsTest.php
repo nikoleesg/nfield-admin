@@ -70,6 +70,16 @@ function endpointCallCases(): array
             'GET', 'v2/BackgroundActivities/activity-1', [],
         ],
 
+        // ── Survey resource usage (/surveyResources) ─────────────────────────
+        'SurveyResourceUsage::list' => [
+            Contracts\SurveyResourceUsageEndpointInterface::class, 'list', [],
+            'GET', 'v2/surveyResources', [],
+        ],
+        'SurveyResourceUsage::find' => [
+            Contracts\SurveyResourceUsageEndpointInterface::class, 'find', [['$top' => 5]],
+            'GET', 'v2/surveyResources?%24top=5', ['$top' => 5],
+        ],
+
         // ── Interviewers Worklog ─────────────────────────────────────────────
         'InterviewersWorklog::download' => [
             Contracts\InterviewersWorklogEndpointInterface::class, 'download', [['from' => '2026-09-01T00:00:00+00:00', 'to' => '2026-09-30T00:00:00+00:00']],
