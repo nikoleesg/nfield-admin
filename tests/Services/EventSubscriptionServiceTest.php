@@ -104,6 +104,18 @@ it('updates a subscription via its resource', function () {
     ]);
 });
 
+it('partially updates a subscription with only changed fields', function () {
+    $endpoint = Mockery::mock(SubscriptionEndpointInterface::class);
+    $endpoint->shouldReceive('updatePartial')
+        ->with('sub-1', ['endpoint' => 'https://example.com/new'])
+        ->once();
+
+    $resource = (new EventSubscriptionResource($endpoint))->setSubscriptionName('sub-1');
+    $resource->update([
+        'endpoint' => 'https://example.com/new',
+    ]);
+});
+
 it('deletes a subscription via its resource', function () {
     $endpoint = Mockery::mock(SubscriptionEndpointInterface::class);
     $endpoint->shouldReceive('destroy')->with('sub-1')->once();

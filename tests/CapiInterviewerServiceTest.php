@@ -209,7 +209,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
 
     $endpoint
         ->shouldReceive('update')
-        ->with('int-1', Mockery::on(fn ($arg) => is_array($arg) && $arg['firstName'] === 'Jane'))
+        ->with('int-1', ['firstName' => 'Jane'])
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['firstName' => 'Jane']));
 
@@ -340,7 +340,7 @@ it('provides a fluent resource that proxies to endpoint', function () {
 
     $endpoint
         ->shouldReceive('update')
-        ->with('int-1', Mockery::on(fn ($arg) => is_array($arg) && $arg['firstName'] === 'Jane'))
+        ->with('int-1', ['firstName' => 'Jane'])
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['firstName' => 'Jane']));
 

@@ -7,7 +7,7 @@ namespace Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-final class ActivateSpareSamplingPointRequestModel extends Data
+final class SamplingPointQuotaLevelTargetUpdateRequestModel extends Data
 {
     public function __construct(
         public int|Optional|null $target = new Optional,

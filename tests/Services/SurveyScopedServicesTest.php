@@ -365,7 +365,7 @@ it('reads and updates the general settings', function () {
     ]);
 
     $general->shouldReceive('updateGeneralSettings')
-        ->withArgs(fn (string $surveyId, array $payload) => $payload['name'] === 'Renamed')
+        ->with('survey-1', ['name' => 'Renamed'])
         ->once();
 
     $service = (new SurveySettingsService($settings, $general))->setSurveyId('survey-1');

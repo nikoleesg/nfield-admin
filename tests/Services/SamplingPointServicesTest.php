@@ -13,7 +13,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\InterviewerSamplingPointAssignmentModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointCreateRequestModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaTargetModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
@@ -219,7 +219,7 @@ it('lists, reads and sets sampling point quota targets', function () {
     $endpoint->shouldReceive('list')->with('survey-1', 'sp-1')->once()->andReturn([$target]);
     $endpoint->shouldReceive('get')->with('survey-1', 'sp-1', 'level-1')->once()->andReturn($target);
     $endpoint->shouldReceive('update')
-        ->withArgs(fn (string $s, string $sp, string $level, array $payload) => $payload['target'] === 20)
+        ->with('survey-1', 'sp-1', 'level-1', ['target' => 20])
         ->once()
         ->andReturn(['levelId' => 'level-1', 'target' => 20]);
 
@@ -229,5 +229,5 @@ it('lists, reads and sets sampling point quota targets', function () {
 
     expect($service->listQuotaTargets()->first())->toBeInstanceOf(SamplingPointQuotaTargetModel::class)
         ->and($service->getQuotaTargets('level-1')->target)->toBe(10)
-        ->and($service->setQuotaTargets('level-1', new SamplingPointQuotaLevelTargetModel(target: 20))->target)->toBe(20);
+        ->and($service->setQuotaTargets('level-1', new SamplingPointQuotaLevelTargetUpdateRequestModel(target: 20))->target)->toBe(20);
 });

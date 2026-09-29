@@ -17,6 +17,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSp
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointCreateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointInterviewerAssignmentsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataInterviewRequestModel;
@@ -79,6 +80,7 @@ function requestModelCases(): array
             'client' => 'Acme',
             'description' => 'A demo',
             'excludeFromAutomaticCleanup' => true,
+            'ownerId' => 'user-1',
         ]],
         SurveySettingModel::class => [SurveySettingModel::class, [
             'name' => 'HideQuotaPage',
@@ -143,6 +145,9 @@ function requestModelCases(): array
             'levelId' => 'level-1',
             'target' => 10,
             'maxTarget' => 20,
+        ]],
+        SamplingPointQuotaLevelTargetUpdateRequestModel::class => [SamplingPointQuotaLevelTargetUpdateRequestModel::class, [
+            'target' => 10,
         ]],
         SamplingPointInterviewerAssignmentsModel::class => [SamplingPointInterviewerAssignmentsModel::class, [
             'samplingPointIds' => ['sp-1'],

@@ -4,21 +4,15 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Data\Surveys;
 
-use Nikoleesg\NfieldAdmin\Data\Casts\StrictNullCast;
-use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 
 final class SurveyUpdateModel extends Data
 {
     public function __construct(
-        #[WithCast(StrictNullCast::class)]
-        public ?string $surveyName,
-        #[WithCast(StrictNullCast::class)]
-        public ?string $clientName,
-        #[WithCast(StrictNullCast::class)]
-        public ?string $description,
-        #[WithCast(StrictNullCast::class)]
-        public ?string $interviewerInstruction,
+        public string|Optional|null $surveyName = new Optional,
+        public string|Optional|null $clientName = new Optional,
+        public string|Optional|null $description = new Optional,
+        public string|Optional|null $interviewerInstruction = new Optional,
     ) {}
-
 }

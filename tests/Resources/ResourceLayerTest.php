@@ -51,7 +51,7 @@ it('reads, updates and deletes the survey it is scoped to', function () {
 
     $endpoint->shouldReceive('get')->with('survey-1')->once()->andReturn($payload);
     $endpoint->shouldReceive('updatePartial')
-        ->withArgs(fn (string $surveyId, array $body) => $body['surveyName'] === 'Renamed')
+        ->with('survey-1', ['surveyName' => 'Renamed'])
         ->once()
         ->andReturn($payload + ['surveyName' => 'Renamed']);
     $endpoint->shouldReceive('destroy')->with('survey-1')->once();
@@ -59,7 +59,7 @@ it('reads, updates and deletes the survey it is scoped to', function () {
     $resource = (new SurveyResource($endpoint))->setSurveyId('survey-1');
 
     expect($resource->getSurvey())->toBeInstanceOf(SurveyModel::class)
-        ->and($resource->updateSurvey(new SurveyUpdateModel('Renamed', null, null, null))->surveyName)->toBe('Demo');
+        ->and($resource->updateSurvey(new SurveyUpdateModel(surveyName: 'Renamed'))->surveyName)->toBe('Demo');
 
     $resource->deleteSurvey();
 });
@@ -108,7 +108,7 @@ it('reads, updates, deletes, activates and replaces its sampling point', functio
     $endpoint->shouldReceive('get')->with('survey-1', 'sp-1')->once()->andReturn($payload);
     $endpoint->shouldReceive('delete')->with('survey-1', 'sp-1')->once();
     $endpoint->shouldReceive('update')
-        ->withArgs(fn (string $s, string $sp, array $body) => $body['name'] === 'Renamed')
+        ->with('survey-1', 'sp-1', ['name' => 'Renamed'])
         ->once()
         ->andReturn($payload);
     $endpoint->shouldReceive('activate')
@@ -116,7 +116,7 @@ it('reads, updates, deletes, activates and replaces its sampling point', functio
         ->once()
         ->andReturn(['isActivated' => true]);
     $endpoint->shouldReceive('replace')
-        ->with('survey-1', 'sp-1', ['spareSamplingPointId' => 'sp-9', 'target' => null])
+        ->with('survey-1', 'sp-1', ['spareSamplingPointId' => 'sp-9'])
         ->once()
         ->andReturn(['success' => true]);
 

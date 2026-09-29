@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaTargetModel;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSamplingPoint;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
@@ -37,9 +38,9 @@ class SamplingPointQuotaTargetsService implements SamplingPointScopedInterface
         );
     }
 
-    public function setQuotaTargets(string $quotaLevelId, array|SamplingPointQuotaLevelTargetModel $data): SamplingPointQuotaTargetModel
+    public function setQuotaTargets(string $quotaLevelId, array|SamplingPointQuotaLevelTargetUpdateRequestModel|SamplingPointQuotaLevelTargetModel $data): SamplingPointQuotaTargetModel
     {
-        $payload = SamplingPointQuotaLevelTargetModel::from($data)->toArray();
+        $payload = SamplingPointQuotaLevelTargetUpdateRequestModel::from($data)->toArray();
 
         return SamplingPointQuotaTargetModel::from(
             $this->samplingPointQuotaTargetsEndpoint->update($this->getSurveyId(), $this->getSamplingPointId(), $quotaLevelId, $payload)
