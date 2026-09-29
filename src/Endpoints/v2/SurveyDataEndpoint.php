@@ -13,7 +13,7 @@ final class SurveyDataEndpoint extends BaseEndpoint implements SurveyDataEndpoin
         return "/{$this->version}/surveys";
     }
 
-    public function downloadInterviewData(string $surveyId, string $interviewId, array $surveyDataInterviewRequestModel): array
+    public function downloadInterviewData(string $surveyId, int $interviewId, array $surveyDataInterviewRequestModel): array
     {
         $uri = $this->subResourceItemPath($surveyId, 'dataDownload', $interviewId);
 

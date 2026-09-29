@@ -272,12 +272,12 @@ function endpointCallCases(): array
             'POST', 'v2/surveys/survey-1/dataDownload', ['fileName' => 'f.zip'],
         ],
         'SurveyData::downloadInterviewData' => [
-            Contracts\SurveyDataEndpointInterface::class, 'downloadInterviewData', ['survey-1', 'interview-1', ['fileName' => 'f.zip']],
-            'POST', 'v2/surveys/survey-1/dataDownload/interview-1', ['fileName' => 'f.zip'],
+            Contracts\SurveyDataEndpointInterface::class, 'downloadInterviewData', ['survey-1', 42, ['fileName' => 'f.zip']],
+            'POST', 'v2/surveys/survey-1/dataDownload/42', ['fileName' => 'f.zip'],
         ],
         'SurveyInterview::deleteInterviewData' => [
-            Contracts\SurveyInterviewEndpointInterface::class, 'deleteInterviewData', ['survey-1', 'interview-1'],
-            'DELETE', 'v2/surveys/survey-1/interviews/interview-1', [],
+            Contracts\SurveyInterviewEndpointInterface::class, 'deleteInterviewData', ['survey-1', 42],
+            'DELETE', 'v2/surveys/survey-1/interviews/42', [],
         ],
         'SurveyInterviewQualityCollection::get' => [
             Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'get', ['survey-1'],

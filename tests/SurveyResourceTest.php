@@ -26,7 +26,7 @@ it('can request data download', function () {
 
     $surveyDataService->shouldReceive('setSurveyId')->with('survey-1')->once();
 
-    $surveyDataService->shouldReceive('downloadData')
+    $surveyDataService->shouldReceive('download')
         ->with($requestModel)
         ->once()
         ->andReturn($status);

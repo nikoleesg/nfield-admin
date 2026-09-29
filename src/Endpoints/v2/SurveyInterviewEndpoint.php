@@ -13,7 +13,7 @@ final class SurveyInterviewEndpoint extends BaseEndpoint implements SurveyInterv
         return "/{$this->version}/surveys";
     }
 
-    public function deleteInterviewData(string $surveyId, string $interviewId): array
+    public function deleteInterviewData(string $surveyId, int $interviewId): array
     {
         $uri = $this->subResourceItemPath($surveyId, 'interviews', $interviewId);
 

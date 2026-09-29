@@ -244,7 +244,7 @@ $survey->publicIds()->update($models);
 Downloads are asynchronous: the API returns a background activity you poll.
 
 ```php
-$activity = $survey->data()->downloadData([
+$activity = $survey->data()->download([
     'fileName' => 'wave-1.zip',
     'startDate' => '2026-01-01',
     'includeSuccessful' => true,
@@ -252,8 +252,10 @@ $activity = $survey->data()->downloadData([
 
 NfieldManager::backgroundActivities()->get($activity->activityId)->status;  // ActivityStatusEnum
 
-$survey->data()->downloadInterviewData('interview-id', 'one.zip');
-$survey->data()->deleteInterviewData('interview-id');
+$interview = $survey->data()->forInterview(42);
+
+$interview->download('one.zip');   // file name is optional
+$interview->delete();
 ```
 
 ### CAPI interviewers

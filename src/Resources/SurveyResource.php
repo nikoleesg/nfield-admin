@@ -71,7 +71,7 @@ class SurveyResource implements SurveyScopedInterface
      */
     public function requestDataDownload(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
-        return $this->data()->downloadData($data);
+        return $this->data()->download($data);
     }
 
     public function samplingPoints(): SamplingPointService

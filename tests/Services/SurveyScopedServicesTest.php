@@ -32,6 +32,7 @@ use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
 use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
+use Nikoleesg\NfieldAdmin\Services\SurveyInterviewDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
@@ -135,7 +136,6 @@ it('refuses every fieldwork call before the scope is set', function () {
 
 it('requests a data download and returns the activity', function () {
     $dataEndpoint = Mockery::mock(SurveyDataEndpointInterface::class);
-    $interviewEndpoint = Mockery::mock(SurveyInterviewEndpointInterface::class);
 
     $dataEndpoint->shouldReceive('downloadData')
         ->withArgs(function (string $surveyId, array $payload) {
@@ -146,9 +146,9 @@ it('requests a data download and returns the activity', function () {
         ->once()
         ->andReturn(['activityId' => 'activity-1']);
 
-    $service = (new SurveyDataService($dataEndpoint, $interviewEndpoint))->setSurveyId('survey-1');
+    $service = (new SurveyDataService($dataEndpoint))->setSurveyId('survey-1');
 
-    $status = $service->downloadData(['fileName' => 'export.zip']);
+    $status = $service->download(['fileName' => 'export.zip']);
 
     expect($status)->toBeInstanceOf(BackgroundActivityStatus::class)
         ->and($status->activityId)->toBe('activity-1');
@@ -162,32 +162,65 @@ it('accepts a request model as well as an array for a data download', function (
         ->once()
         ->andReturn(['activityId' => 'activity-2']);
 
-    $service = (new SurveyDataService($dataEndpoint, Mockery::mock(SurveyInterviewEndpointInterface::class)))
-        ->setSurveyId('survey-1');
+    $service = (new SurveyDataService($dataEndpoint))->setSurveyId('survey-1');
 
-    $status = $service->downloadData(new SurveyDataRequestModel(surveyVersion: 'v3'));
+    $status = $service->download(new SurveyDataRequestModel(surveyVersion: 'v3'));
 
     expect($status->activityId)->toBe('activity-2');
 });
 
-it('downloads and deletes the data of a single interview', function () {
+it('downloads and deletes the data of the interview it is scoped to', function () {
+    // #70: interview operations used to sit on the survey-wide service and
+    // took the interview ID on every call; forInterview() now selects it once.
     $dataEndpoint = Mockery::mock(SurveyDataEndpointInterface::class);
     $interviewEndpoint = Mockery::mock(SurveyInterviewEndpointInterface::class);
 
     $dataEndpoint->shouldReceive('downloadInterviewData')
-        ->with('survey-1', 'interview-1', ['fileName' => 'one.zip'])
+        ->with('survey-1', 42, ['fileName' => 'one.zip'])
         ->once()
         ->andReturn(['activityId' => 'activity-3']);
 
+    $dataEndpoint->shouldReceive('downloadInterviewData')
+        ->with('survey-1', 42, ['fileName' => null])
+        ->once()
+        ->andReturn(['activityId' => 'activity-5']);
+
     $interviewEndpoint->shouldReceive('deleteInterviewData')
-        ->with('survey-1', 'interview-1')
+        ->with('survey-1', 42)
         ->once()
         ->andReturn(['activityId' => 'activity-4']);
 
-    $service = (new SurveyDataService($dataEndpoint, $interviewEndpoint))->setSurveyId('survey-1');
+    app()->instance(SurveyDataEndpointInterface::class, $dataEndpoint);
+    app()->instance(SurveyInterviewEndpointInterface::class, $interviewEndpoint);
 
-    expect($service->downloadInterviewData('interview-1', 'one.zip')->activityId)->toBe('activity-3')
-        ->and($service->deleteInterviewData('interview-1')->activityId)->toBe('activity-4');
+    $interview = (new SurveyDataService($dataEndpoint))->setSurveyId('survey-1')->forInterview(42);
+
+    expect($interview)->toBeInstanceOf(SurveyInterviewDataService::class)
+        ->and($interview->download('one.zip')->activityId)->toBe('activity-3')
+        ->and($interview->download()->activityId)->toBe('activity-5')
+        ->and($interview->delete()->activityId)->toBe('activity-4');
+});
+
+it('hands out a separately scoped service per interview', function () {
+    $service = (new SurveyDataService(Mockery::mock(SurveyDataEndpointInterface::class)))->setSurveyId('survey-1');
+
+    $first = $service->forInterview(1);
+    $second = $service->forInterview(2);
+
+    expect($first)->not->toBe($second)
+        ->and($first->getInterviewId())->toBe(1)
+        ->and($second->getInterviewId())->toBe(2)
+        ->and($second->getSurveyId())->toBe('survey-1');
+});
+
+it('refuses interview data calls before the interview scope is set', function () {
+    $service = (new SurveyInterviewDataService(
+        Mockery::mock(SurveyDataEndpointInterface::class),
+        Mockery::mock(SurveyInterviewEndpointInterface::class),
+    ))->setSurveyId('survey-1');
+
+    expect(fn () => $service->download())->toThrow(MissingScopeException::class)
+        ->and(fn () => $service->delete())->toThrow(MissingScopeException::class);
 });
 
 // ── Publish ──────────────────────────────────────────────────────────────

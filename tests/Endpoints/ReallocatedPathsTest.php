@@ -74,11 +74,11 @@ it('deletes interview data from the interview endpoint', function () {
     $httpClient = Mockery::mock(HttpClient::class);
 
     $httpClient->shouldReceive('delete')
-        ->with('v2/surveys/survey-id/interviews/interview-1')
+        ->with('v2/surveys/survey-id/interviews/42')
         ->once()
         ->andReturn(jsonResponse(['deleted' => true]));
 
-    $result = (new SurveyInterviewEndpoint($httpClient))->deleteInterviewData('survey-id', 'interview-1');
+    $result = (new SurveyInterviewEndpoint($httpClient))->deleteInterviewData('survey-id', 42);
 
     expect($result)->toBe(['deleted' => true]);
 });

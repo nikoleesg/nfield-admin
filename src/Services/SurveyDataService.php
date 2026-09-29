@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyDataEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyInterviewEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataInterviewRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
@@ -18,22 +16,14 @@ class SurveyDataService implements SurveyScopedInterface
 
     public function __construct(
         protected SurveyDataEndpointInterface $surveyDataEndpoint,
-        protected SurveyInterviewEndpointInterface $surveyInterviewEndpoint,
     ) {}
 
-    public function downloadInterviewData(string $interviewId, string $fileName): BackgroundActivityStatus
-    {
-        $payload = SurveyDataInterviewRequestModel::from(['fileName' => $fileName])->toArray();
-
-        return BackgroundActivityStatus::from(
-            $this->surveyDataEndpoint->downloadInterviewData($this->getSurveyId(), $interviewId, $payload)
-        );
-    }
-
     /**
+     * Request a data download of the whole survey.
+     *
      * @param  array<string, mixed>|SurveyDataRequestModel  $data
      */
-    public function downloadData(array|SurveyDataRequestModel $data): BackgroundActivityStatus
+    public function download(array|SurveyDataRequestModel $data): BackgroundActivityStatus
     {
         $payload = SurveyDataRequestModel::from($data)->toArray();
 
@@ -42,10 +32,13 @@ class SurveyDataService implements SurveyScopedInterface
         );
     }
 
-    public function deleteInterviewData(string $interviewId): BackgroundActivityStatus
+    /**
+     * The data of one interview.
+     */
+    public function forInterview(int $interviewId): SurveyInterviewDataService
     {
-        return BackgroundActivityStatus::from(
-            $this->surveyInterviewEndpoint->deleteInterviewData($this->getSurveyId(), $interviewId)
-        );
+        return app(SurveyInterviewDataService::class)
+            ->setSurveyId($this->getSurveyId())
+            ->setInterviewId($interviewId);
     }
 }
