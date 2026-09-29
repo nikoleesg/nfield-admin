@@ -81,17 +81,19 @@ scope — a survey, then a sampling point, then an address.
 ```php
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 
-NfieldManager::listSurveys();                            // Collection<SurveyModel>
-NfieldManager::findSurveys(['surveyName' => 'Wave 1']);  // Collection<SurveyModel>
-NfieldManager::searchRespondent('ada@example.com');      // Collection<SurveyBaseModel>
+$surveys = NfieldManager::surveys();
 
-NfieldManager::createSurvey([
+$surveys->list();                                  // Collection<SurveyModel>
+$surveys->find(['surveyName' => 'Wave 1']);       // Collection<SurveyModel>
+$surveys->searchRespondent('ada@example.com');    // Collection<SurveyBaseModel>
+
+$surveys->create([
     'surveyName' => 'Wave 1',
     'clientName' => 'Acme',
     'surveyType' => 'Capi',
 ]);
 
-NfieldManager::createSurveyFromBlueprint([
+$surveys->createFromBlueprint([
     'surveyName' => 'Wave 2',
     'blueprintSurveyId' => 'blueprint-id',
 ]);
@@ -104,7 +106,7 @@ something you are forced to build:
 ```php
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 
-NfieldManager::createSurvey(new SurveyCreateModel(
+NfieldManager::surveys()->create(new SurveyCreateModel(
     surveyName: 'Wave 1',
     clientName: 'Acme',
     surveyType: 'Capi',
@@ -294,6 +296,32 @@ NfieldManager::surveys()->forBlueprintSurvey('blueprint-id')->update([
 ]);
 ```
 
+### Event subscriptions
+
+```php
+$subscriptions = NfieldManager::eventSubscriptions();
+
+$subscriptions->list();                                // Collection<SubscriptionModel>
+$subscriptions->create([
+    'eventSubscriptionName' => 'fieldwork-events',
+    'endpoint' => 'https://example.com/webhook',
+    'eventTypes' => ['...'],
+]);
+
+$subscription = $subscriptions->forSubscription('fieldwork-events');
+
+$subscription->get();                                  // SubscriptionModel
+$subscription->update(['eventTypes' => ['...']]);      // only the fields you pass are sent
+$subscription->delete();
+```
+
+### Roles
+
+```php
+NfieldManager::roles()->getUserRole();                 // UserRoleModel for the current user
+NfieldManager::roles()->list();                        // role name => Collection<PermissionModel>
+```
+
 ## Error handling
 
 A failed request throws a typed exception carrying the status and the response
@@ -331,6 +359,13 @@ Missing credentials (`domain`, `username`, or `password`) throw
   class owns each wire format.
 - **Output is always a DTO** or an `Illuminate\Support\Collection` of DTOs.
 - **Models are named `*Model`.** The `*DTO` and `*Data` suffixes are retired.
+- **Services are named after their endpoints.** `SurveyCollectionService` covers
+  the collection (`list`, `find`, `create`, `forSurvey()`); `SurveyService` covers
+  one survey. A `forX($id)` selector returns a service scoped to that item, so
+  its methods take no ID: `forInterviewer($id)->get()`, not `get($id)`.
+- **Resources only navigate.** `SurveyResource`, `SamplingPointResource` and
+  `SurveyQuotaResource` lead to the services below them; they never call the API
+  themselves.
 
 ## Testing
 

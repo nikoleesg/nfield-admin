@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
+use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 
 it('will not use debugging functions')
     ->expect(['dd', 'dump', 'ray'])
@@ -516,4 +518,133 @@ it('names every model with the Model suffix', function () {
     }
 
     expect($offenders)->toBe([]);
+});
+
+/**
+ * #55/#68: services own every endpoint call and DTO conversion; a resource
+ * only navigates. These rules pin that split and the names it produced.
+ */
+it('never lets a resource call an endpoint')
+    ->expect('Nikoleesg\NfieldAdmin\Resources')
+    ->not->toUse([
+        'Nikoleesg\NfieldAdmin\Contracts\Endpoints',
+        'Nikoleesg\NfieldAdmin\Endpoints',
+        'Nikoleesg\NfieldAdmin\Contracts\Http',
+    ]);
+
+it('keeps a resource class only where it navigates', function () {
+    // An item with nothing below it is reached as its scoped service
+    // (forAddress(), forInterviewer(), ...); a resource that only forwarded
+    // calls would be a second name for the same thing.
+    $offenders = [];
+
+    foreach (glob(__DIR__.'/../src/Resources/*.php') as $file) {
+        $class = 'Nikoleesg\NfieldAdmin\Resources\\'.basename($file, '.php');
+        $navigates = false;
+
+        foreach ((new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            $returnType = $method->getReturnType();
+
+            if ($returnType instanceof ReflectionNamedType
+                && preg_match('/^Nikoleesg\\\\NfieldAdmin\\\\(Services|Resources)\\\\/', $returnType->getName())) {
+                $navigates = true;
+            }
+        }
+
+        if (! $navigates) {
+            $offenders[] = class_basename($class).' has nothing to navigate to; make it a scoped service';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('pairs every collection service with a scoped item service', function () {
+    // Services mirror the endpoint naming: XCollectionService pairs with
+    // XCollectionEndpoint, XService with XEndpoint and one scoped item.
+    $offenders = [];
+
+    foreach (glob(__DIR__.'/../src/Services/*CollectionService.php') as $file) {
+        $item = 'Nikoleesg\NfieldAdmin\Services\\'.basename($file, 'CollectionService.php').'Service';
+
+        if (! class_exists($item)) {
+            $offenders[] = basename($file, '.php').' has no '.class_basename($item);
+
+            continue;
+        }
+
+        $scoped = array_filter(
+            class_implements($item),
+            fn (string $contract) => str_starts_with($contract, 'Nikoleesg\NfieldAdmin\Contracts\Scoping\\')
+        );
+
+        if ($scoped === []) {
+            $offenders[] = class_basename($item).' is not scoped to one item';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('never repeats the class noun in a CRUD method name', function () {
+    // #68: the class and the chain already name the resource, so
+    // `$survey->getSurvey()` is `$survey->get()`. A verb followed only by
+    // words of the class's own name is the redundant form; a verb followed by
+    // anything else (`getByClientId`, `createColumns`, `updateGeneral`) is a
+    // distinct operation and keeps its noun.
+    $singular = fn (string $word) => preg_replace('/(?<=ss)es$|(?<!s)s$/', '', strtolower($word));
+    $words = fn (string $name) => array_map($singular, preg_split('/(?=[A-Z])/', $name, -1, PREG_SPLIT_NO_EMPTY));
+    $verbs = 'get|list|find|create|update|delete|set|activate|replace|assign|unassign';
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        if (! preg_match('/^('.$verbs.')([A-Z]\w*)$/', $method->getName(), $match)) {
+            continue;
+        }
+
+        // Scope getters and setters (getSurveyId, setInterviewId, ...) come
+        // from the ScopedTo* traits and name the scope, not the resource.
+        if (in_array(lcfirst(substr($method->getName(), 3)), scopingContracts(), true)) {
+            continue;
+        }
+
+        $noun = $words(preg_replace('/(Collection)?(Service|Resource)$/', '', class_basename($class)));
+
+        if (array_diff($words($match[2]), $noun) === []) {
+            $offenders[] = class_basename($class).'::'.$method->getName().'() repeats the class noun; use '.$match[1].'()';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('documents every manager entry point on the facade', function () {
+    // The facade's @method lines are the only thing an IDE sees for
+    // NfieldManager::surveys() and friends; eventSubscriptions() went
+    // undocumented until #68.
+    preg_match_all(
+        '/@method static \\\\?([\w\\\\]+) (\w+)\(\)/',
+        (string) (new ReflectionClass(NfieldManager::class))->getDocComment(),
+        $matches,
+        PREG_SET_ORDER
+    );
+
+    $documented = [];
+
+    foreach ($matches as [, $type, $name]) {
+        $documented[$name] = ltrim($type, '\\');
+    }
+
+    $expected = [];
+
+    foreach ((new ReflectionClass(NfieldManagerService::class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        if (! $method->isConstructor()) {
+            $expected[$method->getName()] = (string) $method->getReturnType();
+        }
+    }
+
+    ksort($documented);
+    ksort($expected);
+
+    expect($documented)->toBe($expected);
 });
