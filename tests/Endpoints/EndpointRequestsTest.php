@@ -231,6 +231,30 @@ function endpointCallCases(): array
             Contracts\SurveySettingsEndpointInterface::class, 'set', ['survey-1', ['name' => 'a', 'value' => 'b']],
             'POST', 'v2/surveys/survey-1/settings', ['name' => 'a', 'value' => 'b'],
         ],
+        'SurveyResponseCodeCollection::list' => [
+            Contracts\SurveyResponseCodeCollectionEndpointInterface::class, 'list', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/responseCodes', [],
+        ],
+        'SurveyResponseCodeCollection::find' => [
+            Contracts\SurveyResponseCodeCollectionEndpointInterface::class, 'find', ['survey-1', ['$top' => 5]],
+            'GET', 'v2/surveys/survey-1/responseCodes?%24top=5', ['$top' => 5],
+        ],
+        'SurveyResponseCodeCollection::create' => [
+            Contracts\SurveyResponseCodeCollectionEndpointInterface::class, 'create', ['survey-1', ['responseCode' => 210]],
+            'POST', 'v2/surveys/survey-1/responseCodes', ['responseCode' => 210],
+        ],
+        'SurveyResponseCode::get' => [
+            Contracts\SurveyResponseCodeEndpointInterface::class, 'get', ['survey-1', 210],
+            'GET', 'v2/surveys/survey-1/responseCodes/210', [],
+        ],
+        'SurveyResponseCode::update' => [
+            Contracts\SurveyResponseCodeEndpointInterface::class, 'update', ['survey-1', 210, ['description' => 'x']],
+            'PATCH', 'v2/surveys/survey-1/responseCodes/210', ['description' => 'x'],
+        ],
+        'SurveyResponseCode::delete' => [
+            Contracts\SurveyResponseCodeEndpointInterface::class, 'delete', ['survey-1', 210],
+            'DELETE', 'v2/surveys/survey-1/responseCodes/210', [],
+        ],
         'SurveyGeneralSettings::get' => [
             Contracts\SurveyGeneralSettingsEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1/generalSettings', [],

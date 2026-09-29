@@ -14,6 +14,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTar
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointQuotaLevelTargetUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsUpdateModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyResponseCodeUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
 use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
@@ -156,4 +157,11 @@ it('omits unset properties on DomainResponseCodeUpdateModel', function () {
         // An explicit null is still sent, so a field can be cleared.
         ->and(DomainResponseCodeUpdateModel::from(['description' => null, 'channelCati' => false])->toArray())
         ->toBe(['description' => null, 'channelCati' => false]);
+});
+
+it('omits unset properties on SurveyResponseCodeUpdateModel', function () {
+    expect(SurveyResponseCodeUpdateModel::from(['description' => 'Callback'])->toArray())
+        ->toBe(['description' => 'Callback'])
+        ->and(SurveyResponseCodeUpdateModel::from([])->toArray())->toBe([])
+        ->and(SurveyResponseCodeUpdateModel::from(['relocationUrl' => null])->toArray())->toBe(['relocationUrl' => null]);
 });

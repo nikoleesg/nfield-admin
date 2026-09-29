@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 97 of 282 operations implemented (34%), across 182 paths.**
+**Overall: 102 of 282 operations implemented (36%), across 182 paths.**
 
-**Planned for development: 42 operations across 7 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 37 operations across 6 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -26,7 +26,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
 | Surveys — Core | 9 | 4 | 14 | 64% |
-| Surveys — Settings & Content | 6 | 5 | 23 | 26% |
+| Surveys — Settings & Content | 11 | — | 23 | 48% |
 | Surveys — Publishing & Script | 3 | 6 | 13 | 23% |
 | Surveys — Interviews & Data | 8 | — | 16 | 50% |
 | Access & Authentication | 4 | 5 | 20 | 20% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **97** | **42** | **282** | **34%** |
+| **Total** | **102** | **37** | **282** | **36%** |
 
 ---
 
@@ -61,9 +61,8 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 | Survey Groups | 5 | [#60](https://github.com/nikoleesg/nfield-admin/issues/60) |
 | Surveys — Core | 4 | [#62](https://github.com/nikoleesg/nfield-admin/issues/62) |
 | Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
-| Surveys — Settings & Content | 5 | [#65](https://github.com/nikoleesg/nfield-admin/issues/65) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **42** | |
+| **Total** | **37** | |
 
 Survey Groups is only partly planned: the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -204,7 +203,7 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 
 ### Surveys — Settings & Content
 
-*6/23 implemented.*
+*11/23 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
@@ -224,11 +223,11 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 | ❌ | POST | `/v2/surveys/{surveyId}/mediaFiles/{fileName}` | — |
 | ✅ | GET | `/v2/surveys/{surveyId}/publicIds` | `SurveyPublicIdsEndpoint::list` |
 | ✅ | PUT | `/v2/surveys/{surveyId}/publicIds` | `SurveyPublicIdsEndpoint::update` |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/responseCodes` | Planned for Development (#65) |
-| 🗓️ | POST | `/v2/surveys/{surveyId}/responseCodes` | Planned for Development (#65) |
-| 🗓️ | DELETE | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
-| 🗓️ | PATCH | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
+| ✅ | GET | `/v2/surveys/{surveyId}/responseCodes` | `SurveyResponseCodeCollectionEndpoint::list` / `find` |
+| ✅ | POST | `/v2/surveys/{surveyId}/responseCodes` | `SurveyResponseCodeCollectionEndpoint::create` |
+| ✅ | DELETE | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | `SurveyResponseCodeEndpoint::delete` |
+| ✅ | GET | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | `SurveyResponseCodeEndpoint::get` |
+| ✅ | PATCH | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | `SurveyResponseCodeEndpoint::update` |
 | ✅ | GET | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::list` |
 | ✅ | POST | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::set` |
 
@@ -638,7 +637,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (185 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (180 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (16 pending)
 
@@ -864,7 +863,7 @@ Everything not yet implemented (185 operations), grouped by section. Items marke
 - `GET /v2/surveys/{surveyId}/samplingPoint/{samplingPointId}/image`
 - `POST /v2/surveys/{surveyId}/samplingPoint/{samplingPointId}/image/{fileName}`
 
-**Surveys — Settings & Content** (17 pending)
+**Surveys — Settings & Content** (12 pending)
 
 - `DELETE /v2/surveys/{surveyId}/interviewerInstructions`
 - `GET /v2/surveys/{surveyId}/interviewerInstructions`
@@ -878,11 +877,6 @@ Everything not yet implemented (185 operations), grouped by section. Items marke
 - `DELETE /v2/surveys/{surveyId}/mediaFiles/{fileName}`
 - `GET /v2/surveys/{surveyId}/mediaFiles/{fileName}`
 - `POST /v2/surveys/{surveyId}/mediaFiles/{fileName}`
-- `GET /v2/surveys/{surveyId}/responseCodes` — Planned for Development (#65)
-- `POST /v2/surveys/{surveyId}/responseCodes` — Planned for Development (#65)
-- `DELETE /v2/surveys/{surveyId}/responseCodes/{responseCode}` — Planned for Development (#65)
-- `GET /v2/surveys/{surveyId}/responseCodes/{responseCode}` — Planned for Development (#65)
-- `PATCH /v2/surveys/{surveyId}/responseCodes/{responseCode}` — Planned for Development (#65)
 
 **Templates** (1 pending)
 

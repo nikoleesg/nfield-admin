@@ -19,6 +19,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyInterviewQualityService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPerformanceService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
+use Nikoleesg\NfieldAdmin\Services\SurveyResponseCodeCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
@@ -128,6 +129,11 @@ class SurveyResource implements SurveyScopedInterface
     public function performance(): SurveyPerformanceService
     {
         return $this->resolveService(SurveyPerformanceService::class);
+    }
+
+    public function responseCodes(): SurveyResponseCodeCollectionService
+    {
+        return $this->resolveService(SurveyResponseCodeCollectionService::class);
     }
 
     private function item(): SurveyService

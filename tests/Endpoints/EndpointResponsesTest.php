@@ -22,6 +22,21 @@ it('unwraps the OData envelope on the CAPI list endpoints', function () {
         ->toBe([['surveyId' => 's-1']]);
 });
 
+it('accepts the OData envelope on the survey response code list', function () {
+    // #65: the spec advertises OData content types for this list, which can
+    // wrap the rows in {"value": [...]}; a bare array must work too.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'endpoint-test-token'], 200),
+        '*/v2/surveys/enveloped/responseCodes' => Http::response(['value' => [['ResponseCode' => 210]]], 200),
+        '*/v2/surveys/bare/responseCodes' => Http::response([['ResponseCode' => 211]], 200),
+    ]);
+
+    $endpoint = app(Contracts\SurveyResponseCodeCollectionEndpointInterface::class);
+
+    expect($endpoint->list('enveloped'))->toBe([['responseCode' => 210]])
+        ->and($endpoint->list('bare'))->toBe([['responseCode' => 211]]);
+});
+
 it('returns the sample download untouched by the key normalizer', function () {
     // A sample download is TSV, not JSON: `body()` must survive the response
     // wrapper the normalization added in #36.

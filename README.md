@@ -241,6 +241,11 @@ $survey->samplingMethod()->update(['samplingMethod' => 'Random']);
 $survey->publicIds()->list();                          // Collection<SurveyPublicIdModel>
 $survey->publicIds()->update($models);
 
+$survey->responseCodes()->list();                      // Collection<SurveyResponseCodeModel>
+$survey->responseCodes()->create(['responseCode' => 210, 'description' => 'Callback']);
+$survey->responseCodes()->forResponseCode(210)->update(['description' => 'Call back later']);
+$survey->responseCodes()->forResponseCode(210)->delete();
+
 $survey->performance()->live();                        // SurveyMetricsModel: warn/block counts per metric
 $survey->performance()->test();
 ```
