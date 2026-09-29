@@ -5,28 +5,23 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Resources;
 
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SubscriptionEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\EventSubscriptionScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Events\SubscriptionModel;
 use Nikoleesg\NfieldAdmin\Data\Events\UpdateSubscriptionModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToEventSubscription;
 
-class EventSubscriptionResource
+class EventSubscriptionResource implements EventSubscriptionScopedInterface
 {
-    protected ?string $subscriptionName = null;
+    use ScopedToEventSubscription;
 
     public function __construct(
         protected SubscriptionEndpointInterface $subscriptionEndpoint
     ) {}
 
-    public function setSubscriptionName(string $name): static
-    {
-        $this->subscriptionName = $name;
-
-        return $this;
-    }
-
     public function get(): SubscriptionModel
     {
         return SubscriptionModel::from(
-            $this->subscriptionEndpoint->get($this->subscriptionName)
+            $this->subscriptionEndpoint->get($this->getSubscriptionName())
         );
     }
 
@@ -37,11 +32,11 @@ class EventSubscriptionResource
     {
         $payload = UpdateSubscriptionModel::from($data)->toArray();
 
-        $this->subscriptionEndpoint->updatePartial($this->subscriptionName, $payload);
+        $this->subscriptionEndpoint->updatePartial($this->getSubscriptionName(), $payload);
     }
 
     public function delete(): void
     {
-        $this->subscriptionEndpoint->destroy($this->subscriptionName);
+        $this->subscriptionEndpoint->destroy($this->getSubscriptionName());
     }
 }

@@ -3,8 +3,12 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointAddressEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SubscriptionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
@@ -24,6 +28,8 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\UpdateBlueprintModel;
 use Nikoleesg\NfieldAdmin\Enums\BlueprintConfigurationEnum;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
+use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
+use Nikoleesg\NfieldAdmin\Resources\EventSubscriptionResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointAddressResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
@@ -273,3 +279,30 @@ it('updates a blueprint with its configuration flag', function () {
     $resource->update(['surveyId' => 'survey-1']);
     $resource->update(new UpdateBlueprintModel('survey-1'));
 });
+
+// ── Unset item scope (#55) ───────────────────────────────────────────────
+
+it('refuses an item call before its own scope is set', function (Closure $call) {
+    // The endpoints are strict mocks: reaching one would fail the test with a
+    // Mockery error, so the exception proves the guard fired first.
+    expect($call)->toThrow(MissingScopeException::class);
+})->with([
+    'sample record without interviewId' => fn () => (new SurveySampleResource(
+        Mockery::mock(SurveySampleEndpointInterface::class),
+        Mockery::mock(SurveySampleCollectionEndpointInterface::class),
+    ))->setSurveyId('survey-1')->getSampleRecord(),
+    'blueprint without blueprintId' => fn () => (new BlueprintSurveyResource(
+        Mockery::mock(SurveyBlueprintsEndpointInterface::class),
+    ))->update(['surveyId' => 'survey-1']),
+    'address without addressId' => fn () => (new SamplingPointAddressResource(
+        Mockery::mock(SamplingPointAddressEndpointInterface::class),
+    ))->setSurveyId('survey-1')->setSamplingPointId('sp-1')->getAddress(),
+    'CAPI interviewer without interviewerId' => fn () => (new CapiInterviewerResource(
+        Mockery::mock(CapiInterviewersEndpointInterface::class),
+        Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class),
+        Mockery::mock(CapiInterviewersOfficesEndpointInterface::class),
+    ))->get(),
+    'event subscription without a name' => fn () => (new EventSubscriptionResource(
+        Mockery::mock(SubscriptionEndpointInterface::class),
+    ))->delete(),
+]);

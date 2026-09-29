@@ -7,31 +7,24 @@ namespace Nikoleesg\NfieldAdmin\Resources;
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUpdateStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyUpdateSampleRecordModel;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToInterview;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-final class SurveySampleResource implements SurveyScopedInterface
+final class SurveySampleResource implements InterviewScopedInterface
 {
+    use ScopedToInterview;
     use ScopedToSurvey;
-
-    protected ?int $interviewId = null;
 
     public function __construct(
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
         protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
     ) {}
-
-    public function setInterviewId(int $interviewId): static
-    {
-        $this->interviewId = $interviewId;
-
-        return $this;
-    }
 
     /**
      * The sample record for this interview.
@@ -44,7 +37,7 @@ final class SurveySampleResource implements SurveyScopedInterface
     public function getSampleRecord(): ?Collection
     {
         // Get raw CSV data from endpoint
-        $rawCsvData = $this->surveySampleEndpoint->get($this->getSurveyId(), $this->interviewId);
+        $rawCsvData = $this->surveySampleEndpoint->get($this->getSurveyId(), $this->getInterviewId());
 
         // Parse CSV into array
         /** @var array<int, array<string, string>> $parsed */

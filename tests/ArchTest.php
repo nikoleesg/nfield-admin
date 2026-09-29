@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 
 it('will not use debugging functions')
     ->expect(['dd', 'dump', 'ray'])
@@ -217,6 +215,30 @@ function publicSdkMethods(): array
     return $methods;
 }
 
+/**
+ * Every scoping contract, mapped to the scope it carries (`getSurveyId()` ->
+ * `surveyId`). Read from src/Contracts/Scoping so a new scope is covered by
+ * the scoping rules below without editing them.
+ *
+ * @return array<class-string, string>
+ */
+function scopingContracts(): array
+{
+    $contracts = [];
+
+    foreach (glob(__DIR__.'/../src/Contracts/Scoping/*.php') as $file) {
+        $contract = 'Nikoleesg\NfieldAdmin\Contracts\Scoping\\'.basename($file, '.php');
+
+        foreach ((new ReflectionClass($contract))->getMethods() as $method) {
+            if ($method->getDeclaringClass()->getName() === $contract && str_starts_with($method->getName(), 'get')) {
+                $contracts[$contract] = lcfirst(substr($method->getName(), 3));
+            }
+        }
+    }
+
+    return $contracts;
+}
+
 it('never returns a raw array from the public SDK surface', function () {
     $offenders = [];
 
@@ -284,7 +306,7 @@ it('never scopes a service by constructor parameter name', function () {
         }
 
         foreach ($constructor->getParameters() as $parameter) {
-            if (in_array($parameter->getName(), ['surveyId', 'samplingPointId'], true)) {
+            if (in_array($parameter->getName(), scopingContracts(), true)) {
                 $offenders[] = class_basename($class).'::__construct() takes $'.$parameter->getName().'; use the scoping contract';
             }
         }
@@ -299,14 +321,59 @@ it('declares the scoping contract wherever a scope is read', function () {
     foreach (publicSdkClasses() as $class) {
         $source = (string) file_get_contents((new ReflectionClass($class))->getFileName());
 
-        if (str_contains($source, '$this->getSurveyId()')
-            && ! is_subclass_of($class, SurveyScopedInterface::class)) {
-            $offenders[] = class_basename($class).' reads the survey scope without implementing SurveyScopedInterface';
+        foreach (scopingContracts() as $contract => $scope) {
+            if (str_contains($source, '$this->get'.ucfirst($scope).'()')
+                && ! is_subclass_of($class, $contract)) {
+                $offenders[] = class_basename($class).' reads the '.$scope.' scope without implementing '.class_basename($contract);
+            }
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('keeps scope state in the ScopedTo* traits', function () {
+    // #55: resources that held their own nullable `$interviewId`,
+    // `$blueprintId`, `$addressId`, ... passed null straight to the endpoint
+    // (a TypeError, or a request to `/sample/`) instead of failing with
+    // MissingScopeException. The traits' getters are the only guard.
+    $offenders = [];
+
+    foreach (publicSdkClasses() as $class) {
+        $reflection = new ReflectionClass($class);
+        $fromTraits = [];
+
+        foreach ($reflection->getTraits() as $trait) {
+            foreach ($trait->getProperties() as $property) {
+                $fromTraits[] = $property->getName();
+            }
         }
 
-        if (str_contains($source, '$this->getSamplingPointId()')
-            && ! is_subclass_of($class, SamplingPointScopedInterface::class)) {
-            $offenders[] = class_basename($class).' reads the sampling point scope without implementing SamplingPointScopedInterface';
+        foreach ($reflection->getProperties() as $property) {
+            if ($property->getDeclaringClass()->getName() === $class
+                && in_array($property->getName(), scopingContracts(), true)
+                && ! in_array($property->getName(), $fromTraits, true)) {
+                $offenders[] = class_basename($class).'::$'.$property->getName().' is hand-rolled; use the ScopedTo* trait';
+            }
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
+it('hands every scope on when resolving a scoped service', function () {
+    $source = (string) file_get_contents(__DIR__.'/../src/Traits/ResolvesScopedServices.php');
+    $offenders = [];
+
+    foreach (scopingContracts() as $contract => $scope) {
+        $name = class_basename($contract);
+
+        if (! str_contains($source, '$service instanceof '.$name.' && $this instanceof '.$name)) {
+            $offenders[] = $name.' is not handed on by resolveService()';
+        }
+
+        if (! str_contains($source, "if (\$this instanceof {$name}) {\n            \$key .= '|'.\$this->get".ucfirst($scope).'();')) {
+            $offenders[] = $name.' is not part of scopedServiceKey()';
         }
     }
 

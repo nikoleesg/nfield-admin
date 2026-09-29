@@ -8,11 +8,13 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersAssignmentsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\CapiInterviewersOfficesEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\CapiInterviewerScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerAssignmentModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToCapiInterviewer;
 
 /**
  * CapiInterviewerResource - Fluent interface for individual CAPI interviewer operations
@@ -20,9 +22,9 @@ use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequ
  * Provides chainable methods for managing a specific CAPI interviewer's assignments
  * and office assignments.
  */
-class CapiInterviewerResource
+class CapiInterviewerResource implements CapiInterviewerScopedInterface
 {
-    protected ?string $interviewerId = null;
+    use ScopedToCapiInterviewer;
 
     public function __construct(
         protected CapiInterviewersEndpointInterface $capiInterviewersEndpoint,
@@ -31,22 +33,12 @@ class CapiInterviewerResource
     ) {}
 
     /**
-     * Set the interviewer ID
-     */
-    public function setInterviewerId(string $interviewerId): static
-    {
-        $this->interviewerId = $interviewerId;
-
-        return $this;
-    }
-
-    /**
      * Get the interviewer details
      */
     public function get(): CapiInterviewerModel
     {
         return CapiInterviewerModel::from(
-            $this->capiInterviewersEndpoint->get($this->interviewerId)
+            $this->capiInterviewersEndpoint->get($this->getInterviewerId())
         );
     }
 
@@ -60,7 +52,7 @@ class CapiInterviewerResource
         $payload = EditCapiInterviewerRequestModel::from($data)->toArray();
 
         return CapiInterviewerResponseModel::from(
-            $this->capiInterviewersEndpoint->update($this->interviewerId, $payload)
+            $this->capiInterviewersEndpoint->update($this->getInterviewerId(), $payload)
         );
     }
 
@@ -74,7 +66,7 @@ class CapiInterviewerResource
         $payload = ResetCapiInterviewerPasswordRequestModel::from($data)->toArray();
 
         return CapiInterviewerResponseModel::from(
-            $this->capiInterviewersEndpoint->resetPassword($this->interviewerId, $payload)
+            $this->capiInterviewersEndpoint->resetPassword($this->getInterviewerId(), $payload)
         );
     }
 
@@ -83,7 +75,7 @@ class CapiInterviewerResource
      */
     public function delete(): void
     {
-        $this->capiInterviewersEndpoint->delete($this->interviewerId);
+        $this->capiInterviewersEndpoint->delete($this->getInterviewerId());
     }
 
     /**
@@ -94,7 +86,7 @@ class CapiInterviewerResource
     public function getAssignments(): Collection
     {
         return CapiInterviewerAssignmentModel::collect(
-            $this->capiInterviewersAssignmentsEndpoint->list($this->interviewerId),
+            $this->capiInterviewersAssignmentsEndpoint->list($this->getInterviewerId()),
             Collection::class
         );
     }
@@ -106,7 +98,7 @@ class CapiInterviewerResource
      */
     public function getOffices(): Collection
     {
-        return collect($this->capiInterviewersOfficesEndpoint->list($this->interviewerId));
+        return collect($this->capiInterviewersOfficesEndpoint->list($this->getInterviewerId()));
     }
 
     /**
@@ -114,7 +106,7 @@ class CapiInterviewerResource
      */
     public function updateOffice(string $officeId): void
     {
-        $this->capiInterviewersOfficesEndpoint->update($this->interviewerId, $officeId);
+        $this->capiInterviewersOfficesEndpoint->update($this->getInterviewerId(), $officeId);
     }
 
     /**
@@ -122,6 +114,6 @@ class CapiInterviewerResource
      */
     public function deleteOffice(string $officeId): void
     {
-        $this->capiInterviewersOfficesEndpoint->delete($this->interviewerId, $officeId);
+        $this->capiInterviewersOfficesEndpoint->delete($this->getInterviewerId(), $officeId);
     }
 }
