@@ -254,7 +254,7 @@ function endpointCallCases(): array
             'GET', 'v2/surveys/survey-1/quotaTargets', [],
         ],
         'SurveyQuotaTargets::getQuotaTargetsByETag' => [
-            Contracts\SurveyQuotaTargetsEndpointInterface::class, 'getQuotaTargetsByETag', ['survey-1', 42],
+            Contracts\SurveyQuotaTargetsEndpointInterface::class, 'getQuotaTargetsByETag', ['survey-1', '42'],
             'GET', 'v2/surveys/survey-1/quotaTargets/42', [],
         ],
         'SurveyQuotaVersions::getQuotaVersions' => [
@@ -262,7 +262,7 @@ function endpointCallCases(): array
             'GET', 'v2/surveys/survey-1/quotaVersions', [],
         ],
         'SurveyQuotaVersions::getQuotaVersionsByETag' => [
-            Contracts\SurveyQuotaVersionsEndpointInterface::class, 'getQuotaVersionsByETag', ['survey-1', 42],
+            Contracts\SurveyQuotaVersionsEndpointInterface::class, 'getQuotaVersionsByETag', ['survey-1', '42'],
             'GET', 'v2/surveys/survey-1/quotaVersions/42', [],
         ],
 

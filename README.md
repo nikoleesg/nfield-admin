@@ -208,14 +208,15 @@ $survey->assignments()->unassignInterviewers(['sp-1', 'sp-2'], ['interviewer-id'
 ```php
 $quota = $survey->quota();
 
-$quota->getQuotaFrame();                               // SurveysQuotaFrameResponseModel
-$quota->setQuotaFrame(['target' => 1000, 'variableDefinitions' => [], 'frameVariables' => []]);
-$quota->setQuotaLevelsTargets($eTag, ['levels' => [...]]);
+$quota->frame()->get();                                // SurveysQuotaFrameResponseModel
+$quota->frame()->update(['target' => 1000, 'variableDefinitions' => [], 'frameVariables' => []]);
 
-$quota->getQuotaTargets();
-$quota->getQuotaTargetsByETag(7);
-$quota->getQuotaVersions();                            // Collection<QuotaFrameVersionModel>
-$quota->getQuotaVersionsByETag(7);
+$quota->targets()->get();                              // targets of the current frame
+$quota->targets()->forVersion($eTag)->get();           // targets of one version
+$quota->targets()->forVersion($eTag)->update(['levels' => [...]]);
+
+$quota->versions()->list();                            // Collection<QuotaFrameVersionModel>
+$quota->versions()->forVersion($eTag)->get();          // QuotaFrameModel
 ```
 
 ### Publishing, settings and public ids

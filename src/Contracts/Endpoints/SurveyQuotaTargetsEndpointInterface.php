@@ -18,5 +18,5 @@ interface SurveyQuotaTargetsEndpointInterface
      *
      * @return array<string, mixed>
      */
-    public function getQuotaTargetsByETag(string $surveyId, int $eTag): array;
+    public function getQuotaTargetsByETag(string $surveyId, string $eTag): array;
 }

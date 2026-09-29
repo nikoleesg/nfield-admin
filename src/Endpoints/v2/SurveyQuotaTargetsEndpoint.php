@@ -20,7 +20,7 @@ final class SurveyQuotaTargetsEndpoint extends BaseEndpoint implements SurveyQuo
         return $this->httpClient->get($uri)->json();
     }
 
-    public function getQuotaTargetsByETag(string $surveyId, int $eTag): array
+    public function getQuotaTargetsByETag(string $surveyId, string $eTag): array
     {
         $uri = $this->subResourceItemPath($surveyId, 'quotaTargets', $eTag);
 

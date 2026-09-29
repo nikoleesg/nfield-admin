@@ -9,6 +9,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Scoping\BlueprintScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\CapiInterviewerScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\EventSubscriptionScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\QuotaVersionScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 
@@ -61,6 +62,10 @@ trait ResolvesScopedServices
             $service->setInterviewId($this->getInterviewId());
         }
 
+        if ($service instanceof QuotaVersionScopedInterface && $this instanceof QuotaVersionScopedInterface) {
+            $service->setQuotaVersion($this->getQuotaVersion());
+        }
+
         if ($service instanceof BlueprintScopedInterface && $this instanceof BlueprintScopedInterface) {
             $service->setBlueprintId($this->getBlueprintId());
         }
@@ -101,6 +106,10 @@ trait ResolvesScopedServices
 
         if ($this instanceof InterviewScopedInterface) {
             $key .= '|'.$this->getInterviewId();
+        }
+
+        if ($this instanceof QuotaVersionScopedInterface) {
+            $key .= '|'.$this->getQuotaVersion();
         }
 
         if ($this instanceof BlueprintScopedInterface) {

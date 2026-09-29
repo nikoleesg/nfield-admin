@@ -8,7 +8,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaFrameEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
@@ -29,7 +28,8 @@ use Nikoleesg\NfieldAdmin\Enums\SamplingPointKindEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyFieldworkStatusEnum;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
-use Nikoleesg\NfieldAdmin\Services\SurveyQuotaService;
+use Nikoleesg\NfieldAdmin\Services\SurveyQuotaTargetsService;
+use Nikoleesg\NfieldAdmin\Services\SurveyQuotaVersionsService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 
@@ -265,20 +265,8 @@ it('nests sample filters inside the clear request model', function () {
 // #33/#37 — quota targets and versions
 // ============================================================
 
-function quotaService(
-    SurveyQuotaTargetsEndpointInterface $targetsEndpoint,
-    SurveyQuotaVersionsEndpointInterface $versionsEndpoint,
-): SurveyQuotaService {
-    return (new SurveyQuotaService(
-        Mockery::mock(SurveyQuotaFrameEndpointInterface::class),
-        $targetsEndpoint,
-        $versionsEndpoint,
-    ))->setSurveyId('survey-1');
-}
-
 it('returns quota targets as a DTO', function () {
     $targetsEndpoint = Mockery::mock(SurveyQuotaTargetsEndpointInterface::class);
-    $versionsEndpoint = Mockery::mock(SurveyQuotaVersionsEndpointInterface::class);
 
     $targetsEndpoint->shouldReceive('getQuotaTargets')->with('survey-1')->once()->andReturn([
         'id' => 'frame-1',
@@ -297,7 +285,7 @@ it('returns quota targets as a DTO', function () {
         ],
     ]);
 
-    $result = quotaService($targetsEndpoint, $versionsEndpoint)->getQuotaTargets();
+    $result = (new SurveyQuotaTargetsService($targetsEndpoint))->setSurveyId('survey-1')->get();
 
     expect($result)->toBeInstanceOf(SurveysQuotaTargetsResponseModel::class)
         ->and($result->rootLevelMaxOvershoot)->toBe(5)
@@ -305,14 +293,13 @@ it('returns quota targets as a DTO', function () {
 });
 
 it('returns quota versions as a collection of DTOs', function () {
-    $targetsEndpoint = Mockery::mock(SurveyQuotaTargetsEndpointInterface::class);
     $versionsEndpoint = Mockery::mock(SurveyQuotaVersionsEndpointInterface::class);
 
     $versionsEndpoint->shouldReceive('getQuotaVersions')->with('survey-1')->once()->andReturn([
         ['id' => 'q-1', 'eTag' => '1', 'publishedDate' => '2026-01-02T03:04:05Z'],
     ]);
 
-    $result = quotaService($targetsEndpoint, $versionsEndpoint)->getQuotaVersions();
+    $result = (new SurveyQuotaVersionsService($versionsEndpoint))->setSurveyId('survey-1')->list();
 
     expect($result)->toBeInstanceOf(Collection::class)
         ->and($result->first())->toBeInstanceOf(QuotaFrameVersionModel::class)
