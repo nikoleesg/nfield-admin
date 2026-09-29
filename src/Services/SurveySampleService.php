@@ -39,14 +39,14 @@ class SurveySampleService implements SurveyScopedInterface
      *
      * @throws RuntimeException If CSV parsing fails
      */
-    public function downloadSampleData(): Collection
+    public function download(): Collection
     {
         $rawCsvData = $this->surveySampleCollectionEndpoint->download($this->getSurveyId());
 
         return collect(CsvParser::parse($rawCsvData));
     }
 
-    public function uploadSampleData(string $sampleData, ?string $fileName = null): SampleUploadStatus
+    public function upload(string $sampleData, ?string $fileName = null): SampleUploadStatus
     {
         $fileName = $fileName ?? $this->generateSampleFileName();
         $response = $this->surveySampleCollectionEndpoint->upload($this->getSurveyId(), $sampleData, $fileName);
@@ -57,7 +57,7 @@ class SurveySampleService implements SurveyScopedInterface
     /**
      * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
      */
-    public function blockSampleData(iterable $filters): BackgroundActivityStatus
+    public function block(iterable $filters): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
             $this->surveySampleCollectionEndpoint->block($this->getSurveyId(), $this->normaliseFilters($filters))
@@ -65,12 +65,12 @@ class SurveySampleService implements SurveyScopedInterface
     }
 
     /**
-     * Create a survey sample (Online).
+     * Create sample columns (Online).
      *
      * @param  iterable<int, array<string, mixed>|SurveyCreateSampleColumnModel>  $columns
      * @return Collection<int, SurveyCreateSampleColumnModel>
      */
-    public function createSampleData(iterable $columns): Collection
+    public function createColumns(iterable $columns): Collection
     {
         $payload = [];
 
@@ -87,7 +87,7 @@ class SurveySampleService implements SurveyScopedInterface
     /**
      * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
      */
-    public function resetSampleData(iterable $filters): BackgroundActivityStatus
+    public function reset(iterable $filters): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
             $this->surveySampleCollectionEndpoint->reset($this->getSurveyId(), $this->normaliseFilters($filters))
@@ -97,7 +97,7 @@ class SurveySampleService implements SurveyScopedInterface
     /**
      * @param  array<string, mixed>|ClearSurveySampleModel  $data
      */
-    public function clearSampleDataColumns(array|ClearSurveySampleModel $data): BackgroundActivityStatus
+    public function clearColumns(array|ClearSurveySampleModel $data): BackgroundActivityStatus
     {
         $payload = ClearSurveySampleModel::from($data)->toArray();
 
@@ -106,7 +106,7 @@ class SurveySampleService implements SurveyScopedInterface
         );
     }
 
-    public function requestSampleDownload(?string $fileName = null): BackgroundActivityStatus
+    public function requestDownload(?string $fileName = null): BackgroundActivityStatus
     {
         $fileName = $fileName ?? $this->generateSampleFileName();
 
@@ -116,7 +116,19 @@ class SurveySampleService implements SurveyScopedInterface
     }
 
     /**
-     * Return SurveySampleResource for the specified survey
+     * Delete the sample records that match the filters.
+     *
+     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
+     */
+    public function delete(iterable $filters): BackgroundActivityStatus
+    {
+        return BackgroundActivityStatus::from(
+            $this->surveySampleCollectionEndpoint->destroy($this->getSurveyId(), $this->normaliseFilters($filters))
+        );
+    }
+
+    /**
+     * The sample record of one interview.
      */
     public function forInterview(int $interviewId): SurveySampleResource
     {

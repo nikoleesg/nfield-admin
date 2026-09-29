@@ -13,10 +13,8 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleColumnUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUpdateStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyUpdateSampleRecordModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\Addresses\AddressModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ReplaceSamplingPointWithSpareRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel;
@@ -206,7 +204,7 @@ it('parses the single sample record it is scoped to', function () {
     $record = (new SurveySampleResource($item, Mockery::mock(SurveySampleCollectionEndpointInterface::class)))
         ->setSurveyId('survey-1')
         ->setInterviewId(7)
-        ->getSampleRecord();
+        ->get();
 
     expect($record)->toBeInstanceOf(Collection::class)
         ->and($record->all())->toBe(['InterviewId' => '7', 'Name' => 'Ada']);
@@ -220,37 +218,48 @@ it('returns null when the sample record is empty', function () {
     $record = (new SurveySampleResource($item, Mockery::mock(SurveySampleCollectionEndpointInterface::class)))
         ->setSurveyId('survey-1')
         ->setInterviewId(7)
-        ->getSampleRecord();
+        ->get();
 
     expect($record)->toBeNull();
 });
 
-it('deletes and updates sample records through the collection endpoint', function () {
+it('updates the sample record of the interview it is scoped to', function () {
+    // #71: the caller used to repeat the record ID inside the request model,
+    // so forInterview() had no effect on the update. The scoped ID is now the
+    // only source of sampleRecordId.
     $collection = Mockery::mock(SurveySampleCollectionEndpointInterface::class);
 
-    $collection->shouldReceive('destroy')
-        ->with('survey-1', [['name' => 'Status', 'op' => 'eq', 'value' => 'Open']])
-        ->once()
-        ->andReturn(['activityId' => 'delete-1']);
-
     $collection->shouldReceive('update')
-        ->withArgs(fn (string $surveyId, array $payload) => $payload['sampleRecordId'] === 7)
+        ->with('survey-1', [
+            'sampleRecordId' => 7,
+            'columnUpdates' => [
+                ['columnName' => 'Phone', 'value' => '555'],
+                ['columnName' => 'Region', 'value' => 'North'],
+            ],
+        ])
         ->once()
         ->andReturn(['resultStatus' => true]);
 
-    $resource = (new SurveySampleResource(Mockery::mock(SurveySampleEndpointInterface::class), $collection))
+    $updated = (new SurveySampleResource(Mockery::mock(SurveySampleEndpointInterface::class), $collection))
         ->setSurveyId('survey-1')
-        ->setInterviewId(7);
-
-    $deleted = $resource->deleteSampleData([new SampleFilterModel('Status', 'eq', 'Open')]);
-
-    expect($deleted)->toBeInstanceOf(BackgroundActivityStatus::class)
-        ->and($deleted->activityId)->toBe('delete-1');
-
-    $updated = $resource->updateSampleRecord(new SurveyUpdateSampleRecordModel(7));
+        ->setInterviewId(7)
+        ->update([
+            ['columnName' => 'Phone', 'value' => '555'],
+            new SampleColumnUpdateModel('Region', 'North'),
+        ]);
 
     expect($updated)->toBeInstanceOf(SampleUpdateStatus::class)
         ->and($updated->resultStatus)->toBeTrue();
+});
+
+it('refuses a record update before the interview scope is set', function () {
+    $resource = (new SurveySampleResource(
+        Mockery::mock(SurveySampleEndpointInterface::class),
+        Mockery::mock(SurveySampleCollectionEndpointInterface::class),
+    ))->setSurveyId('survey-1');
+
+    expect(fn () => $resource->update([['columnName' => 'Phone', 'value' => '555']]))
+        ->toThrow(MissingScopeException::class);
 });
 
 it('refuses a sample call before the survey scope is set', function () {
@@ -259,7 +268,7 @@ it('refuses a sample call before the survey scope is set', function () {
         Mockery::mock(SurveySampleCollectionEndpointInterface::class),
     ))->setInterviewId(7);
 
-    expect(fn () => $resource->getSampleRecord())->toThrow(MissingScopeException::class);
+    expect(fn () => $resource->get())->toThrow(MissingScopeException::class);
 });
 
 // ── BlueprintSurveyResource ──────────────────────────────────────────────
@@ -290,7 +299,7 @@ it('refuses an item call before its own scope is set', function (Closure $call) 
     'sample record without interviewId' => fn () => (new SurveySampleResource(
         Mockery::mock(SurveySampleEndpointInterface::class),
         Mockery::mock(SurveySampleCollectionEndpointInterface::class),
-    ))->setSurveyId('survey-1')->getSampleRecord(),
+    ))->setSurveyId('survey-1')->get(),
     'blueprint without blueprintId' => fn () => (new BlueprintSurveyResource(
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     ))->update(['surveyId' => 'survey-1']),

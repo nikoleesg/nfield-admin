@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
+use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUploadStatus;
@@ -39,7 +40,7 @@ it('parses a downloaded sample into a collection of rows', function () {
         ->once()
         ->andReturn("InterviewId\tName\tPhone\n1\tAda\t555\n2\tGrace\t556");
 
-    $rows = sampleServiceWith(collection: $collection)->downloadSampleData();
+    $rows = sampleServiceWith(collection: $collection)->download();
 
     expect($rows)->toBeInstanceOf(Collection::class)
         ->and($rows)->toHaveCount(2)
@@ -59,7 +60,7 @@ it('uploads sample data under a generated file name', function () {
         ->once()
         ->andReturn(['processingStatus' => 'Finished', 'totalRecordCount' => 1, 'insertedCount' => 1]);
 
-    $status = sampleServiceWith(collection: $collection)->uploadSampleData("Name\nAda");
+    $status = sampleServiceWith(collection: $collection)->upload("Name\nAda");
 
     expect($status)->toBeInstanceOf(SampleUploadStatus::class)
         ->and($status->insertedCount)->toBe(1);
@@ -73,7 +74,7 @@ it('uploads sample data under an explicit file name', function () {
         ->once()
         ->andReturn(['processingStatus' => 'Finished']);
 
-    expect(sampleServiceWith(collection: $collection)->uploadSampleData("Name\nAda", 'mine.csv')->processingStatus)
+    expect(sampleServiceWith(collection: $collection)->upload("Name\nAda", 'mine.csv')->processingStatus)
         ->toBe('Finished');
 });
 
@@ -96,8 +97,31 @@ it('normalises filters through the model when blocking and resetting', function 
         new SampleFilterModel('Region', 'eq', 'North'),
     ];
 
-    expect($service->blockSampleData($filters)->activityId)->toBe('block-1')
-        ->and($service->resetSampleData($filters)->activityId)->toBe('reset-1');
+    expect($service->block($filters)->activityId)->toBe('block-1')
+        ->and($service->reset($filters)->activityId)->toBe('reset-1');
+});
+
+it('deletes the sample records that match the filters', function () {
+    // #71: this lived on the interview-scoped resource, where it ignored the
+    // selected interview and deleted by filter anyway. It is a survey-wide
+    // operation, so it belongs here.
+    $collection = Mockery::mock(SurveySampleCollectionEndpointInterface::class);
+
+    $collection->shouldReceive('destroy')
+        ->with('survey-1', [
+            ['name' => 'Status', 'op' => 'eq', 'value' => 'Open'],
+            ['name' => 'Region', 'op' => 'eq', 'value' => 'North'],
+        ])
+        ->once()
+        ->andReturn(['activityId' => 'delete-1']);
+
+    $status = sampleServiceWith(collection: $collection)->delete([
+        ['name' => 'Status', 'op' => 'eq', 'value' => 'Open'],
+        new SampleFilterModel('Region', 'eq', 'North'),
+    ]);
+
+    expect($status)->toBeInstanceOf(BackgroundActivityStatus::class)
+        ->and($status->activityId)->toBe('delete-1');
 });
 
 it('creates sample columns and returns them as models', function () {
@@ -111,7 +135,7 @@ it('creates sample columns and returns them as models', function () {
         ->once()
         ->andReturn([['columnName' => 'Phone', 'value' => '555']]);
 
-    $columns = sampleServiceWith(collection: $collection)->createSampleData([
+    $columns = sampleServiceWith(collection: $collection)->createColumns([
         ['columnName' => 'Phone', 'value' => '555'],
         new SurveyCreateSampleColumnModel('Email', 'ada@example.test'),
     ]);
@@ -131,8 +155,8 @@ it('clears sample columns', function () {
 
     $service = sampleServiceWith(collection: $collection);
 
-    expect($service->clearSampleDataColumns(['columns' => ['Phone']])->activityId)->toBe('clear-1')
-        ->and($service->clearSampleDataColumns(new ClearSurveySampleModel(columns: ['Phone']))->activityId)->toBe('clear-1');
+    expect($service->clearColumns(['columns' => ['Phone']])->activityId)->toBe('clear-1')
+        ->and($service->clearColumns(new ClearSurveySampleModel(columns: ['Phone']))->activityId)->toBe('clear-1');
 });
 
 it('requests a sample download under a generated or explicit file name', function () {
@@ -150,8 +174,8 @@ it('requests a sample download under a generated or explicit file name', functio
 
     $service = sampleServiceWith(download: $download);
 
-    expect($service->requestSampleDownload()->activityId)->toBe('download-1')
-        ->and($service->requestSampleDownload('mine.csv')->activityId)->toBe('download-2');
+    expect($service->requestDownload()->activityId)->toBe('download-1')
+        ->and($service->requestDownload('mine.csv')->activityId)->toBe('download-2');
 });
 
 it('hands its scope to the interview resource it returns', function () {

@@ -17,7 +17,7 @@ $survey = NfieldManager::withSurvey('survey-id');
 $survey->getSurvey()->surveyName;        // SurveyModel
 $survey->fieldwork()->start();
 $survey->fieldwork()->counts()->successful;
-$survey->samples()->downloadSampleData(); // Collection of sample rows
+$survey->samples()->download();          // Collection of sample rows
 ```
 
 ## Requirements
@@ -143,19 +143,19 @@ $fieldwork->counts();                                  // SurveyFieldworkCountsR
 ```php
 $samples = $survey->samples();
 
-$samples->downloadSampleData();                        // Collection of parsed rows
-$samples->uploadSampleData($tsv, 'wave-1.csv');        // SampleUploadStatus
-$samples->createSampleData([['columnName' => 'Phone', 'value' => '555']]);
-$samples->blockSampleData([['name' => 'Status', 'op' => 'eq', 'value' => 'Open']]);
-$samples->resetSampleData([['name' => 'Status', 'op' => 'eq', 'value' => 'Open']]);
-$samples->clearSampleDataColumns(['columns' => ['Phone']]);
-$samples->requestSampleDownload();                     // BackgroundActivityStatus
+$samples->download();                                  // Collection of parsed rows
+$samples->upload($tsv, 'wave-1.csv');                  // SampleUploadStatus
+$samples->createColumns([['columnName' => 'Phone', 'value' => '555']]);
+$samples->block([['name' => 'Status', 'op' => 'eq', 'value' => 'Open']]);
+$samples->reset([['name' => 'Status', 'op' => 'eq', 'value' => 'Open']]);
+$samples->delete([['name' => 'Status', 'op' => 'eq', 'value' => 'Open']]);
+$samples->clearColumns(['columns' => ['Phone']]);
+$samples->requestDownload();                           // BackgroundActivityStatus
 
 $record = $samples->forInterview(7);
 
-$record->getSampleRecord();                            // ?Collection of one row
-$record->updateSampleRecord(['sampleRecordId' => 7, 'columnUpdates' => [...]]);
-$record->deleteSampleData([['name' => 'Status', 'op' => 'eq', 'value' => 'Open']]);
+$record->get();                                        // ?Collection of one row
+$record->update([['columnName' => 'Phone', 'value' => '555']]); // record ID is 7
 ```
 
 A sample record has no fixed shape — its columns are defined per survey — so it

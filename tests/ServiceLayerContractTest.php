@@ -219,7 +219,7 @@ it('sends sample filters as a list of name/op/value clauses', function () {
         ->once()
         ->andReturn(['activityId' => 'act-1']);
 
-    $result = sampleService($collectionEndpoint)->blockSampleData([
+    $result = sampleService($collectionEndpoint)->block([
         ['name' => 'Email', 'op' => 'eq', 'value' => 'a@b.c'],
     ]);
 
@@ -235,7 +235,7 @@ it('accepts SampleFilterModel instances for a reset', function () {
         ->once()
         ->andReturn(['activityId' => 'act-2']);
 
-    $result = sampleService($collectionEndpoint)->resetSampleData([
+    $result = sampleService($collectionEndpoint)->reset([
         new SampleFilterModel('Status', 'neq', '1'),
     ]);
 
@@ -253,7 +253,7 @@ it('nests sample filters inside the clear request model', function () {
         ->once()
         ->andReturn(['activityId' => 'act-3']);
 
-    $result = sampleService($collectionEndpoint)->clearSampleDataColumns(new ClearSurveySampleModel(
+    $result = sampleService($collectionEndpoint)->clearColumns(new ClearSurveySampleModel(
         filters: [new SampleFilterModel('Status', 'eq', '2')],
         columns: ['Email'],
     ));

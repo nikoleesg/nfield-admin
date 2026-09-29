@@ -8,8 +8,7 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
-use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleColumnUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUpdateStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyUpdateSampleRecordModel;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
@@ -34,7 +33,7 @@ final class SurveySampleResource implements InterviewScopedInterface
      *
      * @return Collection<string, string>|null
      */
-    public function getSampleRecord(): ?Collection
+    public function get(): ?Collection
     {
         // Get raw CSV data from endpoint
         $rawCsvData = $this->surveySampleEndpoint->get($this->getSurveyId(), $this->getInterviewId());
@@ -47,27 +46,22 @@ final class SurveySampleResource implements InterviewScopedInterface
     }
 
     /**
-     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
+     * Update this interview's sample record.
+     *
+     * The record ID is the interview this resource is scoped to, so callers
+     * pass only the column updates.
+     *
+     * @param  iterable<int, array<string, mixed>|SampleColumnUpdateModel>  $columnUpdates
      */
-    public function deleteSampleData(iterable $filters): BackgroundActivityStatus
+    public function update(iterable $columnUpdates): SampleUpdateStatus
     {
-        $payload = [];
+        $updates = [];
 
-        foreach ($filters as $filter) {
-            $payload[] = SampleFilterModel::from($filter)->toArray();
+        foreach ($columnUpdates as $columnUpdate) {
+            $updates[] = SampleColumnUpdateModel::from($columnUpdate);
         }
 
-        return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->destroy($this->getSurveyId(), $payload)
-        );
-    }
-
-    /**
-     * @param  array<string, mixed>|SurveyUpdateSampleRecordModel  $data
-     */
-    public function updateSampleRecord(array|SurveyUpdateSampleRecordModel $data): SampleUpdateStatus
-    {
-        $payload = SurveyUpdateSampleRecordModel::from($data)->toArray();
+        $payload = (new SurveyUpdateSampleRecordModel($this->getInterviewId(), $updates))->toArray();
 
         return SampleUpdateStatus::from(
             $this->surveySampleCollectionEndpoint->update($this->getSurveyId(), $payload)
