@@ -386,3 +386,23 @@ it('hydrates a published package from a deeply nested PascalCase payload', funct
         ->and($package->instructionFile->size)->toBe(2048)
         ->and($package->mediaFiles[0]->fileName)->toBe('logo.png');
 });
+
+it('hydrates the waves of a parent survey from an OData envelope', function () {
+    // #67: waves are surveys; the list is OData.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'token'], 200),
+        '*/v2/parentSurveys/parent-1/waves*' => Http::response(['value' => [[
+            'SurveyId' => 'wave-1',
+            'SurveyName' => 'Wave 1',
+            'ClientName' => 'Acme',
+            'SurveyType' => 'OnlineBasic',
+            'SurveyState' => 1,
+        ]]], 200),
+    ]);
+
+    $wave = NfieldManager::parentSurveys()->forParentSurvey('parent-1')->waves()->list()->first();
+
+    expect($wave)->toBeInstanceOf(SurveyModel::class)
+        ->and($wave->surveyId)->toBe('wave-1')
+        ->and($wave->surveyName)->toBe('Wave 1');
+});

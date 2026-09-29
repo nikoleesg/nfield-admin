@@ -9,6 +9,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Scoping\BlueprintScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\CapiInterviewerScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\EventSubscriptionScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\ParentSurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\QuotaVersionScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\RequestConfigurationScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\ResponseCodeScopedInterface;
@@ -16,6 +17,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyGroupScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyVersionScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyWaveScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\ThemeScopedInterface;
 
 /**
@@ -91,6 +93,14 @@ trait ResolvesScopedServices
             $service->setThemeId($this->getThemeId());
         }
 
+        if ($service instanceof ParentSurveyScopedInterface && $this instanceof ParentSurveyScopedInterface) {
+            $service->setParentSurveyId($this->getParentSurveyId());
+        }
+
+        if ($service instanceof SurveyWaveScopedInterface && $this instanceof SurveyWaveScopedInterface) {
+            $service->setWaveId($this->getWaveId());
+        }
+
         if ($service instanceof BlueprintScopedInterface && $this instanceof BlueprintScopedInterface) {
             $service->setBlueprintId($this->getBlueprintId());
         }
@@ -155,6 +165,14 @@ trait ResolvesScopedServices
 
         if ($this instanceof ThemeScopedInterface) {
             $key .= '|'.$this->getThemeId();
+        }
+
+        if ($this instanceof ParentSurveyScopedInterface) {
+            $key .= '|'.$this->getParentSurveyId();
+        }
+
+        if ($this instanceof SurveyWaveScopedInterface) {
+            $key .= '|'.$this->getWaveId();
         }
 
         if ($this instanceof BlueprintScopedInterface) {

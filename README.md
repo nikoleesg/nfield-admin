@@ -319,6 +319,31 @@ $activity = NfieldManager::interviewersWorklog()->download([
 NfieldManager::backgroundActivities()->get($activity->activityId)->status;
 ```
 
+### Parent surveys and waves
+
+A parent survey groups waves; each wave is a survey in its own right, managed
+through `NfieldManager::surveys()->forSurvey($waveId)`.
+
+```php
+$parents = NfieldManager::parentSurveys();
+
+$parents->list();                                      // Collection<SurveyModel>
+$parent = $parents->create(['surveyName' => 'Brand tracker']);
+
+$tracker = $parents->forParentSurvey('parent-id');
+$tracker->updateCheckMinSuccessfulsBeforeAutoStart(true);
+
+$tracker->waves()->list();                             // Collection<SurveyModel>
+$tracker->waves()->create(['surveyName' => 'Wave 1']);
+$tracker->waves()->forWave('wave-id')->copy('Wave 2'); // copy needs the parent
+
+// Wave settings, by the wave id alone:
+$wave = NfieldManager::surveyWaves()->forWave('wave-id');
+$wave->updateMinSuccessfulsBeforeAutoStart(100);
+$wave->updateStartDate('2026-10-01');
+$wave->updateStopDate(null);                           // null clears the date
+```
+
 ### Survey groups
 
 ```php

@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 125 of 282 operations implemented (44%), across 182 paths.**
+**Overall: 139 of 282 operations implemented (49%), across 182 paths.**
 
-**Planned for development: 14 operations across 1 section**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: all 50 planned operations (11 sections, #57–#67) are implemented** (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -24,6 +24,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Survey Resources | 1 | — | 1 | 100% |
 | Response Codes (tenant) | 4 | — | 4 | 100% |
 | Themes | 3 | — | 3 | 100% |
+| Parent Surveys & Waves | 14 | — | 14 | 100% |
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
 | Surveys — Core | 13 | — | 14 | 93% |
@@ -33,7 +34,6 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Access & Authentication | 9 | — | 20 | 45% |
 | Data Delivery | 0 | — | 38 | 0% |
 | Surveys — Invitations & Distribution | 0 | — | 16 | 0% |
-| Parent Surveys & Waves | 0 | 14 | 14 | 0% |
 | Survey Groups | 5 | — | 12 | 42% |
 | Screeners | 0 | — | 10 | 0% |
 | Surveys — Interviewers & Assignments | 0 | — | 7 | 0% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **125** | **14** | **282** | **44%** |
+| **Total** | **139** | **—** | **282** | **49%** |
 
 ---
 
@@ -54,10 +54,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 Planned for the next release (2026-09-23). Work proceeds section by section; each issue carries a checkbox per operation and is closed once all of them are implemented. When an operation lands, change its row in the detail tables below from 🗓️ to ✅, name the implementing class, and update the counts.
 
-| Section | Operations | Tracking issue |
-|---|---:|---|
-| Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
-| **Total** | **14** | |
+All 50 operations planned on 2026-09-23 are implemented, and their tracking issues (#57–#67) are closed. New work is planned by opening an issue and marking its rows 🗓️ here.
 
 Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -366,24 +363,24 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 
 ### Parent Surveys & Waves
 
-*0/14 implemented.*
+*14/14 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| 🗓️ | GET | `/v2/parentSurveys` | Planned for Development (#67) |
-| 🗓️ | POST | `/v2/parentSurveys` | Planned for Development (#67) |
-| 🗓️ | GET | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
-| 🗓️ | PUT | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
-| 🗓️ | GET | `/v2/parentSurveys/{parentSurveyId}/waves` | Planned for Development (#67) |
-| 🗓️ | POST | `/v2/parentSurveys/{parentSurveyId}/waves` | Planned for Development (#67) |
-| 🗓️ | POST | `/v2/parentSurveys/{parentSurveyId}/waves/{waveId}` | Planned for Development (#67) |
-| 🗓️ | DELETE | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
-| 🗓️ | GET | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
-| 🗓️ | PUT | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | Planned for Development (#67) |
-| 🗓️ | GET | `/v2/surveyWaves/{waveId}/startDate` | Planned for Development (#67) |
-| 🗓️ | PUT | `/v2/surveyWaves/{waveId}/startDate` | Planned for Development (#67) |
-| 🗓️ | GET | `/v2/surveyWaves/{waveId}/stopDate` | Planned for Development (#67) |
-| 🗓️ | PUT | `/v2/surveyWaves/{waveId}/stopDate` | Planned for Development (#67) |
+| ✅ | GET | `/v2/parentSurveys` | `ParentSurveyCollectionEndpoint::list` |
+| ✅ | POST | `/v2/parentSurveys` | `ParentSurveyCollectionEndpoint::create` |
+| ✅ | GET | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | `ParentSurveyEndpoint::getCheckMinSuccessfulsBeforeAutoStart` |
+| ✅ | PUT | `/v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` | `ParentSurveyEndpoint::updateCheckMinSuccessfulsBeforeAutoStart` |
+| ✅ | GET | `/v2/parentSurveys/{parentSurveyId}/waves` | `ParentSurveyWaveCollectionEndpoint::list` |
+| ✅ | POST | `/v2/parentSurveys/{parentSurveyId}/waves` | `ParentSurveyWaveCollectionEndpoint::create` |
+| ✅ | POST | `/v2/parentSurveys/{parentSurveyId}/waves/{waveId}` | `ParentSurveyWaveEndpoint::copy` |
+| ✅ | DELETE | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | `SurveyWaveEndpoint::deleteMinSuccessfulsBeforeAutoStart` |
+| ✅ | GET | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | `SurveyWaveEndpoint::getMinSuccessfulsBeforeAutoStart` |
+| ✅ | PUT | `/v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` | `SurveyWaveEndpoint::updateMinSuccessfulsBeforeAutoStart` |
+| ✅ | GET | `/v2/surveyWaves/{waveId}/startDate` | `SurveyWaveEndpoint::getStartDate` |
+| ✅ | PUT | `/v2/surveyWaves/{waveId}/startDate` | `SurveyWaveEndpoint::updateStartDate` |
+| ✅ | GET | `/v2/surveyWaves/{waveId}/stopDate` | `SurveyWaveEndpoint::getStopDate` |
+| ✅ | PUT | `/v2/surveyWaves/{waveId}/stopDate` | `SurveyWaveEndpoint::updateStopDate` |
 
 ### Survey Groups
 
@@ -632,7 +629,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (157 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (143 operations), grouped by section. None is planned yet.
 
 **Access & Authentication** (11 pending)
 
@@ -730,23 +727,6 @@ Everything not yet implemented (157 operations), grouped by section. Items marke
 - `DELETE /v2/offices/{officeId}`
 - `GET /v2/offices/{officeId}`
 - `PATCH /v2/offices/{officeId}`
-
-**Parent Surveys & Waves** (14 pending)
-
-- `GET /v2/parentSurveys` — Planned for Development (#67)
-- `POST /v2/parentSurveys` — Planned for Development (#67)
-- `GET /v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` — Planned for Development (#67)
-- `PUT /v2/parentSurveys/{parentSurveyId}/checkMinSuccessfulsBeforeAutoStart` — Planned for Development (#67)
-- `GET /v2/parentSurveys/{parentSurveyId}/waves` — Planned for Development (#67)
-- `POST /v2/parentSurveys/{parentSurveyId}/waves` — Planned for Development (#67)
-- `POST /v2/parentSurveys/{parentSurveyId}/waves/{waveId}` — Planned for Development (#67)
-- `DELETE /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` — Planned for Development (#67)
-- `GET /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` — Planned for Development (#67)
-- `PUT /v2/surveyWaves/{waveId}/minSuccessfulsBeforeAutoStart` — Planned for Development (#67)
-- `GET /v2/surveyWaves/{waveId}/startDate` — Planned for Development (#67)
-- `PUT /v2/surveyWaves/{waveId}/startDate` — Planned for Development (#67)
-- `GET /v2/surveyWaves/{waveId}/stopDate` — Planned for Development (#67)
-- `PUT /v2/surveyWaves/{waveId}/stopDate` — Planned for Development (#67)
 
 **Screeners** (10 pending)
 

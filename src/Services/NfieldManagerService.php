@@ -32,6 +32,8 @@ class NfieldManagerService
         protected SurveyGroupCollectionService $surveyGroupCollectionService,
         protected RequestConfigurationCollectionService $requestConfigurationCollectionService,
         protected ThemeCollectionService $themeCollectionService,
+        protected ParentSurveyCollectionService $parentSurveyCollectionService,
+        protected SurveyWavesService $surveyWavesService,
     ) {}
 
     // ========================================
@@ -41,6 +43,16 @@ class NfieldManagerService
     public function surveys(): SurveyCollectionService
     {
         return $this->surveyCollectionService;
+    }
+
+    public function parentSurveys(): ParentSurveyCollectionService
+    {
+        return $this->parentSurveyCollectionService;
+    }
+
+    public function surveyWaves(): SurveyWavesService
+    {
+        return $this->surveyWavesService;
     }
 
     public function surveyGroups(): SurveyGroupCollectionService

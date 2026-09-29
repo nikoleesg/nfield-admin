@@ -19,6 +19,7 @@ use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 use Nikoleesg\NfieldAdmin\Services\EventSubscriptionCollectionService;
 use Nikoleesg\NfieldAdmin\Services\InterviewersWorklogService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
+use Nikoleesg\NfieldAdmin\Services\ParentSurveyCollectionService;
 use Nikoleesg\NfieldAdmin\Services\RequestConfigurationCollectionService;
 use Nikoleesg\NfieldAdmin\Services\ResponseCodeCollectionService;
 use Nikoleesg\NfieldAdmin\Services\RoleService;
@@ -26,6 +27,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyGroupCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService;
+use Nikoleesg\NfieldAdmin\Services\SurveyWavesService;
 use Nikoleesg\NfieldAdmin\Services\ThemeCollectionService;
 
 afterEach(function () {
@@ -46,6 +48,8 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
         app(SurveyGroupCollectionService::class),
         app(RequestConfigurationCollectionService::class),
         app(ThemeCollectionService::class),
+        app(ParentSurveyCollectionService::class),
+        app(SurveyWavesService::class),
     );
 }
 

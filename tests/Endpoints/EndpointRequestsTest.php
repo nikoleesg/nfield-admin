@@ -130,6 +130,64 @@ function endpointCallCases(): array
             'DELETE', 'v2/responseCodes/210', [],
         ],
 
+        // ── Parent surveys and waves ─────────────────────────────────────────
+        'ParentSurveyCollection::list' => [
+            Contracts\ParentSurveyCollectionEndpointInterface::class, 'list', [],
+            'GET', 'v2/parentSurveys', [],
+        ],
+        'ParentSurveyCollection::create' => [
+            Contracts\ParentSurveyCollectionEndpointInterface::class, 'create', [['surveyName' => 'Tracker']],
+            'POST', 'v2/parentSurveys', ['surveyName' => 'Tracker'],
+        ],
+        'ParentSurvey::getCheckMinSuccessfulsBeforeAutoStart' => [
+            Contracts\ParentSurveyEndpointInterface::class, 'getCheckMinSuccessfulsBeforeAutoStart', ['parent-1'],
+            'GET', 'v2/parentSurveys/parent-1/checkMinSuccessfulsBeforeAutoStart', [],
+        ],
+        'ParentSurvey::updateCheckMinSuccessfulsBeforeAutoStart' => [
+            Contracts\ParentSurveyEndpointInterface::class, 'updateCheckMinSuccessfulsBeforeAutoStart', ['parent-1', ['checkMinSuccessfulsBeforeAutoStart' => true]],
+            'PUT', 'v2/parentSurveys/parent-1/checkMinSuccessfulsBeforeAutoStart', ['checkMinSuccessfulsBeforeAutoStart' => true],
+        ],
+        'ParentSurveyWaveCollection::list' => [
+            Contracts\ParentSurveyWaveCollectionEndpointInterface::class, 'list', ['parent-1', ['$top' => 5]],
+            'GET', 'v2/parentSurveys/parent-1/waves?%24top=5', ['$top' => 5],
+        ],
+        'ParentSurveyWaveCollection::create' => [
+            Contracts\ParentSurveyWaveCollectionEndpointInterface::class, 'create', ['parent-1', ['surveyName' => 'Wave 1']],
+            'POST', 'v2/parentSurveys/parent-1/waves', ['surveyName' => 'Wave 1'],
+        ],
+        'ParentSurveyWave::copy' => [
+            Contracts\ParentSurveyWaveEndpointInterface::class, 'copy', ['parent-1', 'wave-1', ['surveyName' => 'Wave 2']],
+            'POST', 'v2/parentSurveys/parent-1/waves/wave-1', ['surveyName' => 'Wave 2'],
+        ],
+        'SurveyWave::getMinSuccessfulsBeforeAutoStart' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'getMinSuccessfulsBeforeAutoStart', ['wave-1'],
+            'GET', 'v2/surveyWaves/wave-1/minSuccessfulsBeforeAutoStart', [],
+        ],
+        'SurveyWave::updateMinSuccessfulsBeforeAutoStart' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'updateMinSuccessfulsBeforeAutoStart', ['wave-1', ['minSuccessfulsBeforeAutoStart' => 50]],
+            'PUT', 'v2/surveyWaves/wave-1/minSuccessfulsBeforeAutoStart', ['minSuccessfulsBeforeAutoStart' => 50],
+        ],
+        'SurveyWave::deleteMinSuccessfulsBeforeAutoStart' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'deleteMinSuccessfulsBeforeAutoStart', ['wave-1'],
+            'DELETE', 'v2/surveyWaves/wave-1/minSuccessfulsBeforeAutoStart', [],
+        ],
+        'SurveyWave::getStartDate' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'getStartDate', ['wave-1'],
+            'GET', 'v2/surveyWaves/wave-1/startDate', [],
+        ],
+        'SurveyWave::updateStartDate' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'updateStartDate', ['wave-1', ['startDate' => '2026-10-01T00:00:00+00:00']],
+            'PUT', 'v2/surveyWaves/wave-1/startDate', ['startDate' => '2026-10-01T00:00:00+00:00'],
+        ],
+        'SurveyWave::getStopDate' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'getStopDate', ['wave-1'],
+            'GET', 'v2/surveyWaves/wave-1/stopDate', [],
+        ],
+        'SurveyWave::updateStopDate' => [
+            Contracts\SurveyWaveEndpointInterface::class, 'updateStopDate', ['wave-1', ['stopDate' => null]],
+            'PUT', 'v2/surveyWaves/wave-1/stopDate', ['stopDate' => null],
+        ],
+
         // ── Survey groups ────────────────────────────────────────────────────
         'SurveyGroupCollection::list' => [
             Contracts\SurveyGroupCollectionEndpointInterface::class, 'list', [],

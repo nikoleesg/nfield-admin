@@ -9,6 +9,8 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 
 /**
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyCollectionService surveys()
+ * @method static \Nikoleesg\NfieldAdmin\Services\ParentSurveyCollectionService parentSurveys()
+ * @method static \Nikoleesg\NfieldAdmin\Services\SurveyWavesService surveyWaves()
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyGroupCollectionService surveyGroups()
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService surveyResourceUsage()
  * @method static \Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService backgroundActivities()
