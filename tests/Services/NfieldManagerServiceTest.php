@@ -17,6 +17,7 @@ use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 use Nikoleesg\NfieldAdmin\Services\EventSubscriptionCollectionService;
+use Nikoleesg\NfieldAdmin\Services\InterviewersWorklogService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Nikoleesg\NfieldAdmin\Services\RoleService;
 use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
@@ -33,7 +34,8 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
         app(CapiInterviewerCollectionService::class),
         $activities ?? app(BackgroundActivitiesService::class),
         Mockery::mock(RoleService::class),
-        Mockery::mock(EventSubscriptionCollectionService::class)
+        Mockery::mock(EventSubscriptionCollectionService::class),
+        app(InterviewersWorklogService::class),
     );
 }
 

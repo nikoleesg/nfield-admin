@@ -287,6 +287,17 @@ $interviewer->assignOffice('office-id');
 $interviewer->unassignOffice('office-id');
 ```
 
+### Interviewers worklog
+
+```php
+$activity = NfieldManager::interviewersWorklog()->download([
+    'from' => '2026-09-01',
+    'to' => '2026-09-30 23:59:59',
+]);                                                    // BackgroundActivityStatus; dates are sent in UTC
+
+NfieldManager::backgroundActivities()->get($activity->activityId)->status;
+```
+
 ### Blueprint surveys
 
 ```php

@@ -70,6 +70,12 @@ function endpointCallCases(): array
             'GET', 'v2/BackgroundActivities/activity-1', [],
         ],
 
+        // ── Interviewers Worklog ─────────────────────────────────────────────
+        'InterviewersWorklog::download' => [
+            Contracts\InterviewersWorklogEndpointInterface::class, 'download', [['from' => '2026-09-01T00:00:00+00:00', 'to' => '2026-09-30T00:00:00+00:00']],
+            'POST', 'v2/interviewersWorklog', ['from' => '2026-09-01T00:00:00+00:00', 'to' => '2026-09-30T00:00:00+00:00'],
+        ],
+
         // ── CAPI interviewers ────────────────────────────────────────────────
         'CapiInterviewersCollection::list' => [
             Contracts\CapiInterviewersCollectionEndpointInterface::class, 'list', [],

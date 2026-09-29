@@ -26,6 +26,7 @@ class NfieldManagerService
         protected BackgroundActivitiesService $backgroundActivitiesService,
         protected RoleService $roleService,
         protected EventSubscriptionCollectionService $eventSubscriptionCollectionService,
+        protected InterviewersWorklogService $interviewersWorklogService,
     ) {}
 
     // ========================================
@@ -49,6 +50,11 @@ class NfieldManagerService
     public function capiInterviewers(): CapiInterviewerCollectionService
     {
         return $this->capiInterviewerCollectionService;
+    }
+
+    public function interviewersWorklog(): InterviewersWorklogService
+    {
+        return $this->interviewersWorklogService;
     }
 
     // ========================================

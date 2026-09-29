@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 89 of 282 operations implemented (32%), across 182 paths.**
+**Overall: 90 of 282 operations implemented (32%), across 182 paths.**
 
-**Planned for development: 50 operations across 11 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 49 operations across 10 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -20,6 +20,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Background Activities | 1 | — | 1 | 100% |
 | Survey Blueprints | 1 | — | 1 | 100% |
 | Event Subscriptions | 5 | — | 5 | 100% |
+| Interviewers Worklog | 1 | — | 1 | 100% |
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
 | Surveys — Core | 9 | 4 | 14 | 64% |
@@ -42,11 +43,10 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Default Texts | 0 | — | 2 | 0% |
 | Email Settings (tenant) | 0 | — | 2 | 0% |
 | Search Fields Setting | 0 | — | 2 | 0% |
-| Interviewers Worklog | 0 | 1 | 1 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Survey Resources | 0 | 1 | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **89** | **50** | **282** | **32%** |
+| **Total** | **90** | **49** | **282** | **32%** |
 
 ---
 
@@ -57,7 +57,6 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 | Section | Operations | Tracking issue |
 |---|---:|---|
 | Access & Authentication | 5 | [#57](https://github.com/nikoleesg/nfield-admin/issues/57) |
-| Interviewers Worklog | 1 | [#58](https://github.com/nikoleesg/nfield-admin/issues/58) |
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
 | Response Codes (tenant) | 4 | [#59](https://github.com/nikoleesg/nfield-admin/issues/59) |
 | Survey Groups | 5 | [#60](https://github.com/nikoleesg/nfield-admin/issues/60) |
@@ -67,7 +66,7 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 | Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
 | Surveys — Settings & Content | 5 | [#65](https://github.com/nikoleesg/nfield-admin/issues/65) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **50** | |
+| **Total** | **49** | |
 
 Survey Groups is only partly planned: the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -469,6 +468,14 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 | ✅ | GET | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::get` |
 | ✅ | PATCH | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::update` |
 
+### Interviewers Worklog
+
+*1/1 implemented.*
+
+| ✓ | Method | Path | Implementation |
+|---|---|---|---|
+| ✅ | POST | `/v2/interviewersWorklog` | `InterviewersWorklogEndpoint::download` |
+
 ### Offices
 
 *0/5 implemented.*
@@ -548,14 +555,6 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 |---|---|---|---|
 | ❌ | GET | `/v2/searchFieldsSetting` | — |
 | ❌ | PUT | `/v2/searchFieldsSetting` | — |
-
-### Interviewers Worklog
-
-*0/1 implemented.*
-
-| ✓ | Method | Path | Implementation |
-|---|---|---|---|
-| 🗓️ | POST | `/v2/interviewersWorklog` | Planned for Development (#58) |
 
 ### Manual Tests (tenant)
 
@@ -642,7 +641,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (193 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (192 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (16 pending)
 
@@ -726,10 +725,6 @@ Everything not yet implemented (193 operations), grouped by section. Items marke
 
 - `GET /v2/emailSettings`
 - `PUT /v2/emailSettings`
-
-**Interviewers Worklog** (1 pending)
-
-- `POST /v2/interviewersWorklog` — Planned for Development (#58)
 
 **Language Translations (tenant)** (4 pending)
 
