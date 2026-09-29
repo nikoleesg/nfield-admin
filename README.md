@@ -222,7 +222,7 @@ $quota->versions()->forVersion($eTag)->get();          // QuotaFrameModel
 ### Publishing, settings and public ids
 
 ```php
-$survey->publish()->getState();                        // SurveyPublishStateModel
+$survey->publish()->state();                           // SurveyPublishStateModel
 $survey->publish()->publishLive();
 $survey->publish()->forcePublishLive();
 $survey->publish()->publishTest();
@@ -230,11 +230,11 @@ $survey->publish()->startPublishLive();                // BackgroundActivityStat
 
 $survey->settings()->list();                           // Collection<SurveySettingModel>
 $survey->settings()->set(SurveySettingNameEnum::HideQuotaPage, 'true');
-$survey->settings()->getGeneral();                     // SurveyGeneralSettingsModel
+$survey->settings()->general();                        // SurveyGeneralSettingsModel
 $survey->settings()->updateGeneral(['description' => 'Wave 1']);
 
-$survey->samplingMethod()->getSamplingMethod();
-$survey->samplingMethod()->setSamplingMethod(['samplingMethod' => 'Random']);
+$survey->samplingMethod()->get();
+$survey->samplingMethod()->update(['samplingMethod' => 'Random']);
 
 $survey->publicIds()->list();                          // Collection<SurveyPublicIdModel>
 $survey->publicIds()->update($models);

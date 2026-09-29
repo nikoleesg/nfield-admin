@@ -43,7 +43,7 @@ class SurveySettingsService implements SurveyScopedInterface
         return SurveySettingModel::from($data);
     }
 
-    public function getGeneral(): SurveyGeneralSettingsModel
+    public function general(): SurveyGeneralSettingsModel
     {
         $data = $this->surveyGeneralSettingsEndpoint->getGeneralSettings($this->getSurveyId());
 

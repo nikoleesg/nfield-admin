@@ -233,7 +233,7 @@ it('reads the publish state of both packages', function () {
         ->once()
         ->andReturn(['live' => 1, 'test' => 0]);
 
-    $state = (new SurveyPublishService($endpoint))->setSurveyId('survey-1')->getState();
+    $state = (new SurveyPublishService($endpoint))->setSurveyId('survey-1')->state();
 
     expect($state)->toBeInstanceOf(SurveyPublishStateModel::class)
         ->and($state->live)->toBe(SurveyPublishStateEnum::from(1))
@@ -341,12 +341,12 @@ it('reads and writes the sampling method', function () {
 
     $service = (new SurveySamplingMethodService($endpoint))->setSurveyId('survey-1');
 
-    $model = $service->getSamplingMethod();
+    $model = $service->get();
 
     expect($model)->toBeInstanceOf(SamplingMethodModel::class)
         ->and($model->samplingMethod)->toBe('Random');
 
-    $service->setSamplingMethod(['samplingMethod' => 'Sequential']);
+    $service->update(['samplingMethod' => 'Sequential']);
 });
 
 // ── Settings ─────────────────────────────────────────────────────────────
@@ -403,7 +403,7 @@ it('reads and updates the general settings', function () {
 
     $service = (new SurveySettingsService($settings, $general))->setSurveyId('survey-1');
 
-    $model = $service->getGeneral();
+    $model = $service->general();
 
     expect($model)->toBeInstanceOf(SurveyGeneralSettingsModel::class)
         ->and($model->owner->userName)->toBe('ada');

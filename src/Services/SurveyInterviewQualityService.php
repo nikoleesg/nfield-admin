@@ -23,12 +23,12 @@ class SurveyInterviewQualityService implements SurveyScopedInterface
     ) {}
 
     /** @return Collection<int, InterviewDetailsModel> */
-    public function getInterviews(): Collection
+    public function list(): Collection
     {
         return InterviewDetailsModel::collect($this->collectionEndpoint->get($this->getSurveyId()), Collection::class);
     }
 
-    public function getInterview(string $interviewId): InterviewDetailsModel
+    public function get(string $interviewId): InterviewDetailsModel
     {
         return InterviewDetailsModel::from($this->itemEndpoint->get($this->getSurveyId(), $interviewId));
     }
@@ -36,7 +36,7 @@ class SurveyInterviewQualityService implements SurveyScopedInterface
     /**
      * @param  array<string, mixed>|QualityNewStateChangeModel  $data
      */
-    public function updateQuality(array|QualityNewStateChangeModel $data): ManagerInterviewDetailsModel
+    public function update(array|QualityNewStateChangeModel $data): ManagerInterviewDetailsModel
     {
         $payload = QualityNewStateChangeModel::from($data)->toArray();
 

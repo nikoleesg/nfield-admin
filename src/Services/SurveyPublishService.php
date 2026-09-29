@@ -20,7 +20,7 @@ class SurveyPublishService implements SurveyScopedInterface
         protected SurveyPublishEndpointInterface $surveyPublishEndpoint,
     ) {}
 
-    public function getState(): SurveyPublishStateModel
+    public function state(): SurveyPublishStateModel
     {
         return SurveyPublishStateModel::from(
             $this->surveyPublishEndpoint->getPublishState($this->getSurveyId())
