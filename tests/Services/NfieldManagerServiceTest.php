@@ -12,14 +12,14 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Enums\ActivityStatusEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
-use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
-use Nikoleesg\NfieldAdmin\Services\EventSubscriptionService;
+use Nikoleesg\NfieldAdmin\Services\EventSubscriptionCollectionService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Nikoleesg\NfieldAdmin\Services\RoleService;
+use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
 
 afterEach(function () {
@@ -33,7 +33,7 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
         app(CapiInterviewerCollectionService::class),
         $activities ?? app(BackgroundActivitiesService::class),
         Mockery::mock(RoleService::class),
-        Mockery::mock(EventSubscriptionService::class)
+        Mockery::mock(EventSubscriptionCollectionService::class)
     );
 }
 
@@ -45,10 +45,7 @@ it('lists and filters surveys as models', function () {
     $collection->shouldReceive('list')->once()->andReturn([surveyPayload()]);
     $collection->shouldReceive('find')->with(['surveyName' => 'Demo'])->once()->andReturn([surveyPayload()]);
 
-    $service = new SurveyCollectionService(
-        $collection,
-        Mockery::mock(SurveyBlueprintsEndpointInterface::class),
-    );
+    $service = new SurveyCollectionService($collection);
 
     $all = $service->list();
 
@@ -66,10 +63,7 @@ it('creates a survey from a blueprint', function () {
         ->once()
         ->andReturn(surveyPayload(['surveyName' => 'Wave 2']));
 
-    $service = new SurveyCollectionService(
-        $collection,
-        Mockery::mock(SurveyBlueprintsEndpointInterface::class),
-    );
+    $service = new SurveyCollectionService($collection);
 
     $survey = $service->createFromBlueprint(new SurveyFromBlueprintModel('Wave 2', 'bp-1'));
 
@@ -84,10 +78,7 @@ it('searches surveys by respondent and returns the slim model', function () {
         ->once()
         ->andReturn([['surveyId' => 'survey-1', 'surveyName' => 'Demo']]);
 
-    $service = new SurveyCollectionService(
-        $collection,
-        Mockery::mock(SurveyBlueprintsEndpointInterface::class),
-    );
+    $service = new SurveyCollectionService($collection);
 
     $found = $service->searchRespondent('ada@example.test');
 
@@ -103,7 +94,7 @@ it('returns scoped resources for a survey and a blueprint', function () {
 
     expect($service->forSurvey('survey-1'))->toBeInstanceOf(SurveyResource::class)
         ->and($service->forSurvey('survey-1')->getSurveyId())->toBe('survey-1')
-        ->and($service->forBlueprintSurvey('bp-1'))->toBeInstanceOf(BlueprintSurveyResource::class);
+        ->and($service->forBlueprintSurvey('bp-1'))->toBeInstanceOf(SurveyBlueprintService::class);
 });
 
 // ── BackgroundActivitiesService ──────────────────────────────────────────
@@ -157,7 +148,7 @@ it('opens the CAPI interviewer chain from the service and the manager', function
 it('exposes the event subscriptions service', function () {
     $manager = app(NfieldManagerService::class);
 
-    expect($manager->eventSubscriptions())->toBeInstanceOf(EventSubscriptionService::class);
+    expect($manager->eventSubscriptions())->toBeInstanceOf(EventSubscriptionCollectionService::class);
 });
 
 it('exposes the roles service', function () {

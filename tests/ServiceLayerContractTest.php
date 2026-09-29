@@ -11,7 +11,6 @@ use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterfac
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Quota\QuotaFrameVersionModel;
@@ -29,7 +28,7 @@ use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyQuotaTargetsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyQuotaVersionsService;
-use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
+use Nikoleesg\NfieldAdmin\Services\SurveySampleCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 
 afterEach(function () {
@@ -198,11 +197,10 @@ it('lists sampling points as a collection of DTOs', function () {
 // #33 — SampleFilterModel is no longer an empty stub
 // ============================================================
 
-function sampleService(SurveySampleCollectionEndpointInterface $collectionEndpoint): SurveySampleService
+function sampleService(SurveySampleCollectionEndpointInterface $collectionEndpoint): SurveySampleCollectionService
 {
-    return (new SurveySampleService(
+    return (new SurveySampleCollectionService(
         $collectionEndpoint,
-        Mockery::mock(SurveySampleEndpointInterface::class),
         Mockery::mock(SurveySampleDataDownloadEndpointInterface::class),
     ))->setSurveyId('survey-1');
 }

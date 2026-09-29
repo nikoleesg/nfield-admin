@@ -25,7 +25,7 @@ class NfieldManagerService
         protected CapiInterviewerCollectionService $capiInterviewerCollectionService,
         protected BackgroundActivitiesService $backgroundActivitiesService,
         protected RoleService $roleService,
-        protected EventSubscriptionService $eventSubscriptionService,
+        protected EventSubscriptionCollectionService $eventSubscriptionCollectionService,
     ) {}
 
     // ========================================
@@ -55,9 +55,9 @@ class NfieldManagerService
     // Event Subscriptions
     // ========================================
 
-    public function eventSubscriptions(): EventSubscriptionService
+    public function eventSubscriptions(): EventSubscriptionCollectionService
     {
-        return $this->eventSubscriptionService;
+        return $this->eventSubscriptionCollectionService;
     }
 
     // ========================================

@@ -288,7 +288,7 @@ $interviewer->unassignOffice('office-id');
 ### Blueprint surveys
 
 ```php
-NfieldManager::withBlueprintSurvey('blueprint-id')->update([
+NfieldManager::surveys()->forBlueprintSurvey('blueprint-id')->update([
     'surveyId' => 'survey-id',
     'includedConfiguration' => BlueprintConfigurationEnum::All,
 ]);

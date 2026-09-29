@@ -24,16 +24,16 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\UpdateBlueprintModel;
 use Nikoleesg\NfieldAdmin\Enums\BlueprintConfigurationEnum;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
-use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
-use Nikoleesg\NfieldAdmin\Resources\EventSubscriptionResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
-use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
+use Nikoleesg\NfieldAdmin\Services\EventSubscriptionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
+use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
+use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 
 /**
  * #29: the fluent resources, against mocked endpoint contracts.
@@ -171,7 +171,7 @@ it('hands both scopes to every service it resolves', function () {
     expect($resource->setSamplingPointId('sp-2')->addresses()->getSamplingPointId())->toBe('sp-2');
 });
 
-// ── SurveySampleResource ─────────────────────────────────────────────────
+// ── SurveySampleService (one interview's record) ─────────────────────────
 
 it('parses the single sample record it is scoped to', function () {
     $item = Mockery::mock(SurveySampleEndpointInterface::class);
@@ -181,7 +181,7 @@ it('parses the single sample record it is scoped to', function () {
         ->once()
         ->andReturn("InterviewId\tName\n7\tAda");
 
-    $record = (new SurveySampleResource($item, Mockery::mock(SurveySampleCollectionEndpointInterface::class)))
+    $record = (new SurveySampleService($item, Mockery::mock(SurveySampleCollectionEndpointInterface::class)))
         ->setSurveyId('survey-1')
         ->setInterviewId(7)
         ->get();
@@ -195,7 +195,7 @@ it('returns null when the sample record is empty', function () {
 
     $item->shouldReceive('get')->with('survey-1', 7)->once()->andReturn("InterviewId\tName\n");
 
-    $record = (new SurveySampleResource($item, Mockery::mock(SurveySampleCollectionEndpointInterface::class)))
+    $record = (new SurveySampleService($item, Mockery::mock(SurveySampleCollectionEndpointInterface::class)))
         ->setSurveyId('survey-1')
         ->setInterviewId(7)
         ->get();
@@ -220,7 +220,7 @@ it('updates the sample record of the interview it is scoped to', function () {
         ->once()
         ->andReturn(['resultStatus' => true]);
 
-    $updated = (new SurveySampleResource(Mockery::mock(SurveySampleEndpointInterface::class), $collection))
+    $updated = (new SurveySampleService(Mockery::mock(SurveySampleEndpointInterface::class), $collection))
         ->setSurveyId('survey-1')
         ->setInterviewId(7)
         ->update([
@@ -233,7 +233,7 @@ it('updates the sample record of the interview it is scoped to', function () {
 });
 
 it('refuses a record update before the interview scope is set', function () {
-    $resource = (new SurveySampleResource(
+    $resource = (new SurveySampleService(
         Mockery::mock(SurveySampleEndpointInterface::class),
         Mockery::mock(SurveySampleCollectionEndpointInterface::class),
     ))->setSurveyId('survey-1');
@@ -243,7 +243,7 @@ it('refuses a record update before the interview scope is set', function () {
 });
 
 it('refuses a sample call before the survey scope is set', function () {
-    $resource = (new SurveySampleResource(
+    $resource = (new SurveySampleService(
         Mockery::mock(SurveySampleEndpointInterface::class),
         Mockery::mock(SurveySampleCollectionEndpointInterface::class),
     ))->setInterviewId(7);
@@ -251,7 +251,7 @@ it('refuses a sample call before the survey scope is set', function () {
     expect(fn () => $resource->get())->toThrow(MissingScopeException::class);
 });
 
-// ── BlueprintSurveyResource ──────────────────────────────────────────────
+// ── SurveyBlueprintService ───────────────────────────────────────────────
 
 it('updates a blueprint with its configuration flag', function () {
     $endpoint = Mockery::mock(SurveyBlueprintsEndpointInterface::class);
@@ -263,7 +263,7 @@ it('updates a blueprint with its configuration flag', function () {
         ])
         ->twice();
 
-    $resource = (new BlueprintSurveyResource($endpoint))->setBlueprintId('bp-1');
+    $resource = (new SurveyBlueprintService($endpoint))->setBlueprintId('bp-1');
 
     $resource->update(['surveyId' => 'survey-1']);
     $resource->update(new UpdateBlueprintModel('survey-1'));
@@ -276,11 +276,11 @@ it('refuses an item call before its own scope is set', function (Closure $call) 
     // Mockery error, so the exception proves the guard fired first.
     expect($call)->toThrow(MissingScopeException::class);
 })->with([
-    'sample record without interviewId' => fn () => (new SurveySampleResource(
+    'sample record without interviewId' => fn () => (new SurveySampleService(
         Mockery::mock(SurveySampleEndpointInterface::class),
         Mockery::mock(SurveySampleCollectionEndpointInterface::class),
     ))->setSurveyId('survey-1')->get(),
-    'blueprint without blueprintId' => fn () => (new BlueprintSurveyResource(
+    'blueprint without blueprintId' => fn () => (new SurveyBlueprintService(
         Mockery::mock(SurveyBlueprintsEndpointInterface::class),
     ))->update(['surveyId' => 'survey-1']),
     'address without addressId' => fn () => (new SamplingPointAddressService(
@@ -291,7 +291,7 @@ it('refuses an item call before its own scope is set', function (Closure $call) 
         Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class),
         Mockery::mock(CapiInterviewersOfficesEndpointInterface::class),
     ))->get(),
-    'event subscription without a name' => fn () => (new EventSubscriptionResource(
+    'event subscription without a name' => fn () => (new EventSubscriptionService(
         Mockery::mock(SubscriptionEndpointInterface::class),
     ))->delete(),
 ]);

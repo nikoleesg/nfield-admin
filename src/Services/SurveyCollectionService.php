@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
-use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 
 /**
@@ -24,7 +22,6 @@ class SurveyCollectionService
 {
     public function __construct(
         private readonly SurveyCollectionEndpointInterface $surveyCollectionEndpoint,
-        private readonly SurveyBlueprintsEndpointInterface $surveyBlueprintsEndpoint,
     ) {}
 
     /** @return Collection<int, SurveyModel> */
@@ -68,11 +65,12 @@ class SurveyCollectionService
         return SurveyBaseModel::collect($this->surveyCollectionEndpoint->search($value), Collection::class);
     }
 
-    public function forBlueprintSurvey(string $blueprintId): BlueprintSurveyResource
+    /**
+     * One blueprint survey.
+     */
+    public function forBlueprintSurvey(string $blueprintId): SurveyBlueprintService
     {
-        $resource = new BlueprintSurveyResource($this->surveyBlueprintsEndpoint);
-
-        return $resource->setBlueprintId($blueprintId);
+        return app(SurveyBlueprintService::class)->setBlueprintId($blueprintId);
     }
 
     public function forSurvey(string $surveyId): SurveyResource

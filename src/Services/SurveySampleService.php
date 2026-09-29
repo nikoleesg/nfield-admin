@@ -6,167 +6,72 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
-use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUploadStatus;
-use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyCreateSampleColumnModel;
-use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleColumnUpdateModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUpdateStatus;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyUpdateSampleRecordModel;
 use Nikoleesg\NfieldAdmin\Support\CsvParser;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToInterview;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
-use RuntimeException;
 
-class SurveySampleService implements SurveyScopedInterface
+/**
+ * The sample record of one interview, reached through
+ * `$survey->samples()->forInterview($interviewId)`.
+ *
+ * Services mirror the endpoint naming: this pairs with SurveySampleEndpoint,
+ * and {@see SurveySampleCollectionService} with SurveySampleCollectionEndpoint.
+ */
+class SurveySampleService implements InterviewScopedInterface
 {
+    use ScopedToInterview;
     use ScopedToSurvey;
 
     public function __construct(
-        protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
         protected SurveySampleEndpointInterface $surveySampleEndpoint,
-        protected SurveySampleDataDownloadEndpointInterface $surveySampleDataDownloadEndpoint,
+        protected SurveySampleCollectionEndpointInterface $surveySampleCollectionEndpoint,
     ) {}
 
     /**
-     * Download and parse sample data from the survey.
+     * The sample record for this interview.
      *
-     * Sample columns are defined per survey, so a record has no fixed shape and
-     * is returned as a keyed array of its CSV header columns.
+     * Sample columns are defined per survey, so the record has no fixed shape
+     * and is returned keyed by its CSV header columns.
      *
-     * @return Collection<int, array<string, string>>
-     *
-     * @throws RuntimeException If CSV parsing fails
+     * @return Collection<string, string>|null
      */
-    public function download(): Collection
+    public function get(): ?Collection
     {
-        $rawCsvData = $this->surveySampleCollectionEndpoint->download($this->getSurveyId());
+        // Get raw CSV data from endpoint
+        $rawCsvData = $this->surveySampleEndpoint->get($this->getSurveyId(), $this->getInterviewId());
 
-        return collect(CsvParser::parse($rawCsvData));
-    }
+        // Parse CSV into array
+        /** @var array<int, array<string, string>> $parsed */
+        $parsed = CsvParser::parse($rawCsvData);
 
-    public function upload(string $sampleData, ?string $fileName = null): SampleUploadStatus
-    {
-        $fileName = $fileName ?? $this->generateSampleFileName();
-        $response = $this->surveySampleCollectionEndpoint->upload($this->getSurveyId(), $sampleData, $fileName);
-
-        return SampleUploadStatus::from($response);
+        return isset($parsed[0]) ? new Collection($parsed[0]) : null;
     }
 
     /**
-     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
-     */
-    public function block(iterable $filters): BackgroundActivityStatus
-    {
-        return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->block($this->getSurveyId(), $this->normaliseFilters($filters))
-        );
-    }
-
-    /**
-     * Create sample columns (Online).
+     * Update this interview's sample record.
      *
-     * @param  iterable<int, array<string, mixed>|SurveyCreateSampleColumnModel>  $columns
-     * @return Collection<int, SurveyCreateSampleColumnModel>
+     * The record ID is the interview this resource is scoped to, so callers
+     * pass only the column updates.
+     *
+     * @param  iterable<int, array<string, mixed>|SampleColumnUpdateModel>  $columnUpdates
      */
-    public function createColumns(iterable $columns): Collection
+    public function update(iterable $columnUpdates): SampleUpdateStatus
     {
-        $payload = [];
+        $updates = [];
 
-        foreach ($columns as $column) {
-            $payload[] = SurveyCreateSampleColumnModel::from($column)->toArray();
+        foreach ($columnUpdates as $columnUpdate) {
+            $updates[] = SampleColumnUpdateModel::from($columnUpdate);
         }
 
-        return SurveyCreateSampleColumnModel::collect(
-            $this->surveySampleCollectionEndpoint->create($this->getSurveyId(), $payload),
-            Collection::class
-        );
-    }
+        $payload = (new SurveyUpdateSampleRecordModel($this->getInterviewId(), $updates))->toArray();
 
-    /**
-     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
-     */
-    public function reset(iterable $filters): BackgroundActivityStatus
-    {
-        return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->reset($this->getSurveyId(), $this->normaliseFilters($filters))
-        );
-    }
-
-    /**
-     * @param  array<string, mixed>|ClearSurveySampleModel  $data
-     */
-    public function clearColumns(array|ClearSurveySampleModel $data): BackgroundActivityStatus
-    {
-        $payload = ClearSurveySampleModel::from($data)->toArray();
-
-        return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->clear($this->getSurveyId(), $payload)
-        );
-    }
-
-    public function requestDownload(?string $fileName = null): BackgroundActivityStatus
-    {
-        $fileName = $fileName ?? $this->generateSampleFileName();
-
-        return BackgroundActivityStatus::from(
-            $this->surveySampleDataDownloadEndpoint->requestDownload($this->getSurveyId(), $fileName)
-        );
-    }
-
-    /**
-     * Delete the sample records that match the filters.
-     *
-     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
-     */
-    public function delete(iterable $filters): BackgroundActivityStatus
-    {
-        return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->destroy($this->getSurveyId(), $this->normaliseFilters($filters))
-        );
-    }
-
-    /**
-     * The sample record of one interview.
-     */
-    public function forInterview(int $interviewId): SurveySampleResource
-    {
-        $surveySampleResource = new SurveySampleResource($this->surveySampleEndpoint, $this->surveySampleCollectionEndpoint);
-
-        return $surveySampleResource
-            ->setSurveyId($this->getSurveyId())
-            ->setInterviewId($interviewId);
-    }
-
-    /**
-     * The sample filter endpoints take a bare JSON array of filter clauses.
-     *
-     * @param  iterable<int, array<string, mixed>|SampleFilterModel>  $filters
-     * @return list<array<string, mixed>>
-     */
-    protected function normaliseFilters(iterable $filters): array
-    {
-        $payload = [];
-
-        foreach ($filters as $filter) {
-            $payload[] = SampleFilterModel::from($filter)->toArray();
-        }
-
-        return $payload;
-    }
-
-    /**
-     * Generate a default filename for sample download
-     *
-     * @return string Generated filename with survey ID and timestamp
-     */
-    protected function generateSampleFileName(): string
-    {
-        return sprintf(
-            'Survey_%s_Samples_%s',
-            $this->getSurveyId(),
-            now()->format('Ymd_His')
+        return SampleUpdateStatus::from(
+            $this->surveySampleCollectionEndpoint->update($this->getSurveyId(), $payload)
         );
     }
 }

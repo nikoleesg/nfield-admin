@@ -5,13 +5,12 @@ declare(strict_types=1);
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleDataDownloadEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\ClearSurveySampleModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleFilterModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SampleUploadStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Sample\SurveyCreateSampleColumnModel;
-use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
+use Nikoleesg\NfieldAdmin\Services\SurveySampleCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 
 afterEach(function () {
@@ -20,12 +19,10 @@ afterEach(function () {
 
 function sampleServiceWith(
     ?object $collection = null,
-    ?object $item = null,
     ?object $download = null
-): SurveySampleService {
-    return (new SurveySampleService(
+): SurveySampleCollectionService {
+    return (new SurveySampleCollectionService(
         $collection ?? Mockery::mock(SurveySampleCollectionEndpointInterface::class),
-        $item ?? Mockery::mock(SurveySampleEndpointInterface::class),
         $download ?? Mockery::mock(SurveySampleDataDownloadEndpointInterface::class),
     ))->setSurveyId('survey-1');
 }
@@ -178,9 +175,10 @@ it('requests a sample download under a generated or explicit file name', functio
         ->and($service->requestDownload('mine.csv')->activityId)->toBe('download-2');
 });
 
-it('hands its scope to the interview resource it returns', function () {
+it('hands both scopes to the interview sample service it returns', function () {
     $resource = sampleServiceWith()->forInterview(7);
 
-    expect($resource)->toBeInstanceOf(SurveySampleResource::class)
-        ->and($resource->getSurveyId())->toBe('survey-1');
+    expect($resource)->toBeInstanceOf(SurveySampleService::class)
+        ->and($resource->getSurveyId())->toBe('survey-1')
+        ->and($resource->getInterviewId())->toBe(7);
 });

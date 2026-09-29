@@ -4,46 +4,46 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SubscriptionCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SubscriptionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\Events\CreateSubscriptionModel;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\EventSubscriptionScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Events\SubscriptionModel;
-use Nikoleesg\NfieldAdmin\Resources\EventSubscriptionResource;
+use Nikoleesg\NfieldAdmin\Data\Events\UpdateSubscriptionModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToEventSubscription;
 
-class EventSubscriptionService
+/**
+ * One event subscription, reached through
+ * `NfieldManager::eventSubscriptions()->forSubscription($name)`.
+ *
+ * Services mirror the endpoint naming: this pairs with SubscriptionEndpoint,
+ * and {@see EventSubscriptionCollectionService} with SubscriptionCollectionEndpoint.
+ */
+class EventSubscriptionService implements EventSubscriptionScopedInterface
 {
+    use ScopedToEventSubscription;
+
     public function __construct(
-        protected SubscriptionCollectionEndpointInterface $subscriptionCollectionEndpoint,
         protected SubscriptionEndpointInterface $subscriptionEndpoint
     ) {}
 
-    /**
-     * @return Collection<int, SubscriptionModel>
-     */
-    public function list(): Collection
+    public function get(): SubscriptionModel
     {
-        return SubscriptionModel::collect(
-            $this->subscriptionCollectionEndpoint->list(),
-            Collection::class
-        );
-    }
-
-    /**
-     * @param  array<string, mixed>|CreateSubscriptionModel  $data
-     */
-    public function create(array|CreateSubscriptionModel $data): SubscriptionModel
-    {
-        $payload = CreateSubscriptionModel::from($data)->toArray();
-
         return SubscriptionModel::from(
-            $this->subscriptionCollectionEndpoint->create($payload)
+            $this->subscriptionEndpoint->get($this->getSubscriptionName())
         );
     }
 
-    public function forSubscription(string $name): EventSubscriptionResource
+    /**
+     * @param  array<string, mixed>|UpdateSubscriptionModel  $data
+     */
+    public function update(array|UpdateSubscriptionModel $data): void
     {
-        return (new EventSubscriptionResource($this->subscriptionEndpoint))
-            ->setSubscriptionName($name);
+        $payload = UpdateSubscriptionModel::from($data)->toArray();
+
+        $this->subscriptionEndpoint->updatePartial($this->getSubscriptionName(), $payload);
+    }
+
+    public function delete(): void
+    {
+        $this->subscriptionEndpoint->destroy($this->getSubscriptionName());
     }
 }
