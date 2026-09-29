@@ -16,11 +16,11 @@ use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyInterviewQualityService;
-use Nikoleesg\NfieldAdmin\Services\SurveyItemService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
+use Nikoleesg\NfieldAdmin\Services\SurveyService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
@@ -124,8 +124,8 @@ class SurveyResource implements SurveyScopedInterface
         return $this->resolveService(SurveyInterviewQualityService::class);
     }
 
-    private function item(): SurveyItemService
+    private function item(): SurveyService
     {
-        return $this->resolveService(SurveyItemService::class);
+        return $this->resolveService(SurveyService::class);
     }
 }

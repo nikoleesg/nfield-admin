@@ -50,7 +50,7 @@ afterEach(function () {
 
 /**
  * #55: the resource no longer holds the endpoint; its item operations go
- * through SurveyItemService, which the container builds with this mock.
+ * through SurveyService, which the container builds with this mock.
  */
 function surveyResourceWith(SurveyEndpointInterface $endpoint): SurveyResource
 {

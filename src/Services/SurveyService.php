@@ -5,72 +5,56 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyBlueprintsEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyCollectionEndpointInterface;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyBaseModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCreateModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFromBlueprintModel;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
-use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyService
+/**
+ * Operations on one survey, exposed through {@see SurveyResource}.
+ *
+ * Services mirror the endpoint naming: this pairs with SurveyEndpoint, and
+ * {@see SurveyCollectionService} with SurveyCollectionEndpoint.
+ */
+class SurveyService implements SurveyScopedInterface
 {
+    use ScopedToSurvey;
+
     public function __construct(
-        private readonly SurveyCollectionEndpointInterface $surveyCollectionEndpoint,
-        private readonly SurveyBlueprintsEndpointInterface $surveyBlueprintsEndpoint,
+        protected SurveyEndpointInterface $surveyEndpoint,
     ) {}
 
-    /** @return Collection<int, SurveyModel> */
-    public function list(): Collection
+    public function get(): SurveyModel
     {
-        return SurveyModel::collect($this->surveyCollectionEndpoint->list(), Collection::class);
+        return SurveyModel::from($this->surveyEndpoint->get($this->getSurveyId()));
     }
 
     /**
-     * @param  array<string, mixed>  $filter
-     * @return Collection<int, SurveyModel>
+     * @param  array<string, mixed>|SurveyUpdateModel  $data
      */
-    public function find(array $filter): Collection
+    public function update(array|SurveyUpdateModel $data): SurveyModel
     {
-        return SurveyModel::collect($this->surveyCollectionEndpoint->find($filter), Collection::class);
+        $payload = SurveyUpdateModel::from($data)->toArray();
+
+        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->getSurveyId(), $payload));
     }
 
-    /**
-     * @param  array<string, mixed>|SurveyCreateModel  $data
-     */
-    public function create(array|SurveyCreateModel $data): SurveyModel
+    public function delete(): void
     {
-        $payload = SurveyCreateModel::from($data)->toArray();
-
-        return SurveyModel::from($this->surveyCollectionEndpoint->create($payload));
+        $this->surveyEndpoint->destroy($this->getSurveyId());
     }
 
-    /**
-     * @param  array<string, mixed>|SurveyFromBlueprintModel  $data
-     */
-    public function createFromBlueprint(array|SurveyFromBlueprintModel $data): SurveyModel
+    public function counts(): SurveyCountsModel
     {
-        $payload = SurveyFromBlueprintModel::from($data)->toArray();
-
-        return SurveyModel::from($this->surveyCollectionEndpoint->createFromBlueprint($payload));
+        return SurveyCountsModel::from($this->surveyEndpoint->counts($this->getSurveyId()));
     }
 
-    /** @return Collection<int, SurveyBaseModel> */
-    public function searchRespondent(string $value): Collection
+    /** @return Collection<int, string> */
+    public function customColumns(): Collection
     {
-        return SurveyBaseModel::collect($this->surveyCollectionEndpoint->search($value), Collection::class);
-    }
-
-    public function forBlueprintSurvey(string $blueprintId): BlueprintSurveyResource
-    {
-        $resource = new BlueprintSurveyResource($this->surveyBlueprintsEndpoint);
-
-        return $resource->setBlueprintId($blueprintId);
-    }
-
-    public function forSurvey(string $surveyId): SurveyResource
-    {
-        return (new SurveyResource)->setSurveyId($surveyId);
+        return collect($this->surveyEndpoint->getCustomColumns($this->getSurveyId()));
     }
 }

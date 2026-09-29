@@ -21,7 +21,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 class NfieldManagerService
 {
     public function __construct(
-        protected SurveyService $surveyService,
+        protected SurveyCollectionService $surveyCollectionService,
         protected CapiInterviewerService $capiInterviewerService,
         protected BackgroundActivitiesService $backgroundActivitiesService,
         protected RoleService $roleService,
@@ -32,9 +32,9 @@ class NfieldManagerService
     // Explicit Method Declarations
     // ========================================
 
-    public function surveys(): SurveyService
+    public function surveys(): SurveyCollectionService
     {
-        return $this->surveyService;
+        return $this->surveyCollectionService;
     }
 
     public function backgroundActivities(): BackgroundActivitiesService

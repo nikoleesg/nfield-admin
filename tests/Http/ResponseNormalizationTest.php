@@ -11,8 +11,8 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResp
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 use Nikoleesg\NfieldAdmin\Services\Http\HttpClient;
+use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
-use Nikoleesg\NfieldAdmin\Services\SurveyService;
 
 /**
  * The API returns PascalCase; the package speaks camelCase everywhere.
@@ -125,7 +125,7 @@ it('hydrates a mapper-free DTO straight from a real PascalCase payload', functio
         ], 200),
     ]);
 
-    $survey = app(SurveyService::class)->list()->first();
+    $survey = app(SurveyCollectionService::class)->list()->first();
 
     expect($survey)->toBeInstanceOf(SurveyModel::class)
         ->and($survey->surveyId)->toBe('survey-1')
