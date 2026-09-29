@@ -25,11 +25,11 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\UpdateBlueprintModel;
 use Nikoleesg\NfieldAdmin\Enums\BlueprintConfigurationEnum;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
-use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Resources\EventSubscriptionResource;
 use Nikoleesg\NfieldAdmin\Resources\SamplingPointResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveySampleResource;
+use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
@@ -286,7 +286,7 @@ it('refuses an item call before its own scope is set', function (Closure $call) 
     'address without addressId' => fn () => (new SamplingPointAddressService(
         Mockery::mock(SamplingPointAddressEndpointInterface::class),
     ))->setSurveyId('survey-1')->setSamplingPointId('sp-1')->get(),
-    'CAPI interviewer without interviewerId' => fn () => (new CapiInterviewerResource(
+    'CAPI interviewer without interviewerId' => fn () => (new CapiInterviewerService(
         Mockery::mock(CapiInterviewersEndpointInterface::class),
         Mockery::mock(CapiInterviewersAssignmentsEndpointInterface::class),
         Mockery::mock(CapiInterviewersOfficesEndpointInterface::class),

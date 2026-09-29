@@ -13,9 +13,9 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Enums\ActivityStatusEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Resources\BlueprintSurveyResource;
-use Nikoleesg\NfieldAdmin\Resources\CapiInterviewerResource;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
+use Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
 use Nikoleesg\NfieldAdmin\Services\EventSubscriptionService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
@@ -30,7 +30,7 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
 {
     return new NfieldManagerService(
         $surveyService,
-        app(CapiInterviewerService::class),
+        app(CapiInterviewerCollectionService::class),
         $activities ?? app(BackgroundActivitiesService::class),
         Mockery::mock(RoleService::class),
         Mockery::mock(EventSubscriptionService::class)
@@ -150,8 +150,8 @@ it('exposes the background activities domain service', function () {
 it('opens the CAPI interviewer chain from the service and the manager', function () {
     $manager = app(NfieldManagerService::class);
 
-    expect($manager->capiInterviewers())->toBeInstanceOf(CapiInterviewerService::class)
-        ->and($manager->capiInterviewers()->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerResource::class);
+    expect($manager->capiInterviewers())->toBeInstanceOf(CapiInterviewerCollectionService::class)
+        ->and($manager->capiInterviewers()->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerService::class);
 });
 
 it('exposes the event subscriptions service', function () {

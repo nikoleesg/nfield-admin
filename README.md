@@ -279,10 +279,10 @@ $interviewer->update(['firstName' => 'Ada']);
 $interviewer->resetPassword(['password' => '...']);
 $interviewer->delete();
 
-$interviewer->getAssignments();                        // Collection<CapiInterviewerAssignmentModel>
-$interviewer->getOffices();                            // Collection<string>
-$interviewer->updateOffice('office-id');
-$interviewer->deleteOffice('office-id');
+$interviewer->assignments();                           // Collection<CapiInterviewerAssignmentModel>
+$interviewer->offices();                               // Collection<string>
+$interviewer->assignOffice('office-id');
+$interviewer->unassignOffice('office-id');
 ```
 
 ### Blueprint surveys

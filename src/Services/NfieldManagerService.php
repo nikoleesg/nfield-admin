@@ -22,7 +22,7 @@ class NfieldManagerService
 {
     public function __construct(
         protected SurveyCollectionService $surveyCollectionService,
-        protected CapiInterviewerService $capiInterviewerService,
+        protected CapiInterviewerCollectionService $capiInterviewerCollectionService,
         protected BackgroundActivitiesService $backgroundActivitiesService,
         protected RoleService $roleService,
         protected EventSubscriptionService $eventSubscriptionService,
@@ -46,9 +46,9 @@ class NfieldManagerService
     // CAPI Interviewer Methods
     // ========================================
 
-    public function capiInterviewers(): CapiInterviewerService
+    public function capiInterviewers(): CapiInterviewerCollectionService
     {
-        return $this->capiInterviewerService;
+        return $this->capiInterviewerCollectionService;
     }
 
     // ========================================

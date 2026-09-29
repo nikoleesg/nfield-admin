@@ -10,7 +10,7 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 /**
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyCollectionService surveys()
  * @method static \Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService backgroundActivities()
- * @method static \Nikoleesg\NfieldAdmin\Services\CapiInterviewerService capiInterviewers()
+ * @method static \Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService capiInterviewers()
  * @method static \Nikoleesg\NfieldAdmin\Services\RoleService roles()
  *
  * @see NfieldManagerService
