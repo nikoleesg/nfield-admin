@@ -124,6 +124,10 @@ $survey->delete();
 $survey->counts();                                     // SurveyCountsModel
 $survey->customColumns();                              // Collection<string>
 $survey->requestDownload(['fileName' => 'wave-1.zip']); // same as data()->download()
+$survey->moveToGroup(7);                               // SurveyMoveModel
+$survey->versions()->list();                           // Collection<SurveyVersionModel>
+$survey->dataRetentionSettings()->get();               // retentionPeriod + possibleValues, in days
+$survey->dataRetentionSettings()->update(365);
 ```
 
 ### Fieldwork

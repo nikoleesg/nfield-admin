@@ -249,6 +249,22 @@ function endpointCallCases(): array
             Contracts\SurveySettingsEndpointInterface::class, 'list', ['survey-1'],
             'GET', 'v2/surveys/survey-1/settings', [],
         ],
+        'SurveyDataRetentionSettings::get' => [
+            Contracts\SurveyDataRetentionSettingsEndpointInterface::class, 'get', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/dataRetentionSettings', [],
+        ],
+        'SurveyDataRetentionSettings::update' => [
+            Contracts\SurveyDataRetentionSettingsEndpointInterface::class, 'update', ['survey-1', ['retentionPeriod' => 90]],
+            'PUT', 'v2/surveys/survey-1/dataRetentionSettings', ['retentionPeriod' => 90],
+        ],
+        'SurveyMove::update' => [
+            Contracts\SurveyMoveEndpointInterface::class, 'update', ['survey-1', ['surveyGroupId' => 7]],
+            'PUT', 'v2/surveys/survey-1/surveyGroup', ['surveyGroupId' => 7],
+        ],
+        'SurveyVersions::list' => [
+            Contracts\SurveyVersionsEndpointInterface::class, 'list', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/versions', [],
+        ],
         'SurveySettings::set' => [
             Contracts\SurveySettingsEndpointInterface::class, 'set', ['survey-1', ['name' => 'a', 'value' => 'b']],
             'POST', 'v2/surveys/survey-1/settings', ['name' => 'a', 'value' => 'b'],

@@ -6,9 +6,11 @@ namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyMoveEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyMoveModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
@@ -25,6 +27,7 @@ class SurveyService implements SurveyScopedInterface
 
     public function __construct(
         protected SurveyEndpointInterface $surveyEndpoint,
+        protected SurveyMoveEndpointInterface $surveyMoveEndpoint,
     ) {}
 
     public function get(): SurveyModel
@@ -56,5 +59,15 @@ class SurveyService implements SurveyScopedInterface
     public function customColumns(): Collection
     {
         return collect($this->surveyEndpoint->customColumns($this->getSurveyId()));
+    }
+
+    /**
+     * Move the survey to another survey group.
+     */
+    public function moveToGroup(int $surveyGroupId): SurveyMoveModel
+    {
+        $payload = (new SurveyMoveModel($surveyGroupId))->toArray();
+
+        return SurveyMoveModel::from($this->surveyMoveEndpoint->update($this->getSurveyId(), $payload));
     }
 }

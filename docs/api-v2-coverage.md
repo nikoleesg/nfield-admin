@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 107 of 282 operations implemented (38%), across 182 paths.**
+**Overall: 111 of 282 operations implemented (39%), across 182 paths.**
 
-**Planned for development: 32 operations across 5 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 28 operations across 4 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -25,7 +25,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Response Codes (tenant) | 4 | — | 4 | 100% |
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
-| Surveys — Core | 9 | 4 | 14 | 64% |
+| Surveys — Core | 13 | — | 14 | 93% |
 | Surveys — Settings & Content | 11 | — | 23 | 48% |
 | Surveys — Publishing & Script | 3 | 6 | 13 | 23% |
 | Surveys — Interviews & Data | 8 | — | 16 | 50% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **107** | **32** | **282** | **38%** |
+| **Total** | **111** | **28** | **282** | **39%** |
 
 ---
 
@@ -58,10 +58,9 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 |---|---:|---|
 | Access & Authentication | 5 | [#57](https://github.com/nikoleesg/nfield-admin/issues/57) |
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
-| Surveys — Core | 4 | [#62](https://github.com/nikoleesg/nfield-admin/issues/62) |
 | Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **32** | |
+| **Total** | **28** | |
 
 Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -181,7 +180,7 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 
 ### Surveys — Core
 
-*9/14 implemented.*
+*13/14 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
@@ -194,11 +193,11 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 | ✅ | PATCH | `/v2/surveys/{surveyId}` | `SurveyEndpoint::update` |
 | ✅ | GET | `/v2/surveys/{surveyId}/counts` | `SurveyEndpoint::counts` |
 | ✅ | GET | `/v2/surveys/{surveyId}/customColumns` | `SurveyEndpoint::customColumns` |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/dataRetentionSettings` | Planned for Development (#62) |
-| 🗓️ | PUT | `/v2/surveys/{surveyId}/dataRetentionSettings` | Planned for Development (#62) |
+| ✅ | GET | `/v2/surveys/{surveyId}/dataRetentionSettings` | `SurveyDataRetentionSettingsEndpoint::get` |
+| ✅ | PUT | `/v2/surveys/{surveyId}/dataRetentionSettings` | `SurveyDataRetentionSettingsEndpoint::update` |
 | ❌ | POST | `/v2/surveys/{surveyId}/respondentDataEncrypt` | — |
-| 🗓️ | PUT | `/v2/surveys/{surveyId}/surveyGroup` | Planned for Development (#62) |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/versions` | Planned for Development (#62) |
+| ✅ | PUT | `/v2/surveys/{surveyId}/surveyGroup` | `SurveyMoveEndpoint::update` |
+| ✅ | GET | `/v2/surveys/{surveyId}/versions` | `SurveyVersionsEndpoint::list` |
 
 ### Surveys — Settings & Content
 
@@ -636,7 +635,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (175 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (171 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (16 pending)
 
@@ -785,13 +784,9 @@ Everything not yet implemented (175 operations), grouped by section. Items marke
 - `PUT /v2/surveyGroups/{surveyGroupId}/unassignDirectory`
 - `PUT /v2/surveyGroups/{surveyGroupId}/unassignLocal`
 
-**Surveys — Core** (5 pending)
+**Surveys — Core** (1 pending)
 
-- `GET /v2/surveys/{surveyId}/dataRetentionSettings` — Planned for Development (#62)
-- `PUT /v2/surveys/{surveyId}/dataRetentionSettings` — Planned for Development (#62)
 - `POST /v2/surveys/{surveyId}/respondentDataEncrypt`
-- `PUT /v2/surveys/{surveyId}/surveyGroup` — Planned for Development (#62)
-- `GET /v2/surveys/{surveyId}/versions` — Planned for Development (#62)
 
 **Surveys — Interviewers & Assignments** (7 pending)
 

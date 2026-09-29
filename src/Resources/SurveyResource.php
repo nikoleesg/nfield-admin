@@ -10,9 +10,11 @@ use Nikoleesg\NfieldAdmin\Data\BackgroundActivities\BackgroundActivityStatus;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyDataRequestModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyMoveModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
+use Nikoleesg\NfieldAdmin\Services\SurveyDataRetentionSettingsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyInterviewQualityService;
@@ -24,6 +26,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveySampleCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
+use Nikoleesg\NfieldAdmin\Services\SurveyVersionsService;
 use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
@@ -59,6 +62,11 @@ class SurveyResource implements SurveyScopedInterface
     public function customColumns(): Collection
     {
         return $this->item()->customColumns();
+    }
+
+    public function moveToGroup(int $surveyGroupId): SurveyMoveModel
+    {
+        return $this->item()->moveToGroup($surveyGroupId);
     }
 
     /**
@@ -134,6 +142,16 @@ class SurveyResource implements SurveyScopedInterface
     public function responseCodes(): SurveyResponseCodeCollectionService
     {
         return $this->resolveService(SurveyResponseCodeCollectionService::class);
+    }
+
+    public function dataRetentionSettings(): SurveyDataRetentionSettingsService
+    {
+        return $this->resolveService(SurveyDataRetentionSettingsService::class);
+    }
+
+    public function versions(): SurveyVersionsService
+    {
+        return $this->resolveService(SurveyVersionsService::class);
     }
 
     private function item(): SurveyService
