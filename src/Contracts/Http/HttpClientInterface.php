@@ -36,4 +36,9 @@ interface HttpClientInterface
     public function postRaw(string $uri, string $body, string $contentType): Response;
 
     public function postMultipart(string $uri, string $name, string $contents, string $filename): Response;
+
+    /**
+     * @param  array<string, mixed>  $query
+     */
+    public function putMultipart(string $uri, string $name, string $contents, string $filename, array $query = []): Response;
 }

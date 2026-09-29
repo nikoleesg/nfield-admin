@@ -102,6 +102,16 @@ function endpointCallCases(): array
             'DELETE', 'v2/requests/12', [],
         ],
 
+        // ── Themes ───────────────────────────────────────────────────────────
+        'ThemeCollection::downloadUrl' => [
+            Contracts\ThemeCollectionEndpointInterface::class, 'downloadUrl', ['theme-1'],
+            'GET', 'v2/themes?themeId=theme-1', ['themeId' => 'theme-1'],
+        ],
+        'Theme::delete' => [
+            Contracts\ThemeEndpointInterface::class, 'delete', ['theme-1'],
+            'DELETE', 'v2/themes/theme-1', [],
+        ],
+
         // ── Response codes (domain) ──────────────────────────────────────────
         'ResponseCodeCollection::list' => [
             Contracts\ResponseCodeCollectionEndpointInterface::class, 'list', [],
@@ -592,7 +602,7 @@ it('covers every public endpoint method', function () {
         array_keys(endpointCallCases()),
         // Covered by a dedicated test below: its body is a multipart file part,
         // not a JSON array the dataset can compare.
-        ['SurveySampleCollection::upload'],
+        ['SurveySampleCollection::upload', 'ThemeCollection::upload'],
     );
 
     $missing = [];
@@ -636,5 +646,21 @@ it('uploads sample data as a multipart file', function () {
         ->and($request->isMultipart())->toBeTrue()
         ->and($request->body())->toContain('filename="sample.csv"')
         ->and($request->body())->toContain("a\tb\n1\t2")
+        ->and($request->body())->toContain('name="File"');
+});
+
+it('uploads a theme as a multipart PUT with its template and name on the query', function () {
+    // #66: the file is the body, so templateId and themeName travel as query
+    // parameters.
+    app(Contracts\ThemeCollectionEndpointInterface::class)
+        ->upload('template-1', 'Brand A', 'zip-bytes', 'brand-a.zip');
+
+    $request = sentRequest();
+
+    expect($request->method())->toBe('PUT')
+        ->and(sentUri($request))->toBe('v2/themes?templateId=template-1&themeName=Brand+A')
+        ->and($request->isMultipart())->toBeTrue()
+        ->and($request->body())->toContain('filename="brand-a.zip"')
+        ->and($request->body())->toContain('zip-bytes')
         ->and($request->body())->toContain('name="File"');
 });

@@ -17,6 +17,7 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
  * @method static \Nikoleesg\NfieldAdmin\Services\InterviewersWorklogService interviewersWorklog()
  * @method static \Nikoleesg\NfieldAdmin\Services\RequestConfigurationCollectionService requestConfigurations()
  * @method static \Nikoleesg\NfieldAdmin\Services\ResponseCodeCollectionService responseCodes()
+ * @method static \Nikoleesg\NfieldAdmin\Services\ThemeCollectionService themes()
  * @method static \Nikoleesg\NfieldAdmin\Services\RoleService roles()
  *
  * @see NfieldManagerService

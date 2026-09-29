@@ -26,6 +26,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyGroupCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService;
+use Nikoleesg\NfieldAdmin\Services\ThemeCollectionService;
 
 afterEach(function () {
     Mockery::close();
@@ -44,6 +45,7 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
         app(ResponseCodeCollectionService::class),
         app(SurveyGroupCollectionService::class),
         app(RequestConfigurationCollectionService::class),
+        app(ThemeCollectionService::class),
     );
 }
 

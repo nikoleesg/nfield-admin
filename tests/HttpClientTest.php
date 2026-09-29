@@ -137,6 +137,7 @@ it('authenticates every request except the token endpoints', function () {
     $client->delete('/v2/surveys/1');
     $client->postRaw('/v2/surveys/1/sample', "a\tb", 'text/csv');
     $client->postMultipart('/v2/surveys/1/sample', 'File', "a\tb", 'sample.csv');
+    $client->putMultipart('/v2/themes', 'File', 'zip', 'theme.zip', ['templateId' => 't-1']);
 
     collect(Http::recorded())->map(fn (array $pair): Request => $pair[0])
         ->each(function (Request $request) {

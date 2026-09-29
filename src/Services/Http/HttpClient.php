@@ -162,6 +162,22 @@ class HttpClient implements HttpClientInterface
         );
     }
 
+    /**
+     * A multipart PUT; the query parameters go on the URL, since the body is
+     * the file.
+     *
+     * @param  array<string, mixed>  $query
+     */
+    public function putMultipart(string $uri, string $name, string $contents, string $filename, array $query = []): Response
+    {
+        $url = $query === [] ? $uri : $uri.'?'.http_build_query($query);
+
+        return $this->request($uri, fn () => $this->getPendingRequest($uri)
+            ->attach($name, $contents, $filename)
+            ->put($url)
+        );
+    }
+
     private function request(string $uri, callable $call, bool $retry = true): Response
     {
         try {

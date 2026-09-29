@@ -16,6 +16,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Scoping\SamplingPointScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyGroupScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyVersionScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\ThemeScopedInterface;
 
 /**
  * Resolves a scoped service from the container and hands it this resource's scope.
@@ -86,6 +87,10 @@ trait ResolvesScopedServices
             $service->setSurveyVersion($this->getSurveyVersion());
         }
 
+        if ($service instanceof ThemeScopedInterface && $this instanceof ThemeScopedInterface) {
+            $service->setThemeId($this->getThemeId());
+        }
+
         if ($service instanceof BlueprintScopedInterface && $this instanceof BlueprintScopedInterface) {
             $service->setBlueprintId($this->getBlueprintId());
         }
@@ -146,6 +151,10 @@ trait ResolvesScopedServices
 
         if ($this instanceof SurveyVersionScopedInterface) {
             $key .= '|'.$this->getSurveyVersion();
+        }
+
+        if ($this instanceof ThemeScopedInterface) {
+            $key .= '|'.$this->getThemeId();
         }
 
         if ($this instanceof BlueprintScopedInterface) {

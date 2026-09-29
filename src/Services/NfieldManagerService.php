@@ -31,6 +31,7 @@ class NfieldManagerService
         protected ResponseCodeCollectionService $responseCodeCollectionService,
         protected SurveyGroupCollectionService $surveyGroupCollectionService,
         protected RequestConfigurationCollectionService $requestConfigurationCollectionService,
+        protected ThemeCollectionService $themeCollectionService,
     ) {}
 
     // ========================================
@@ -55,6 +56,11 @@ class NfieldManagerService
     public function requestConfigurations(): RequestConfigurationCollectionService
     {
         return $this->requestConfigurationCollectionService;
+    }
+
+    public function themes(): ThemeCollectionService
+    {
+        return $this->themeCollectionService;
     }
 
     public function responseCodes(): ResponseCodeCollectionService
