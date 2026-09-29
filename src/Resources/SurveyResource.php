@@ -18,14 +18,17 @@ use Nikoleesg\NfieldAdmin\Services\SurveyDataRetentionSettingsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyInterviewQualityService;
+use Nikoleesg\NfieldAdmin\Services\SurveyPackageService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPerformanceService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveyResponseCodeCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
+use Nikoleesg\NfieldAdmin\Services\SurveyScriptService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
+use Nikoleesg\NfieldAdmin\Services\SurveyVarFileService;
 use Nikoleesg\NfieldAdmin\Services\SurveyVersionsService;
 use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
@@ -152,6 +155,21 @@ class SurveyResource implements SurveyScopedInterface
     public function versions(): SurveyVersionsService
     {
         return $this->resolveService(SurveyVersionsService::class);
+    }
+
+    public function package(): SurveyPackageService
+    {
+        return $this->resolveService(SurveyPackageService::class);
+    }
+
+    public function script(): SurveyScriptService
+    {
+        return $this->resolveService(SurveyScriptService::class);
+    }
+
+    public function varFile(): SurveyVarFileService
+    {
+        return $this->resolveService(SurveyVarFileService::class);
     }
 
     private function item(): SurveyService

@@ -31,4 +31,14 @@ class SurveyVersionsService implements SurveyScopedInterface
             Collection::class
         );
     }
+
+    /**
+     * One published version, by the eTag list() returns.
+     */
+    public function forVersion(string $eTag): SurveyVersionService
+    {
+        return app(SurveyVersionService::class)
+            ->setSurveyId($this->getSurveyId())
+            ->setSurveyVersion($eTag);
+    }
 }

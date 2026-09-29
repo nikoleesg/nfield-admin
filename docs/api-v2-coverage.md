@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 116 of 282 operations implemented (41%), across 182 paths.**
+**Overall: 122 of 282 operations implemented (43%), across 182 paths.**
 
-**Planned for development: 23 operations across 3 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 17 operations across 2 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -27,7 +27,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Surveys — Sample | 10 | — | 12 | 83% |
 | Surveys — Core | 13 | — | 14 | 93% |
 | Surveys — Settings & Content | 11 | — | 23 | 48% |
-| Surveys — Publishing & Script | 3 | 6 | 13 | 23% |
+| Surveys — Publishing & Script | 9 | — | 13 | 69% |
 | Surveys — Interviews & Data | 8 | — | 16 | 50% |
 | Access & Authentication | 9 | — | 20 | 45% |
 | Data Delivery | 0 | — | 38 | 0% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **116** | **23** | **282** | **41%** |
+| **Total** | **122** | **17** | **282** | **43%** |
 
 ---
 
@@ -57,9 +57,8 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 | Section | Operations | Tracking issue |
 |---|---:|---|
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
-| Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **23** | |
+| **Total** | **17** | |
 
 Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -230,23 +229,23 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 
 ### Surveys — Publishing & Script
 
-*3/13 implemented.*
+*9/13 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| 🗓️ | GET | `/v2/surveys/{surveyId}/package` | Planned for Development (#64) |
+| ✅ | GET | `/v2/surveys/{surveyId}/package` | `SurveyPackageEndpoint::get` |
 | ✅ | GET | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::get` |
 | ✅ | PUT | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::publish` |
 | ✅ | POST | `/v2/surveys/{surveyId}/publish/start` | `SurveyPublishEndpoint::start` |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/script` | Planned for Development (#64) |
-| 🗓️ | POST | `/v2/surveys/{surveyId}/script` | Planned for Development (#64) |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/script/{eTag}` | Planned for Development (#64) |
+| ✅ | GET | `/v2/surveys/{surveyId}/script` | `SurveyScriptEndpoint::get` |
+| ✅ | POST | `/v2/surveys/{surveyId}/script` | `SurveyScriptEndpoint::update` |
+| ✅ | GET | `/v2/surveys/{surveyId}/script/{eTag}` | `SurveyScriptEndpoint::getVersion` |
 | ❌ | GET | `/v2/surveys/{surveyId}/scriptFragments` | — |
 | ❌ | DELETE | `/v2/surveys/{surveyId}/scriptFragments/{fragmentName}` | — |
 | ❌ | GET | `/v2/surveys/{surveyId}/scriptFragments/{fragmentName}` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/scriptFragments/{fragmentName}` | — |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/varFile` | Planned for Development (#64) |
-| 🗓️ | GET | `/v2/surveys/{surveyId}/varFile/{eTag}` | Planned for Development (#64) |
+| ✅ | GET | `/v2/surveys/{surveyId}/varFile` | `SurveyVarFileEndpoint::get` |
+| ✅ | GET | `/v2/surveys/{surveyId}/varFile/{eTag}` | `SurveyVarFileEndpoint::getVersion` |
 
 ### Surveys — Interviews & Data
 
@@ -634,7 +633,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (166 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (160 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (11 pending)
 
@@ -822,18 +821,12 @@ Everything not yet implemented (166 operations), grouped by section. Items marke
 - `GET /v2/surveys/{surveyId}/landingPage`
 - `POST /v2/surveys/{surveyId}/landingPage`
 
-**Surveys — Publishing & Script** (10 pending)
+**Surveys — Publishing & Script** (4 pending)
 
-- `GET /v2/surveys/{surveyId}/package` — Planned for Development (#64)
-- `GET /v2/surveys/{surveyId}/script` — Planned for Development (#64)
-- `POST /v2/surveys/{surveyId}/script` — Planned for Development (#64)
-- `GET /v2/surveys/{surveyId}/script/{eTag}` — Planned for Development (#64)
 - `GET /v2/surveys/{surveyId}/scriptFragments`
 - `DELETE /v2/surveys/{surveyId}/scriptFragments/{fragmentName}`
 - `GET /v2/surveys/{surveyId}/scriptFragments/{fragmentName}`
 - `POST /v2/surveys/{surveyId}/scriptFragments/{fragmentName}`
-- `GET /v2/surveys/{surveyId}/varFile` — Planned for Development (#64)
-- `GET /v2/surveys/{surveyId}/varFile/{eTag}` — Planned for Development (#64)
 
 **Surveys — Sample** (2 pending)
 

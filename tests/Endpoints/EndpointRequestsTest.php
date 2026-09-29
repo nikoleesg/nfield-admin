@@ -341,6 +341,30 @@ function endpointCallCases(): array
         ],
 
         // ── Publish ──────────────────────────────────────────────────────────
+        'SurveyPackage::get' => [
+            Contracts\SurveyPackageEndpointInterface::class, 'get', ['survey-1', 2],
+            'GET', 'v2/surveys/survey-1/package?type=2', ['type' => 2],
+        ],
+        'SurveyScript::get' => [
+            Contracts\SurveyScriptEndpointInterface::class, 'get', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/script', [],
+        ],
+        'SurveyScript::getVersion' => [
+            Contracts\SurveyScriptEndpointInterface::class, 'getVersion', ['survey-1', '0x8DC'],
+            'GET', 'v2/surveys/survey-1/script/0x8DC', [],
+        ],
+        'SurveyScript::update' => [
+            Contracts\SurveyScriptEndpointInterface::class, 'update', ['survey-1', ['script' => '*QUESTION 1', 'fileName' => null, 'unfixedIsOk' => false]],
+            'POST', 'v2/surveys/survey-1/script', ['script' => '*QUESTION 1', 'fileName' => null, 'unfixedIsOk' => false],
+        ],
+        'SurveyVarFile::get' => [
+            Contracts\SurveyVarFileEndpointInterface::class, 'get', ['survey-1'],
+            'GET', 'v2/surveys/survey-1/varFile', [],
+        ],
+        'SurveyVarFile::getVersion' => [
+            Contracts\SurveyVarFileEndpointInterface::class, 'getVersion', ['survey-1', '0x8DC'],
+            'GET', 'v2/surveys/survey-1/varFile/0x8DC', [],
+        ],
         'SurveyPublish::get' => [
             Contracts\SurveyPublishEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1/publish', [],

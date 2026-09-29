@@ -250,6 +250,15 @@ $survey->responseCodes()->create(['responseCode' => 210, 'description' => 'Callb
 $survey->responseCodes()->forResponseCode(210)->update(['description' => 'Call back later']);
 $survey->responseCodes()->forResponseCode(210)->delete();
 
+$survey->script()->get();                              // SurveyGetScriptModel: ODIN script + file name
+$survey->script()->update($odin);                      // string, array or SurveySetScriptModel; returns parse warnings
+$survey->varFile()->get();                             // SurveyVarFileModel
+$survey->package()->get(SurveyPackageTypeEnum::Test);  // SurveyPackageV1Model; live by default
+
+$version = $survey->versions()->forVersion($eTag);     // an eTag from versions()->list()
+$version->script();
+$version->varFile();
+
 $survey->performance()->live();                        // SurveyMetricsModel: warn/block counts per metric
 $survey->performance()->test();
 ```

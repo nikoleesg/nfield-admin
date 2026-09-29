@@ -13,6 +13,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\ManagerInterviewDetailsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\MetricCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricCountsModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Monitoring\SurveyMetricsModel;
+use Nikoleesg\NfieldAdmin\Data\Surveys\Package\SurveyPackageV1Model;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyFieldwork\SurveyFieldworkCountsResponseModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGroups\SurveyGroupDirectoryAssignmentModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
@@ -354,4 +355,34 @@ it('hydrates a request configuration with its headers from a real PascalCase pay
         ->and($config->headers[0])->toBeInstanceOf(RequestConfigurationHeaderModel::class)
         ->and($config->headers[0]->name)->toBe('Authorization')
         ->and($config->headers[0]->isObfuscated)->toBeTrue();
+});
+
+it('hydrates a published package from a deeply nested PascalCase payload', function () {
+    // #64: lists of objects holding further lists, a single nested object,
+    // and survey settings whose value may be null.
+    Http::fake([
+        '*/v2/token' => Http::response(['AccessToken' => 'token'], 200),
+        '*/v2/surveys/survey-1/package*' => Http::response([
+            'SurveyName' => 'Wave 1',
+            'ETag' => 42,
+            'ResponseCodes' => [['ResponseCode' => 210, 'Description' => 'Callback']],
+            'Languages' => [['Id' => 1, 'Name' => 'English', 'Translations' => [['Name' => 'Next', 'Text' => 'Next']]]],
+            'Relocations' => [['Reason' => '1', 'Url' => 'https://example.com/done']],
+            'Settings' => [['Name' => 'HideQuotaPage', 'Value' => null]],
+            'InstructionFile' => ['FileName' => 'brief.pdf', 'Md5' => 'abc', 'Size' => 2048],
+            'MediaFiles' => [['FileName' => 'logo.png', 'Md5' => 'def', 'Size' => 512]],
+            'QuestionnaireMd5' => 'ghi',
+        ], 200),
+    ]);
+
+    $package = NfieldManager::surveys()->forSurvey('survey-1')->package()->get();
+
+    expect($package)->toBeInstanceOf(SurveyPackageV1Model::class)
+        ->and($package->eTag)->toBe(42)
+        ->and($package->responseCodes[0]->responseCode)->toBe(210)
+        ->and($package->languages[0]->translations[0]->text)->toBe('Next')
+        ->and($package->relocations[0]->url)->toBe('https://example.com/done')
+        ->and($package->settings[0]->value)->toBeNull()
+        ->and($package->instructionFile->size)->toBe(2048)
+        ->and($package->mediaFiles[0]->fileName)->toBe('logo.png');
 });

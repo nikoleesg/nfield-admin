@@ -10,6 +10,6 @@ final class SurveySettingModel extends Data
 {
     public function __construct(
         public string $name,
-        public string $value,
+        public ?string $value = null,
     ) {}
 }
