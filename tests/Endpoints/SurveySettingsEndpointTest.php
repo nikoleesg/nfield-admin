@@ -22,7 +22,7 @@ it('can list settings using the v2 path', function () {
         ->once()
         ->andReturn($response);
 
-    $result = $endpoint->listSettings('survey-id');
+    $result = $endpoint->list('survey-id');
 
     expect($result)->toBe(['some' => 'data']);
 });
@@ -39,7 +39,7 @@ it('can add or update setting using the v2 path', function () {
         ->once()
         ->andReturn($response);
 
-    $result = $endpoint->addOrUpdateSetting('survey-id', ['key' => 'value']);
+    $result = $endpoint->set('survey-id', ['key' => 'value']);
 
     expect($result)->toBe(['success' => true]);
 });

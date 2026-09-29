@@ -39,11 +39,11 @@ class EventSubscriptionService implements EventSubscriptionScopedInterface
     {
         $payload = UpdateSubscriptionModel::from($data)->toArray();
 
-        $this->subscriptionEndpoint->updatePartial($this->getSubscriptionName(), $payload);
+        $this->subscriptionEndpoint->update($this->getSubscriptionName(), $payload);
     }
 
     public function delete(): void
     {
-        $this->subscriptionEndpoint->destroy($this->getSubscriptionName());
+        $this->subscriptionEndpoint->delete($this->getSubscriptionName());
     }
 }

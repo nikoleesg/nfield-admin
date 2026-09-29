@@ -24,7 +24,7 @@ class SurveyQuotaFrameService implements SurveyScopedInterface
     public function get(): SurveysQuotaFrameResponseModel
     {
         return SurveysQuotaFrameResponseModel::from(
-            $this->surveyQuotaFrameEndpoint->getQuotaFrame($this->getSurveyId())
+            $this->surveyQuotaFrameEndpoint->get($this->getSurveyId())
         );
     }
 
@@ -36,7 +36,7 @@ class SurveyQuotaFrameService implements SurveyScopedInterface
         $payload = SurveyQuotaFrameRequestModel::from($data)->toArray();
 
         return SurveysQuotaFrameResponseModel::from(
-            $this->surveyQuotaFrameEndpoint->setQuotaFrame($this->getSurveyId(), $payload)
+            $this->surveyQuotaFrameEndpoint->update($this->getSurveyId(), $payload)
         );
     }
 }

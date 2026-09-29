@@ -9,11 +9,11 @@ interface SurveyInterviewQualityCollectionEndpointInterface
     /**
      * @return list<array<string, mixed>>
      */
-    public function get(string $surveyId): array;
+    public function list(string $surveyId): array;
 
     /**
      * @param  array<string, mixed>  $qualityNewStateChangeModel
      * @return array<string, mixed>
      */
-    public function updateQuality(string $surveyId, array $qualityNewStateChangeModel): array;
+    public function update(string $surveyId, array $qualityNewStateChangeModel): array;
 }

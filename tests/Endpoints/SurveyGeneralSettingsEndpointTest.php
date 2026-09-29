@@ -22,7 +22,7 @@ it('can get general settings using the v2 path', function () {
         ->once()
         ->andReturn($response);
 
-    $result = $endpoint->getGeneralSettings('survey-id');
+    $result = $endpoint->get('survey-id');
 
     expect($result)->toBe(['general' => 'data']);
 });
@@ -35,5 +35,5 @@ it('can update general settings using the v2 path', function () {
         ->with('v2/surveys/survey-id/generalSettings', ['patch' => 'data'])
         ->once();
 
-    $endpoint->updateGeneralSettings('survey-id', ['patch' => 'data']);
+    $endpoint->update('survey-id', ['patch' => 'data']);
 });

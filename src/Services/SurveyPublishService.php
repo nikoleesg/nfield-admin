@@ -23,7 +23,7 @@ class SurveyPublishService implements SurveyScopedInterface
     public function state(): SurveyPublishStateModel
     {
         return SurveyPublishStateModel::from(
-            $this->surveyPublishEndpoint->getPublishState($this->getSurveyId())
+            $this->surveyPublishEndpoint->get($this->getSurveyId())
         );
     }
 
@@ -38,7 +38,7 @@ class SurveyPublishService implements SurveyScopedInterface
     public function start(SurveyPackageTypeEnum $packageType, SurveyPublishForceUpgradeEnum $forceUpgrade): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
-            $this->surveyPublishEndpoint->startPublish($this->getSurveyId(), [
+            $this->surveyPublishEndpoint->start($this->getSurveyId(), [
                 'packageType' => $packageType->value,
                 'forceUpgrade' => $forceUpgrade->value,
             ])

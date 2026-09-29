@@ -77,7 +77,7 @@ it('refuses a version call before the version scope is set', function () {
 it('reads the quota frame', function () {
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
-    $frame->shouldReceive('getQuotaFrame')->with('survey-1')->once()->andReturn([
+    $frame->shouldReceive('get')->with('survey-1')->once()->andReturn([
         'target' => 100,
         'variableDefinitions' => [],
         'frameVariables' => [],
@@ -94,7 +94,7 @@ it('reads the quota frame', function () {
 it('writes the quota frame from an array or a request model', function () {
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
-    $frame->shouldReceive('setQuotaFrame')
+    $frame->shouldReceive('update')
         ->withArgs(fn (string $surveyId, array $payload) => $payload['target'] === 200)
         ->twice()
         ->andReturn([
@@ -116,7 +116,7 @@ it('updates the targets of a frame version', function () {
 
     $levels = [['id' => 'level-1', 'target' => 10, 'maxTarget' => 20, 'maxOvershoot' => 0]];
 
-    $frame->shouldReceive('setQuotaLevelsTargets')
+    $frame->shouldReceive('updateVersion')
         ->with('survey-1', '7', ['levels' => $levels])
         ->once()
         ->andReturn(['levels' => $levels]);
@@ -136,7 +136,7 @@ it('updates the targets of a frame version', function () {
 it('reads the current targets and the targets of one version', function () {
     $targets = Mockery::mock(SurveyQuotaTargetsEndpointInterface::class);
 
-    $targets->shouldReceive('getQuotaTargets')->with('survey-1')->once()->andReturn([
+    $targets->shouldReceive('get')->with('survey-1')->once()->andReturn([
         'id' => 'targets-1',
         'target' => 100,
         'rootLevelMaxOvershoot' => 5,
@@ -149,7 +149,7 @@ it('reads the current targets and the targets of one version', function () {
         ]],
     ]);
 
-    $targets->shouldReceive('getQuotaTargetsByETag')->with('survey-1', '7')->once()->andReturn([
+    $targets->shouldReceive('getVersion')->with('survey-1', '7')->once()->andReturn([
         'id' => 'targets-1',
         'target' => 100,
         'variables' => [],
@@ -172,11 +172,11 @@ it('reads the current targets and the targets of one version', function () {
 it('lists the quota versions and reads one by its eTag', function () {
     $versions = Mockery::mock(SurveyQuotaVersionsEndpointInterface::class);
 
-    $versions->shouldReceive('getQuotaVersions')->with('survey-1')->once()->andReturn([
+    $versions->shouldReceive('list')->with('survey-1')->once()->andReturn([
         ['id' => 'version-1', 'eTag' => '7', 'publishedDate' => '2026-09-23T10:00:00Z'],
     ]);
 
-    $versions->shouldReceive('getQuotaVersionsByETag')->with('survey-1', '7')->once()->andReturn([
+    $versions->shouldReceive('get')->with('survey-1', '7')->once()->andReturn([
         'id' => 'frame-1',
         'variables' => [],
         'target' => 100,

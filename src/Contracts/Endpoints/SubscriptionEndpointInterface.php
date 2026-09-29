@@ -14,7 +14,7 @@ interface SubscriptionEndpointInterface
     /**
      * @param  array<string, mixed>  $data
      */
-    public function updatePartial(string $name, array $data): void;
+    public function update(string $name, array $data): void;
 
-    public function destroy(string $name): void;
+    public function delete(string $name): void;
 }

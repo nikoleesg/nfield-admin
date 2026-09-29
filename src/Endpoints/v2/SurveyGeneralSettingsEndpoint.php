@@ -13,14 +13,14 @@ final class SurveyGeneralSettingsEndpoint extends BaseEndpoint implements Survey
         return "/{$this->version}/surveys";
     }
 
-    public function getGeneralSettings(string $surveyId): array
+    public function get(string $surveyId): array
     {
         $uri = $this->subResourcePath($surveyId, 'generalSettings');
 
         return $this->httpClient->get($uri)->json();
     }
 
-    public function updateGeneralSettings(string $surveyId, array $data): void
+    public function update(string $surveyId, array $data): void
     {
         $uri = $this->subResourcePath($surveyId, 'generalSettings');
 

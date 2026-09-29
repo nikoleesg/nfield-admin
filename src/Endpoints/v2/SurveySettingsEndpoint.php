@@ -13,14 +13,14 @@ final class SurveySettingsEndpoint extends BaseEndpoint implements SurveySetting
         return "/{$this->version}/surveys";
     }
 
-    public function listSettings(string $surveyId): array
+    public function list(string $surveyId): array
     {
         $uri = $this->subResourcePath($surveyId, 'settings');
 
         return $this->httpClient->get($uri)->json();
     }
 
-    public function addOrUpdateSetting(string $surveyId, array $setting): array
+    public function set(string $surveyId, array $setting): array
     {
         $uri = $this->subResourcePath($surveyId, 'settings');
 

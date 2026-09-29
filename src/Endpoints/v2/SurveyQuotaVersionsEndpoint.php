@@ -13,14 +13,14 @@ final class SurveyQuotaVersionsEndpoint extends BaseEndpoint implements SurveyQu
         return "/{$this->version}/surveys";
     }
 
-    public function getQuotaVersions(string $surveyId): array
+    public function list(string $surveyId): array
     {
         $uri = $this->subResourcePath($surveyId, 'quotaVersions');
 
         return $this->httpClient->get($uri)->json();
     }
 
-    public function getQuotaVersionsByETag(string $surveyId, string $eTag): array
+    public function get(string $surveyId, string $eTag): array
     {
         $uri = $this->subResourceItemPath($surveyId, 'quotaVersions', $eTag);
 

@@ -35,7 +35,7 @@ class SurveyInterviewDataService implements InterviewScopedInterface
         $payload = (new SurveyDataInterviewRequestModel($fileName))->toArray();
 
         return BackgroundActivityStatus::from(
-            $this->surveyDataEndpoint->downloadInterviewData($this->getSurveyId(), $this->getInterviewId(), $payload)
+            $this->surveyDataEndpoint->downloadInterview($this->getSurveyId(), $this->getInterviewId(), $payload)
         );
     }
 
@@ -45,7 +45,7 @@ class SurveyInterviewDataService implements InterviewScopedInterface
     public function delete(): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
-            $this->surveyInterviewEndpoint->deleteInterviewData($this->getSurveyId(), $this->getInterviewId())
+            $this->surveyInterviewEndpoint->delete($this->getSurveyId(), $this->getInterviewId())
         );
     }
 }

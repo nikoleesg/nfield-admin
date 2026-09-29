@@ -11,7 +11,7 @@ interface SurveyQuotaFrameEndpointInterface
      *
      * @return array<string, mixed>
      */
-    public function getQuotaFrame(string $surveyId): array;
+    public function get(string $surveyId): array;
 
     /**
      * Create or updates the survey quota frame
@@ -19,7 +19,7 @@ interface SurveyQuotaFrameEndpointInterface
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public function setQuotaFrame(string $surveyId, array $data): array;
+    public function update(string $surveyId, array $data): array;
 
     /**
      * Update the survey quota targets for the specified quota frame version.
@@ -27,5 +27,5 @@ interface SurveyQuotaFrameEndpointInterface
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public function setQuotaLevelsTargets(string $surveyId, string $eTag, array $data): array;
+    public function updateVersion(string $surveyId, string $eTag, array $data): array;
 }

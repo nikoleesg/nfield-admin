@@ -13,7 +13,7 @@ final class SurveyPublishEndpoint extends BaseEndpoint implements SurveyPublishE
         return "/{$this->version}/surveys";
     }
 
-    public function getPublishState(string $surveyId): array
+    public function get(string $surveyId): array
     {
         $uri = $this->subResourcePath($surveyId, 'publish');
 
@@ -27,7 +27,7 @@ final class SurveyPublishEndpoint extends BaseEndpoint implements SurveyPublishE
         $this->httpClient->put($uri, $model);
     }
 
-    public function startPublish(string $surveyId, array $model): array
+    public function start(string $surveyId, array $model): array
     {
         $uri = $this->subResourceActionPath($surveyId, 'publish', 'start');
 

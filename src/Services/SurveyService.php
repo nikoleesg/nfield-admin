@@ -39,12 +39,12 @@ class SurveyService implements SurveyScopedInterface
     {
         $payload = SurveyUpdateModel::from($data)->toArray();
 
-        return SurveyModel::from($this->surveyEndpoint->updatePartial($this->getSurveyId(), $payload));
+        return SurveyModel::from($this->surveyEndpoint->update($this->getSurveyId(), $payload));
     }
 
     public function delete(): void
     {
-        $this->surveyEndpoint->destroy($this->getSurveyId());
+        $this->surveyEndpoint->delete($this->getSurveyId());
     }
 
     public function counts(): SurveyCountsModel
@@ -55,6 +55,6 @@ class SurveyService implements SurveyScopedInterface
     /** @return Collection<int, string> */
     public function customColumns(): Collection
     {
-        return collect($this->surveyEndpoint->getCustomColumns($this->getSurveyId()));
+        return collect($this->surveyEndpoint->customColumns($this->getSurveyId()));
     }
 }

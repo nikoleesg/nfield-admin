@@ -13,21 +13,21 @@ final class SurveyQuotaFrameEndpoint extends BaseEndpoint implements SurveyQuota
         return "/{$this->version}/surveys";
     }
 
-    public function getQuotaFrame(string $surveyId): array
+    public function get(string $surveyId): array
     {
         $uri = $this->subResourcePath($surveyId, 'surveyQuotaFrame');
 
         return $this->httpClient->get($uri)->json();
     }
 
-    public function setQuotaFrame(string $surveyId, array $data): array
+    public function update(string $surveyId, array $data): array
     {
         $uri = $this->subResourcePath($surveyId, 'surveyQuotaFrame');
 
         return $this->httpClient->put($uri, $data)->json();
     }
 
-    public function setQuotaLevelsTargets(string $surveyId, string $eTag, array $data): array
+    public function updateVersion(string $surveyId, string $eTag, array $data): array
     {
         $uri = $this->subResourceItemPath($surveyId, 'surveyQuotaFrame', $eTag);
 

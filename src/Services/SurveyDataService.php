@@ -28,7 +28,7 @@ class SurveyDataService implements SurveyScopedInterface
         $payload = SurveyDataRequestModel::from($data)->toArray();
 
         return BackgroundActivityStatus::from(
-            $this->surveyDataEndpoint->downloadData($this->getSurveyId(), $payload)
+            $this->surveyDataEndpoint->download($this->getSurveyId(), $payload)
         );
     }
 

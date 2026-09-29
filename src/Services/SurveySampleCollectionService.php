@@ -127,7 +127,7 @@ class SurveySampleCollectionService implements SurveyScopedInterface
     public function delete(iterable $filters): BackgroundActivityStatus
     {
         return BackgroundActivityStatus::from(
-            $this->surveySampleCollectionEndpoint->destroy($this->getSurveyId(), $this->normaliseFilters($filters))
+            $this->surveySampleCollectionEndpoint->delete($this->getSurveyId(), $this->normaliseFilters($filters))
         );
     }
 

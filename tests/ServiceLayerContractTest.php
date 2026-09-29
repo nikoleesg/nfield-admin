@@ -123,7 +123,7 @@ it('returns survey settings as an Illuminate collection of DTOs', function () {
     $settingsEndpoint = Mockery::mock(SurveySettingsEndpointInterface::class);
     $generalEndpoint = Mockery::mock(SurveyGeneralSettingsEndpointInterface::class);
 
-    $settingsEndpoint->shouldReceive('listSettings')->with('survey-1')->once()->andReturn([
+    $settingsEndpoint->shouldReceive('list')->with('survey-1')->once()->andReturn([
         ['name' => 'Foo', 'value' => 'bar'],
     ]);
 
@@ -262,7 +262,7 @@ it('nests sample filters inside the clear request model', function () {
 it('returns quota targets as a DTO', function () {
     $targetsEndpoint = Mockery::mock(SurveyQuotaTargetsEndpointInterface::class);
 
-    $targetsEndpoint->shouldReceive('getQuotaTargets')->with('survey-1')->once()->andReturn([
+    $targetsEndpoint->shouldReceive('get')->with('survey-1')->once()->andReturn([
         'id' => 'frame-1',
         'target' => 100,
         'rootLevelMaxOvershoot' => 5,
@@ -289,7 +289,7 @@ it('returns quota targets as a DTO', function () {
 it('returns quota versions as a collection of DTOs', function () {
     $versionsEndpoint = Mockery::mock(SurveyQuotaVersionsEndpointInterface::class);
 
-    $versionsEndpoint->shouldReceive('getQuotaVersions')->with('survey-1')->once()->andReturn([
+    $versionsEndpoint->shouldReceive('list')->with('survey-1')->once()->andReturn([
         ['id' => 'q-1', 'eTag' => '1', 'publishedDate' => '2026-01-02T03:04:05Z'],
     ]);
 

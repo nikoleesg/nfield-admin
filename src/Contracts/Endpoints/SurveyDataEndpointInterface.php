@@ -12,7 +12,7 @@ interface SurveyDataEndpointInterface
      * @param  array<string, mixed>  $surveyDataInterviewRequestModel
      * @return array<string, mixed>
      */
-    public function downloadInterviewData(string $surveyId, int $interviewId, array $surveyDataInterviewRequestModel): array;
+    public function downloadInterview(string $surveyId, int $interviewId, array $surveyDataInterviewRequestModel): array;
 
     /**
      * Post a request for a data download
@@ -20,5 +20,5 @@ interface SurveyDataEndpointInterface
      * @param  array<string, mixed>  $surveyDataRequestModel
      * @return array<string, mixed>
      */
-    public function downloadData(string $surveyId, array $surveyDataRequestModel): array;
+    public function download(string $surveyId, array $surveyDataRequestModel): array;
 }

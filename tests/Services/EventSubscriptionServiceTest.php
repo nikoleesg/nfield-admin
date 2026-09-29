@@ -84,7 +84,7 @@ it('gets a subscription via its service', function () {
 
 it('updates a subscription via its service', function () {
     $endpoint = Mockery::mock(SubscriptionEndpointInterface::class);
-    $endpoint->shouldReceive('updatePartial')
+    $endpoint->shouldReceive('update')
         ->with('sub-1', ['endpoint' => 'https://example.com/new', 'eventTypes' => ['Event.Updated']])
         ->once();
 
@@ -97,7 +97,7 @@ it('updates a subscription via its service', function () {
 
 it('partially updates a subscription with only changed fields', function () {
     $endpoint = Mockery::mock(SubscriptionEndpointInterface::class);
-    $endpoint->shouldReceive('updatePartial')
+    $endpoint->shouldReceive('update')
         ->with('sub-1', ['endpoint' => 'https://example.com/new'])
         ->once();
 
@@ -109,7 +109,7 @@ it('partially updates a subscription with only changed fields', function () {
 
 it('deletes a subscription via its service', function () {
     $endpoint = Mockery::mock(SubscriptionEndpointInterface::class);
-    $endpoint->shouldReceive('destroy')->with('sub-1')->once();
+    $endpoint->shouldReceive('delete')->with('sub-1')->once();
 
     $resource = (new EventSubscriptionService($endpoint))->setSubscriptionName('sub-1');
     $resource->delete();

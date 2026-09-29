@@ -64,11 +64,11 @@ it('reads, updates and deletes the survey it is scoped to', function () {
     $payload = surveyPayload();
 
     $endpoint->shouldReceive('get')->with('survey-1')->once()->andReturn($payload);
-    $endpoint->shouldReceive('updatePartial')
+    $endpoint->shouldReceive('update')
         ->with('survey-1', ['surveyName' => 'Renamed'])
         ->once()
         ->andReturn($payload + ['surveyName' => 'Renamed']);
-    $endpoint->shouldReceive('destroy')->with('survey-1')->once();
+    $endpoint->shouldReceive('delete')->with('survey-1')->once();
 
     $resource = surveyResourceWith($endpoint);
 
@@ -104,7 +104,7 @@ it('returns the custom columns as a collection of names', function () {
     // values, not keys, which is why they survive the key normalizer.
     $endpoint = Mockery::mock(SurveyEndpointInterface::class);
 
-    $endpoint->shouldReceive('getCustomColumns')->with('survey-1')->once()->andReturn(['Phone', 'Email']);
+    $endpoint->shouldReceive('customColumns')->with('survey-1')->once()->andReturn(['Phone', 'Email']);
 
     $columns = surveyResourceWith($endpoint)->customColumns();
 

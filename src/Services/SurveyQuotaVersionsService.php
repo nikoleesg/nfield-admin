@@ -25,7 +25,7 @@ class SurveyQuotaVersionsService implements SurveyScopedInterface
     public function list(): Collection
     {
         return QuotaFrameVersionModel::collect(
-            $this->surveyQuotaVersionsEndpoint->getQuotaVersions($this->getSurveyId()),
+            $this->surveyQuotaVersionsEndpoint->list($this->getSurveyId()),
             Collection::class
         );
     }

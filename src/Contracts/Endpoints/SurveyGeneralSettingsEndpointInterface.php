@@ -12,7 +12,7 @@ interface SurveyGeneralSettingsEndpointInterface
      *
      * @return array<string, mixed>
      */
-    public function getGeneralSettings(string $surveyId): array;
+    public function get(string $surveyId): array;
 
     /**
      * Partially updates the general settings for a survey.
@@ -20,5 +20,5 @@ interface SurveyGeneralSettingsEndpointInterface
      *
      * @param  array<string, mixed>  $data
      */
-    public function updateGeneralSettings(string $surveyId, array $data): void;
+    public function update(string $surveyId, array $data): void;
 }

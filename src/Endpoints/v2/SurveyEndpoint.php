@@ -20,14 +20,14 @@ final class SurveyEndpoint extends BaseEndpoint implements SurveyEndpointInterfa
         return $this->httpClient->get($uri)->json();
     }
 
-    public function destroy(string $surveyId): void
+    public function delete(string $surveyId): void
     {
         $uri = $this->resourcePath($surveyId);
 
         $this->httpClient->delete($uri)->json();
     }
 
-    public function updatePartial(string $surveyId, array $surveyUpdateModel): array
+    public function update(string $surveyId, array $surveyUpdateModel): array
     {
         $uri = $this->resourcePath($surveyId);
 
@@ -41,7 +41,7 @@ final class SurveyEndpoint extends BaseEndpoint implements SurveyEndpointInterfa
         return $this->httpClient->get($uri)->json();
     }
 
-    public function getCustomColumns(string $surveyId): array
+    public function customColumns(string $surveyId): array
     {
         $uri = $this->resourceActionPath($surveyId, 'customColumns');
 

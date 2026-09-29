@@ -13,14 +13,14 @@ final class SurveyInterviewQualityCollectionEndpoint extends BaseEndpoint implem
         return "/{$this->version}/surveys";
     }
 
-    public function get(string $surveyId): array
+    public function list(string $surveyId): array
     {
         $uri = $this->subResourcePath($surveyId, 'interviewQuality');
 
         return $this->httpClient->get($uri)->json();
     }
 
-    public function updateQuality(string $surveyId, array $qualityNewStateChangeModel): array
+    public function update(string $surveyId, array $qualityNewStateChangeModel): array
     {
         $uri = $this->subResourcePath($surveyId, 'interviewQuality');
 

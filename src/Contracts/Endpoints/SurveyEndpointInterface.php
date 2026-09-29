@@ -16,7 +16,7 @@ interface SurveyEndpointInterface
     /**
      * Deletes a specified survey.
      */
-    public function destroy(string $surveyId): void;
+    public function delete(string $surveyId): void;
 
     /**
      * Update a survey with the specified fields.
@@ -24,7 +24,7 @@ interface SurveyEndpointInterface
      * @param  array<string, mixed>  $surveyUpdateModel
      * @return array<string, mixed>
      */
-    public function updatePartial(string $surveyId, array $surveyUpdateModel): array;
+    public function update(string $surveyId, array $surveyUpdateModel): array;
 
     /**
      * Return the counts for the specified survey.
@@ -38,7 +38,7 @@ interface SurveyEndpointInterface
      *
      * @return list<string>
      */
-    public function getCustomColumns(string $surveyId): array;
+    public function customColumns(string $surveyId): array;
 
     /**
      * Activate a list of spare sampling points so they can be assigned.

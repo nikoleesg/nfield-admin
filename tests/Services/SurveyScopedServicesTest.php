@@ -137,7 +137,7 @@ it('refuses every fieldwork call before the scope is set', function () {
 it('requests a data download and returns the activity', function () {
     $dataEndpoint = Mockery::mock(SurveyDataEndpointInterface::class);
 
-    $dataEndpoint->shouldReceive('downloadData')
+    $dataEndpoint->shouldReceive('download')
         ->withArgs(function (string $surveyId, array $payload) {
             return $surveyId === 'survey-1'
                 && $payload['fileName'] === 'export.zip'
@@ -157,7 +157,7 @@ it('requests a data download and returns the activity', function () {
 it('accepts a request model as well as an array for a data download', function () {
     $dataEndpoint = Mockery::mock(SurveyDataEndpointInterface::class);
 
-    $dataEndpoint->shouldReceive('downloadData')
+    $dataEndpoint->shouldReceive('download')
         ->withArgs(fn (string $surveyId, array $payload) => $payload['surveyVersion'] === 'v3')
         ->once()
         ->andReturn(['activityId' => 'activity-2']);
@@ -175,17 +175,17 @@ it('downloads and deletes the data of the interview it is scoped to', function (
     $dataEndpoint = Mockery::mock(SurveyDataEndpointInterface::class);
     $interviewEndpoint = Mockery::mock(SurveyInterviewEndpointInterface::class);
 
-    $dataEndpoint->shouldReceive('downloadInterviewData')
+    $dataEndpoint->shouldReceive('downloadInterview')
         ->with('survey-1', 42, ['fileName' => 'one.zip'])
         ->once()
         ->andReturn(['activityId' => 'activity-3']);
 
-    $dataEndpoint->shouldReceive('downloadInterviewData')
+    $dataEndpoint->shouldReceive('downloadInterview')
         ->with('survey-1', 42, ['fileName' => null])
         ->once()
         ->andReturn(['activityId' => 'activity-5']);
 
-    $interviewEndpoint->shouldReceive('deleteInterviewData')
+    $interviewEndpoint->shouldReceive('delete')
         ->with('survey-1', 42)
         ->once()
         ->andReturn(['activityId' => 'activity-4']);
@@ -228,7 +228,7 @@ it('refuses interview data calls before the interview scope is set', function ()
 it('reads the publish state of both packages', function () {
     $endpoint = Mockery::mock(SurveyPublishEndpointInterface::class);
 
-    $endpoint->shouldReceive('getPublishState')
+    $endpoint->shouldReceive('get')
         ->with('survey-1')
         ->once()
         ->andReturn(['live' => 1, 'test' => 0]);
@@ -274,7 +274,7 @@ it('sends the package type and upgrade flag as integers', function () {
 it('starts a publish as a background activity', function () {
     $endpoint = Mockery::mock(SurveyPublishEndpointInterface::class);
 
-    $endpoint->shouldReceive('startPublish')
+    $endpoint->shouldReceive('start')
         ->with('survey-1', [
             'packageType' => SurveyPackageTypeEnum::Live->value,
             'forceUpgrade' => SurveyPublishForceUpgradeEnum::NoUpgrade->value,
@@ -282,7 +282,7 @@ it('starts a publish as a background activity', function () {
         ->once()
         ->andReturn(['activityId' => 'publish-1']);
 
-    $endpoint->shouldReceive('startPublish')
+    $endpoint->shouldReceive('start')
         ->with('survey-1', [
             'packageType' => SurveyPackageTypeEnum::Live->value,
             'forceUpgrade' => SurveyPublishForceUpgradeEnum::ForceUpgrade->value,
@@ -355,7 +355,7 @@ it('lists settings as a collection of models', function () {
     $settings = Mockery::mock(SurveySettingsEndpointInterface::class);
     $general = Mockery::mock(SurveyGeneralSettingsEndpointInterface::class);
 
-    $settings->shouldReceive('listSettings')->with('survey-1')->once()->andReturn([
+    $settings->shouldReceive('list')->with('survey-1')->once()->andReturn([
         ['name' => 'InterviewerAuthentication', 'value' => 'true'],
         ['name' => 'AllowRefusal', 'value' => 'false'],
     ]);
@@ -374,7 +374,7 @@ it('accepts a setting name as a string or as an enum', function () {
 
     $name = SurveySettingNameEnum::cases()[0];
 
-    $settings->shouldReceive('addOrUpdateSetting')
+    $settings->shouldReceive('set')
         ->with('survey-1', ['name' => $name->value, 'value' => 'true'])
         ->twice()
         ->andReturn(['name' => $name->value, 'value' => 'true']);
@@ -389,7 +389,7 @@ it('reads and updates the general settings', function () {
     $settings = Mockery::mock(SurveySettingsEndpointInterface::class);
     $general = Mockery::mock(SurveyGeneralSettingsEndpointInterface::class);
 
-    $general->shouldReceive('getGeneralSettings')->with('survey-1')->once()->andReturn([
+    $general->shouldReceive('get')->with('survey-1')->once()->andReturn([
         'name' => 'Demo',
         'client' => 'Acme',
         'description' => 'A demo',
@@ -397,7 +397,7 @@ it('reads and updates the general settings', function () {
         'owner' => ['id' => 'user-1', 'userName' => 'ada'],
     ]);
 
-    $general->shouldReceive('updateGeneralSettings')
+    $general->shouldReceive('update')
         ->with('survey-1', ['name' => 'Renamed'])
         ->once();
 
@@ -442,7 +442,7 @@ it('publishes an explicit package type and upgrade flag', function () {
         ])
         ->once();
 
-    $endpoint->shouldReceive('startPublish')
+    $endpoint->shouldReceive('start')
         ->with('survey-1', [
             'packageType' => SurveyPackageTypeEnum::Test->value,
             'forceUpgrade' => SurveyPublishForceUpgradeEnum::ForceUpgrade->value,

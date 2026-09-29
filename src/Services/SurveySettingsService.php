@@ -26,7 +26,7 @@ class SurveySettingsService implements SurveyScopedInterface
     /** @return Collection<int, SurveySettingModel> */
     public function list(): Collection
     {
-        $data = $this->surveySettingsEndpoint->listSettings($this->getSurveyId());
+        $data = $this->surveySettingsEndpoint->list($this->getSurveyId());
 
         return SurveySettingModel::collect($data, Collection::class);
     }
@@ -38,14 +38,14 @@ class SurveySettingsService implements SurveyScopedInterface
             value: $value,
         );
 
-        $data = $this->surveySettingsEndpoint->addOrUpdateSetting($this->getSurveyId(), $setting->toArray());
+        $data = $this->surveySettingsEndpoint->set($this->getSurveyId(), $setting->toArray());
 
         return SurveySettingModel::from($data);
     }
 
     public function general(): SurveyGeneralSettingsModel
     {
-        $data = $this->surveyGeneralSettingsEndpoint->getGeneralSettings($this->getSurveyId());
+        $data = $this->surveyGeneralSettingsEndpoint->get($this->getSurveyId());
 
         return SurveyGeneralSettingsModel::from($data);
     }
@@ -57,6 +57,6 @@ class SurveySettingsService implements SurveyScopedInterface
     {
         $payload = SurveyGeneralSettingsUpdateModel::from($data)->toArray();
 
-        $this->surveyGeneralSettingsEndpoint->updateGeneralSettings($this->getSurveyId(), $payload);
+        $this->surveyGeneralSettingsEndpoint->update($this->getSurveyId(), $payload);
     }
 }

@@ -11,12 +11,12 @@ interface SurveyQuotaVersionsEndpointInterface
      *
      * @return list<array<string, mixed>>
      */
-    public function getQuotaVersions(string $surveyId): array;
+    public function list(string $surveyId): array;
 
     /**
      * Retrieves quota frame for specified version
      *
      * @return array<string, mixed>
      */
-    public function getQuotaVersionsByETag(string $surveyId, string $eTag): array;
+    public function get(string $surveyId, string $eTag): array;
 }

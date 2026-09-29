@@ -586,6 +586,41 @@ it('pairs every collection service with a scoped item service', function () {
     expect($offenders)->toBe([]);
 });
 
+/**
+ * Every method declared on an endpoint contract. The contracts are public
+ * (callers bind and mock them), so they follow the same naming as services.
+ *
+ * @return list<array{class-string, ReflectionMethod}>
+ */
+function endpointContractMethods(): array
+{
+    $methods = [];
+
+    foreach (glob(__DIR__.'/../src/Contracts/Endpoints/*.php') as $file) {
+        $contract = 'Nikoleesg\NfieldAdmin\Contracts\Endpoints\\'.basename($file, '.php');
+
+        foreach ((new ReflectionClass($contract))->getMethods() as $method) {
+            $methods[] = [$contract, $method];
+        }
+    }
+
+    return $methods;
+}
+
+it('uses one verb per operation on endpoint contracts', function () {
+    // #75: `destroy()` and `updatePartial()` sat beside `delete()` and
+    // `update()` for the same HTTP operations.
+    $offenders = [];
+
+    foreach (endpointContractMethods() as [$contract, $method]) {
+        if (in_array($method->getName(), ['destroy', 'updatePartial'], true)) {
+            $offenders[] = class_basename($contract).'::'.$method->getName().'()';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
 it('never repeats the class noun in a CRUD method name', function () {
     // #68: the class and the chain already name the resource, so
     // `$survey->getSurvey()` is `$survey->get()`. A verb followed only by
@@ -597,7 +632,7 @@ it('never repeats the class noun in a CRUD method name', function () {
     $verbs = 'get|list|find|create|update|delete|set|activate|replace|assign|unassign';
     $offenders = [];
 
-    foreach (publicSdkMethods() as [$class, $method]) {
+    foreach ([...publicSdkMethods(), ...endpointContractMethods()] as [$class, $method]) {
         if (! preg_match('/^('.$verbs.')([A-Z]\w*)$/', $method->getName(), $match)) {
             continue;
         }
@@ -608,7 +643,7 @@ it('never repeats the class noun in a CRUD method name', function () {
             continue;
         }
 
-        $noun = $words(preg_replace('/(Collection)?(Service|Resource)$/', '', class_basename($class)));
+        $noun = $words(preg_replace('/(Collection)?(Service|Resource|EndpointInterface)$/', '', class_basename($class)));
 
         if (array_diff($words($match[2]), $noun) === []) {
             $offenders[] = class_basename($class).'::'.$method->getName().'() repeats the class noun; use '.$match[1].'()';

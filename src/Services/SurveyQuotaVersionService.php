@@ -26,7 +26,7 @@ class SurveyQuotaVersionService implements QuotaVersionScopedInterface
     public function get(): QuotaFrameModel
     {
         return QuotaFrameModel::from(
-            $this->surveyQuotaVersionsEndpoint->getQuotaVersionsByETag($this->getSurveyId(), $this->getQuotaVersion())
+            $this->surveyQuotaVersionsEndpoint->get($this->getSurveyId(), $this->getQuotaVersion())
         );
     }
 }

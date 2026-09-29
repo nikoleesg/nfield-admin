@@ -27,7 +27,7 @@ final class SurveySampleCollectionEndpoint extends BaseEndpoint implements Surve
         return $this->httpClient->postMultipart($uri, 'File', $sampleData, $fileName)->json();
     }
 
-    public function destroy(string $surveyId, array $sampleFilterModel): array
+    public function delete(string $surveyId, array $sampleFilterModel): array
     {
         $uri = $this->subResourcePath($surveyId, 'sample');
 

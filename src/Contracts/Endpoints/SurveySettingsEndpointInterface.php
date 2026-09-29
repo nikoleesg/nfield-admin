@@ -12,7 +12,7 @@ interface SurveySettingsEndpointInterface
      *
      * @return list<array<string, mixed>>
      */
-    public function listSettings(string $surveyId): array;
+    public function list(string $surveyId): array;
 
     /**
      * Adds or updates a single key-value setting for a survey.
@@ -21,5 +21,5 @@ interface SurveySettingsEndpointInterface
      * @param  array<string, mixed>  $setting
      * @return array<string, mixed>
      */
-    public function addOrUpdateSetting(string $surveyId, array $setting): array;
+    public function set(string $surveyId, array $setting): array;
 }

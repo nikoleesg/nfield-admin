@@ -99,13 +99,13 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ✅ | GET | `/v2/surveys/{surveyId}/quotaTargets` | `SurveyQuotaTargetsEndpoint::getQuotaTargets` |
-| ✅ | GET | `/v2/surveys/{surveyId}/quotaTargets/{eTag}` | `SurveyQuotaTargetsEndpoint::getQuotaTargetsByETag` |
-| ✅ | GET | `/v2/surveys/{surveyId}/quotaVersions` | `SurveyQuotaVersionsEndpoint::getQuotaVersions` |
-| ✅ | GET | `/v2/surveys/{surveyId}/quotaVersions/{eTag}` | `SurveyQuotaVersionsEndpoint::getQuotaVersionsByETag` |
-| ✅ | GET | `/v2/surveys/{surveyId}/surveyQuotaFrame` | `SurveyQuotaFrameEndpoint::getQuotaFrame` |
-| ✅ | PUT | `/v2/surveys/{surveyId}/surveyQuotaFrame` | `SurveyQuotaFrameEndpoint::setQuotaFrame` |
-| ✅ | PUT | `/v2/surveys/{surveyId}/surveyQuotaFrame/{eTag}` | `SurveyQuotaFrameEndpoint::setQuotaLevelsTargets` |
+| ✅ | GET | `/v2/surveys/{surveyId}/quotaTargets` | `SurveyQuotaTargetsEndpoint::get` |
+| ✅ | GET | `/v2/surveys/{surveyId}/quotaTargets/{eTag}` | `SurveyQuotaTargetsEndpoint::getVersion` |
+| ✅ | GET | `/v2/surveys/{surveyId}/quotaVersions` | `SurveyQuotaVersionsEndpoint::list` |
+| ✅ | GET | `/v2/surveys/{surveyId}/quotaVersions/{eTag}` | `SurveyQuotaVersionsEndpoint::get` |
+| ✅ | GET | `/v2/surveys/{surveyId}/surveyQuotaFrame` | `SurveyQuotaFrameEndpoint::get` |
+| ✅ | PUT | `/v2/surveys/{surveyId}/surveyQuotaFrame` | `SurveyQuotaFrameEndpoint::update` |
+| ✅ | PUT | `/v2/surveys/{surveyId}/surveyQuotaFrame/{eTag}` | `SurveyQuotaFrameEndpoint::updateVersion` |
 
 ### Surveys — Fieldwork
 
@@ -172,7 +172,7 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ✅ | DELETE | `/v2/surveys/{surveyId}/sample` | `SurveySampleCollectionEndpoint::destroy` |
+| ✅ | DELETE | `/v2/surveys/{surveyId}/sample` | `SurveySampleCollectionEndpoint::delete` |
 | ✅ | GET | `/v2/surveys/{surveyId}/sample` | `SurveySampleCollectionEndpoint::download` |
 | ✅ | POST | `/v2/surveys/{surveyId}/sample` | `SurveySampleCollectionEndpoint::upload` |
 | ✅ | PUT | `/v2/surveys/{surveyId}/sample/block` | `SurveySampleCollectionEndpoint::block` |
@@ -195,11 +195,11 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 | ✅ | POST | `/v2/surveys` | `SurveyCollectionEndpoint::create` |
 | ✅ | POST | `/v2/surveys/createSurveyFromBlueprint` | `SurveyCollectionEndpoint::createFromBlueprint` |
 | ✅ | GET | `/v2/surveys/search` | `SurveyCollectionEndpoint::search` |
-| ✅ | DELETE | `/v2/surveys/{surveyId}` | `SurveyEndpoint::destroy` |
+| ✅ | DELETE | `/v2/surveys/{surveyId}` | `SurveyEndpoint::delete` |
 | ✅ | GET | `/v2/surveys/{surveyId}` | `SurveyEndpoint::get` |
-| ✅ | PATCH | `/v2/surveys/{surveyId}` | `SurveyEndpoint::updatePartial` |
+| ✅ | PATCH | `/v2/surveys/{surveyId}` | `SurveyEndpoint::update` |
 | ✅ | GET | `/v2/surveys/{surveyId}/counts` | `SurveyEndpoint::counts` |
-| ✅ | GET | `/v2/surveys/{surveyId}/customColumns` | `SurveyEndpoint::getCustomColumns` |
+| ✅ | GET | `/v2/surveys/{surveyId}/customColumns` | `SurveyEndpoint::customColumns` |
 | 🗓️ | GET | `/v2/surveys/{surveyId}/dataRetentionSettings` | Planned for Development (#62) |
 | 🗓️ | PUT | `/v2/surveys/{surveyId}/dataRetentionSettings` | Planned for Development (#62) |
 | ❌ | POST | `/v2/surveys/{surveyId}/respondentDataEncrypt` | — |
@@ -212,8 +212,8 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| ✅ | GET | `/v2/surveys/{surveyId}/generalSettings` | `SurveyGeneralSettingsEndpoint::getGeneralSettings` |
-| ✅ | PATCH | `/v2/surveys/{surveyId}/generalSettings` | `SurveyGeneralSettingsEndpoint::updateGeneralSettings` |
+| ✅ | GET | `/v2/surveys/{surveyId}/generalSettings` | `SurveyGeneralSettingsEndpoint::get` |
+| ✅ | PATCH | `/v2/surveys/{surveyId}/generalSettings` | `SurveyGeneralSettingsEndpoint::update` |
 | ❌ | DELETE | `/v2/surveys/{surveyId}/interviewerInstructions` | — |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewerInstructions` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/interviewerInstructions/{fileName}` | — |
@@ -233,8 +233,8 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 | 🗓️ | DELETE | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
 | 🗓️ | GET | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
 | 🗓️ | PATCH | `/v2/surveys/{surveyId}/responseCodes/{responseCode}` | Planned for Development (#65) |
-| ✅ | GET | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::listSettings` |
-| ✅ | POST | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::addOrUpdateSetting` |
+| ✅ | GET | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::list` |
+| ✅ | POST | `/v2/surveys/{surveyId}/settings` | `SurveySettingsEndpoint::set` |
 
 ### Surveys — Publishing & Script
 
@@ -243,9 +243,9 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
 | 🗓️ | GET | `/v2/surveys/{surveyId}/package` | Planned for Development (#64) |
-| ✅ | GET | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::getPublishState` |
+| ✅ | GET | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::get` |
 | ✅ | PUT | `/v2/surveys/{surveyId}/publish` | `SurveyPublishEndpoint::publish` |
-| ✅ | POST | `/v2/surveys/{surveyId}/publish/start` | `SurveyPublishEndpoint::startPublish` |
+| ✅ | POST | `/v2/surveys/{surveyId}/publish/start` | `SurveyPublishEndpoint::start` |
 | 🗓️ | GET | `/v2/surveys/{surveyId}/script` | Planned for Development (#64) |
 | 🗓️ | POST | `/v2/surveys/{surveyId}/script` | Planned for Development (#64) |
 | 🗓️ | GET | `/v2/surveys/{surveyId}/script/{eTag}` | Planned for Development (#64) |
@@ -263,17 +263,17 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
 | ❌ | GET | `/v2/surveys/interviewSimulations` | — |
-| ✅ | POST | `/v2/surveys/{surveyId}/dataDownload` | `SurveyDataEndpoint::downloadData` |
-| ✅ | POST | `/v2/surveys/{surveyId}/dataDownload/{interviewId}` | `SurveyDataEndpoint::downloadInterviewData` |
+| ✅ | POST | `/v2/surveys/{surveyId}/dataDownload` | `SurveyDataEndpoint::download` |
+| ✅ | POST | `/v2/surveys/{surveyId}/dataDownload/{interviewId}` | `SurveyDataEndpoint::downloadInterview` |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewInteractionsSettings` | — |
 | ❌ | PATCH | `/v2/surveys/{surveyId}/interviewInteractionsSettings` | — |
 | ✅ | GET | `/v2/surveys/{surveyId}/interviewQuality` | `SurveyInterviewQualityCollectionEndpoint::get` |
-| ✅ | PUT | `/v2/surveys/{surveyId}/interviewQuality` | `SurveyInterviewQualityCollectionEndpoint::updateQuality` |
+| ✅ | PUT | `/v2/surveys/{surveyId}/interviewQuality` | `SurveyInterviewQualityCollectionEndpoint::update` |
 | ✅ | GET | `/v2/surveys/{surveyId}/interviewQuality/{interviewId}` | `SurveyInterviewQualityEndpoint::get` |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewSimulation` | — |
 | ❌ | GET | `/v2/surveys/{surveyId}/interviewSimulations/downloadHints` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/interviewSimulations/startInterviewSimulations` | — |
-| ✅ | DELETE | `/v2/surveys/{surveyId}/interviews/{interviewId}` | `SurveyInterviewEndpoint::deleteInterviewData` |
+| ✅ | DELETE | `/v2/surveys/{surveyId}/interviews/{interviewId}` | `SurveyInterviewEndpoint::delete` |
 | ❌ | GET | `/v2/surveys/{surveyId}/manualTests` | — |
 | ❌ | POST | `/v2/surveys/{surveyId}/manualTests` | — |
 | 🗓️ | GET | `/v2/surveys/{surveyId}/performance/metrics/live` | Planned for Development (#63) |
@@ -465,9 +465,9 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 |---|---|---|---|
 | ✅ | GET | `/v2/events/subscriptions` | `SubscriptionCollectionEndpoint::list` |
 | ✅ | POST | `/v2/events/subscriptions` | `SubscriptionCollectionEndpoint::create` |
-| ✅ | DELETE | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::destroy` |
+| ✅ | DELETE | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::delete` |
 | ✅ | GET | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::get` |
-| ✅ | PATCH | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::updatePartial` |
+| ✅ | PATCH | `/v2/events/subscriptions/{name}` | `SubscriptionEndpoint::update` |
 
 ### Offices
 

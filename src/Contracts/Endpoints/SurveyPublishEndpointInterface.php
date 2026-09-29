@@ -9,7 +9,7 @@ interface SurveyPublishEndpointInterface
     /**
      * @return array<string, mixed>
      */
-    public function getPublishState(string $surveyId): array;
+    public function get(string $surveyId): array;
 
     /**
      * @param  array<string, mixed>  $model
@@ -20,5 +20,5 @@ interface SurveyPublishEndpointInterface
      * @param  array<string, mixed>  $model
      * @return array<string, mixed>
      */
-    public function startPublish(string $surveyId, array $model): array;
+    public function start(string $surveyId, array $model): array;
 }

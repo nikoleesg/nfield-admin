@@ -24,7 +24,7 @@ interface SurveySampleCollectionEndpointInterface
      * @param  list<array<string, mixed>>  $sampleFilterModel
      * @return array<string, mixed>
      */
-    public function destroy(string $surveyId, array $sampleFilterModel): array;
+    public function delete(string $surveyId, array $sampleFilterModel): array;
 
     /**
      * Blocks sample data for a survey based on survey id and a filter

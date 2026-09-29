@@ -11,5 +11,5 @@ interface SurveyInterviewEndpointInterface
      *
      * @return array<string, mixed>
      */
-    public function deleteInterviewData(string $surveyId, int $interviewId): array;
+    public function delete(string $surveyId, int $interviewId): array;
 }

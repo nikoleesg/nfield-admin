@@ -20,14 +20,14 @@ final class SubscriptionEndpoint extends BaseEndpoint implements SubscriptionEnd
         return $this->httpClient->get($uri)->json();
     }
 
-    public function updatePartial(string $name, array $data): void
+    public function update(string $name, array $data): void
     {
         $uri = $this->resourcePath($name);
 
         $this->httpClient->patch($uri, $data);
     }
 
-    public function destroy(string $name): void
+    public function delete(string $name): void
     {
         $uri = $this->resourcePath($name);
 

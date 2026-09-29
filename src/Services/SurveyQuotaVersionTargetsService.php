@@ -30,7 +30,7 @@ class SurveyQuotaVersionTargetsService implements QuotaVersionScopedInterface
     public function get(): SurveysQuotaTargetsEtagResponseModel
     {
         return SurveysQuotaTargetsEtagResponseModel::from(
-            $this->surveyQuotaTargetsEndpoint->getQuotaTargetsByETag($this->getSurveyId(), $this->getQuotaVersion())
+            $this->surveyQuotaTargetsEndpoint->getVersion($this->getSurveyId(), $this->getQuotaVersion())
         );
     }
 
@@ -48,7 +48,7 @@ class SurveyQuotaVersionTargetsService implements QuotaVersionScopedInterface
         $payload = SurveyQuotaFrameEtagRequestModel::from($data)->toArray();
 
         return SurveyQuotaFrameEtagResponseModel::from(
-            $this->surveyQuotaFrameEndpoint->setQuotaLevelsTargets($this->getSurveyId(), $this->getQuotaVersion(), $payload)
+            $this->surveyQuotaFrameEndpoint->updateVersion($this->getSurveyId(), $this->getQuotaVersion(), $payload)
         );
     }
 }

@@ -11,12 +11,12 @@ interface SurveyQuotaTargetsEndpointInterface
      *
      * @return array<string, mixed>
      */
-    public function getQuotaTargets(string $surveyId): array;
+    public function get(string $surveyId): array;
 
     /**
      * Retrieves a FULL QuotaFrame structure based on survey (The successful counts are also retrieved)
      *
      * @return array<string, mixed>
      */
-    public function getQuotaTargetsByETag(string $surveyId, string $eTag): array;
+    public function getVersion(string $surveyId, string $eTag): array;
 }

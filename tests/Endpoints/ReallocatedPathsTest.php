@@ -53,7 +53,7 @@ it('deletes and updates sample from the collection endpoint', function () {
 
     $endpoint = new SurveySampleCollectionEndpoint($httpClient);
 
-    expect($endpoint->destroy('survey-id', ['filter' => 'x']))->toBe(['deleted' => 1])
+    expect($endpoint->delete('survey-id', ['filter' => 'x']))->toBe(['deleted' => 1])
         ->and($endpoint->update('survey-id', ['column' => 'y']))->toBe(['updated' => 1]);
 });
 
@@ -78,7 +78,7 @@ it('deletes interview data from the interview endpoint', function () {
         ->once()
         ->andReturn(jsonResponse(['deleted' => true]));
 
-    $result = (new SurveyInterviewEndpoint($httpClient))->deleteInterviewData('survey-id', 42);
+    $result = (new SurveyInterviewEndpoint($httpClient))->delete('survey-id', 42);
 
     expect($result)->toBe(['deleted' => true]);
 });

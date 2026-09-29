@@ -26,7 +26,7 @@ class SurveyQuotaTargetsService implements SurveyScopedInterface
     public function get(): SurveysQuotaTargetsResponseModel
     {
         return SurveysQuotaTargetsResponseModel::from(
-            $this->surveyQuotaTargetsEndpoint->getQuotaTargets($this->getSurveyId())
+            $this->surveyQuotaTargetsEndpoint->get($this->getSurveyId())
         );
     }
 

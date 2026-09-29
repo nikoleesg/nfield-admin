@@ -46,12 +46,12 @@ function endpointCallCases(): array
             Contracts\SubscriptionEndpointInterface::class, 'get', ['sub1'],
             'GET', 'v2/events/subscriptions/sub1', [],
         ],
-        'Subscription::updatePartial' => [
-            Contracts\SubscriptionEndpointInterface::class, 'updatePartial', ['sub1', ['name' => 'sub1']],
+        'Subscription::update' => [
+            Contracts\SubscriptionEndpointInterface::class, 'update', ['sub1', ['name' => 'sub1']],
             'PATCH', 'v2/events/subscriptions/sub1', ['name' => 'sub1'],
         ],
-        'Subscription::destroy' => [
-            Contracts\SubscriptionEndpointInterface::class, 'destroy', ['sub1'],
+        'Subscription::delete' => [
+            Contracts\SubscriptionEndpointInterface::class, 'delete', ['sub1'],
             'DELETE', 'v2/events/subscriptions/sub1', [],
         ],
         // ── Access & Authentication ──────────────────────────────────────────
@@ -145,20 +145,20 @@ function endpointCallCases(): array
             Contracts\SurveyEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1', [],
         ],
-        'Survey::destroy' => [
-            Contracts\SurveyEndpointInterface::class, 'destroy', ['survey-1'],
+        'Survey::delete' => [
+            Contracts\SurveyEndpointInterface::class, 'delete', ['survey-1'],
             'DELETE', 'v2/surveys/survey-1', [],
         ],
-        'Survey::updatePartial' => [
-            Contracts\SurveyEndpointInterface::class, 'updatePartial', ['survey-1', ['surveyName' => 'renamed']],
+        'Survey::update' => [
+            Contracts\SurveyEndpointInterface::class, 'update', ['survey-1', ['surveyName' => 'renamed']],
             'PATCH', 'v2/surveys/survey-1', ['surveyName' => 'renamed'],
         ],
         'Survey::counts' => [
             Contracts\SurveyEndpointInterface::class, 'counts', ['survey-1'],
             'GET', 'v2/surveys/survey-1/counts', [],
         ],
-        'Survey::getCustomColumns' => [
-            Contracts\SurveyEndpointInterface::class, 'getCustomColumns', ['survey-1'],
+        'Survey::customColumns' => [
+            Contracts\SurveyEndpointInterface::class, 'customColumns', ['survey-1'],
             'GET', 'v2/surveys/survey-1/customColumns', [],
         ],
         'Survey::batchActivateSamplingPoints' => [
@@ -189,20 +189,20 @@ function endpointCallCases(): array
         ],
 
         // ── Settings ─────────────────────────────────────────────────────────
-        'SurveySettings::listSettings' => [
-            Contracts\SurveySettingsEndpointInterface::class, 'listSettings', ['survey-1'],
+        'SurveySettings::list' => [
+            Contracts\SurveySettingsEndpointInterface::class, 'list', ['survey-1'],
             'GET', 'v2/surveys/survey-1/settings', [],
         ],
-        'SurveySettings::addOrUpdateSetting' => [
-            Contracts\SurveySettingsEndpointInterface::class, 'addOrUpdateSetting', ['survey-1', ['name' => 'a', 'value' => 'b']],
+        'SurveySettings::set' => [
+            Contracts\SurveySettingsEndpointInterface::class, 'set', ['survey-1', ['name' => 'a', 'value' => 'b']],
             'POST', 'v2/surveys/survey-1/settings', ['name' => 'a', 'value' => 'b'],
         ],
-        'SurveyGeneralSettings::getGeneralSettings' => [
-            Contracts\SurveyGeneralSettingsEndpointInterface::class, 'getGeneralSettings', ['survey-1'],
+        'SurveyGeneralSettings::get' => [
+            Contracts\SurveyGeneralSettingsEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1/generalSettings', [],
         ],
-        'SurveyGeneralSettings::updateGeneralSettings' => [
-            Contracts\SurveyGeneralSettingsEndpointInterface::class, 'updateGeneralSettings', ['survey-1', ['description' => 'x']],
+        'SurveyGeneralSettings::update' => [
+            Contracts\SurveyGeneralSettingsEndpointInterface::class, 'update', ['survey-1', ['description' => 'x']],
             'PATCH', 'v2/surveys/survey-1/generalSettings', ['description' => 'x'],
         ],
         'SurveySamplingMethod::get' => [
@@ -223,68 +223,68 @@ function endpointCallCases(): array
         ],
 
         // ── Publish ──────────────────────────────────────────────────────────
-        'SurveyPublish::getPublishState' => [
-            Contracts\SurveyPublishEndpointInterface::class, 'getPublishState', ['survey-1'],
+        'SurveyPublish::get' => [
+            Contracts\SurveyPublishEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1/publish', [],
         ],
         'SurveyPublish::publish' => [
             Contracts\SurveyPublishEndpointInterface::class, 'publish', ['survey-1', ['packageType' => 1]],
             'PUT', 'v2/surveys/survey-1/publish', ['packageType' => 1],
         ],
-        'SurveyPublish::startPublish' => [
-            Contracts\SurveyPublishEndpointInterface::class, 'startPublish', ['survey-1', ['packageType' => 1]],
+        'SurveyPublish::start' => [
+            Contracts\SurveyPublishEndpointInterface::class, 'start', ['survey-1', ['packageType' => 1]],
             'POST', 'v2/surveys/survey-1/publish/start', ['packageType' => 1],
         ],
 
         // ── Quota ────────────────────────────────────────────────────────────
-        'SurveyQuotaFrame::getQuotaFrame' => [
-            Contracts\SurveyQuotaFrameEndpointInterface::class, 'getQuotaFrame', ['survey-1'],
+        'SurveyQuotaFrame::get' => [
+            Contracts\SurveyQuotaFrameEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1/surveyQuotaFrame', [],
         ],
-        'SurveyQuotaFrame::setQuotaFrame' => [
-            Contracts\SurveyQuotaFrameEndpointInterface::class, 'setQuotaFrame', ['survey-1', ['levels' => []]],
+        'SurveyQuotaFrame::update' => [
+            Contracts\SurveyQuotaFrameEndpointInterface::class, 'update', ['survey-1', ['levels' => []]],
             'PUT', 'v2/surveys/survey-1/surveyQuotaFrame', ['levels' => []],
         ],
-        'SurveyQuotaFrame::setQuotaLevelsTargets' => [
-            Contracts\SurveyQuotaFrameEndpointInterface::class, 'setQuotaLevelsTargets', ['survey-1', '42', ['levels' => []]],
+        'SurveyQuotaFrame::updateVersion' => [
+            Contracts\SurveyQuotaFrameEndpointInterface::class, 'updateVersion', ['survey-1', '42', ['levels' => []]],
             'PUT', 'v2/surveys/survey-1/surveyQuotaFrame/42', ['levels' => []],
         ],
-        'SurveyQuotaTargets::getQuotaTargets' => [
-            Contracts\SurveyQuotaTargetsEndpointInterface::class, 'getQuotaTargets', ['survey-1'],
+        'SurveyQuotaTargets::get' => [
+            Contracts\SurveyQuotaTargetsEndpointInterface::class, 'get', ['survey-1'],
             'GET', 'v2/surveys/survey-1/quotaTargets', [],
         ],
-        'SurveyQuotaTargets::getQuotaTargetsByETag' => [
-            Contracts\SurveyQuotaTargetsEndpointInterface::class, 'getQuotaTargetsByETag', ['survey-1', '42'],
+        'SurveyQuotaTargets::getVersion' => [
+            Contracts\SurveyQuotaTargetsEndpointInterface::class, 'getVersion', ['survey-1', '42'],
             'GET', 'v2/surveys/survey-1/quotaTargets/42', [],
         ],
-        'SurveyQuotaVersions::getQuotaVersions' => [
-            Contracts\SurveyQuotaVersionsEndpointInterface::class, 'getQuotaVersions', ['survey-1'],
+        'SurveyQuotaVersions::list' => [
+            Contracts\SurveyQuotaVersionsEndpointInterface::class, 'list', ['survey-1'],
             'GET', 'v2/surveys/survey-1/quotaVersions', [],
         ],
-        'SurveyQuotaVersions::getQuotaVersionsByETag' => [
-            Contracts\SurveyQuotaVersionsEndpointInterface::class, 'getQuotaVersionsByETag', ['survey-1', '42'],
+        'SurveyQuotaVersions::get' => [
+            Contracts\SurveyQuotaVersionsEndpointInterface::class, 'get', ['survey-1', '42'],
             'GET', 'v2/surveys/survey-1/quotaVersions/42', [],
         ],
 
         // ── Data delivery ────────────────────────────────────────────────────
-        'SurveyData::downloadData' => [
-            Contracts\SurveyDataEndpointInterface::class, 'downloadData', ['survey-1', ['fileName' => 'f.zip']],
+        'SurveyData::download' => [
+            Contracts\SurveyDataEndpointInterface::class, 'download', ['survey-1', ['fileName' => 'f.zip']],
             'POST', 'v2/surveys/survey-1/dataDownload', ['fileName' => 'f.zip'],
         ],
-        'SurveyData::downloadInterviewData' => [
-            Contracts\SurveyDataEndpointInterface::class, 'downloadInterviewData', ['survey-1', 42, ['fileName' => 'f.zip']],
+        'SurveyData::downloadInterview' => [
+            Contracts\SurveyDataEndpointInterface::class, 'downloadInterview', ['survey-1', 42, ['fileName' => 'f.zip']],
             'POST', 'v2/surveys/survey-1/dataDownload/42', ['fileName' => 'f.zip'],
         ],
-        'SurveyInterview::deleteInterviewData' => [
-            Contracts\SurveyInterviewEndpointInterface::class, 'deleteInterviewData', ['survey-1', 42],
+        'SurveyInterview::delete' => [
+            Contracts\SurveyInterviewEndpointInterface::class, 'delete', ['survey-1', 42],
             'DELETE', 'v2/surveys/survey-1/interviews/42', [],
         ],
-        'SurveyInterviewQualityCollection::get' => [
-            Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'get', ['survey-1'],
+        'SurveyInterviewQualityCollection::list' => [
+            Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'list', ['survey-1'],
             'GET', 'v2/surveys/survey-1/interviewQuality', [],
         ],
-        'SurveyInterviewQualityCollection::updateQuality' => [
-            Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'updateQuality', ['survey-1', ['interviewId' => 'int-1', 'newState' => 1]],
+        'SurveyInterviewQualityCollection::update' => [
+            Contracts\SurveyInterviewQualityCollectionEndpointInterface::class, 'update', ['survey-1', ['interviewId' => 'int-1', 'newState' => 1]],
             'PUT', 'v2/surveys/survey-1/interviewQuality', ['interviewId' => 'int-1', 'newState' => 1],
         ],
         'SurveyInterviewQuality::get' => [
@@ -297,8 +297,8 @@ function endpointCallCases(): array
             Contracts\SurveySampleCollectionEndpointInterface::class, 'download', ['survey-1'],
             'GET', 'v2/surveys/survey-1/sample', [],
         ],
-        'SurveySampleCollection::destroy' => [
-            Contracts\SurveySampleCollectionEndpointInterface::class, 'destroy', ['survey-1', [['name' => 'c', 'op' => 'eq', 'value' => '1']]],
+        'SurveySampleCollection::delete' => [
+            Contracts\SurveySampleCollectionEndpointInterface::class, 'delete', ['survey-1', [['name' => 'c', 'op' => 'eq', 'value' => '1']]],
             'DELETE', 'v2/surveys/survey-1/sample', [['name' => 'c', 'op' => 'eq', 'value' => '1']],
         ],
         'SurveySampleCollection::block' => [

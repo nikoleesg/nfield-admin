@@ -104,7 +104,7 @@ it('deletes the sample records that match the filters', function () {
     // operation, so it belongs here.
     $collection = Mockery::mock(SurveySampleCollectionEndpointInterface::class);
 
-    $collection->shouldReceive('destroy')
+    $collection->shouldReceive('delete')
         ->with('survey-1', [
             ['name' => 'Status', 'op' => 'eq', 'value' => 'Open'],
             ['name' => 'Region', 'op' => 'eq', 'value' => 'North'],
