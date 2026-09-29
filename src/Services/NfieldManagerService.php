@@ -28,6 +28,7 @@ class NfieldManagerService
         protected EventSubscriptionCollectionService $eventSubscriptionCollectionService,
         protected InterviewersWorklogService $interviewersWorklogService,
         protected SurveyResourceUsageService $surveyResourceUsageService,
+        protected ResponseCodeCollectionService $responseCodeCollectionService,
     ) {}
 
     // ========================================
@@ -42,6 +43,11 @@ class NfieldManagerService
     public function surveyResourceUsage(): SurveyResourceUsageService
     {
         return $this->surveyResourceUsageService;
+    }
+
+    public function responseCodes(): ResponseCodeCollectionService
+    {
+        return $this->responseCodeCollectionService;
     }
 
     public function backgroundActivities(): BackgroundActivitiesService

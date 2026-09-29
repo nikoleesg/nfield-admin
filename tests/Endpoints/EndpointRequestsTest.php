@@ -80,6 +80,24 @@ function endpointCallCases(): array
             'GET', 'v2/surveyResources?%24top=5', ['$top' => 5],
         ],
 
+        // ── Response codes (domain) ──────────────────────────────────────────
+        'ResponseCodeCollection::list' => [
+            Contracts\ResponseCodeCollectionEndpointInterface::class, 'list', [],
+            'GET', 'v2/responseCodes', [],
+        ],
+        'ResponseCodeCollection::create' => [
+            Contracts\ResponseCodeCollectionEndpointInterface::class, 'create', [['id' => 210, 'description' => 'Discarded']],
+            'POST', 'v2/responseCodes', ['id' => 210, 'description' => 'Discarded'],
+        ],
+        'ResponseCode::update' => [
+            Contracts\ResponseCodeEndpointInterface::class, 'update', [210, ['url' => 'https://example.com']],
+            'PATCH', 'v2/responseCodes/210', ['url' => 'https://example.com'],
+        ],
+        'ResponseCode::delete' => [
+            Contracts\ResponseCodeEndpointInterface::class, 'delete', [210],
+            'DELETE', 'v2/responseCodes/210', [],
+        ],
+
         // ── Interviewers Worklog ─────────────────────────────────────────────
         'InterviewersWorklog::download' => [
             Contracts\InterviewersWorklogEndpointInterface::class, 'download', [['from' => '2026-09-01T00:00:00+00:00', 'to' => '2026-09-30T00:00:00+00:00']],

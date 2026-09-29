@@ -2,9 +2,9 @@
 
 Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
 
-**Overall: 93 of 282 operations implemented (33%), across 182 paths.**
+**Overall: 97 of 282 operations implemented (34%), across 182 paths.**
 
-**Planned for development: 46 operations across 8 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
+**Planned for development: 42 operations across 7 sections**, each tracked by a GitHub issue (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
@@ -22,6 +22,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Event Subscriptions | 5 | — | 5 | 100% |
 | Interviewers Worklog | 1 | — | 1 | 100% |
 | Survey Resources | 1 | — | 1 | 100% |
+| Response Codes (tenant) | 4 | — | 4 | 100% |
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
 | Surveys — Core | 9 | 4 | 14 | 64% |
@@ -38,7 +39,6 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | CATI Interviewers | 0 | — | 5 | 0% |
 | Offices | 0 | — | 5 | 0% |
 | Language Translations (tenant) | 0 | — | 4 | 0% |
-| Response Codes (tenant) | 0 | 4 | 4 | 0% |
 | Themes | 0 | 3 | 3 | 0% |
 | Blacklist | 0 | — | 2 | 0% |
 | Default Texts | 0 | — | 2 | 0% |
@@ -46,7 +46,7 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 | Search Fields Setting | 0 | — | 2 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
 | Templates | 0 | — | 1 | 0% |
-| **Total** | **93** | **46** | **282** | **33%** |
+| **Total** | **97** | **42** | **282** | **34%** |
 
 ---
 
@@ -58,13 +58,12 @@ Planned for the next release (2026-09-23). Work proceeds section by section; eac
 |---|---:|---|
 | Access & Authentication | 5 | [#57](https://github.com/nikoleesg/nfield-admin/issues/57) |
 | Parent Surveys & Waves | 14 | [#67](https://github.com/nikoleesg/nfield-admin/issues/67) |
-| Response Codes (tenant) | 4 | [#59](https://github.com/nikoleesg/nfield-admin/issues/59) |
 | Survey Groups | 5 | [#60](https://github.com/nikoleesg/nfield-admin/issues/60) |
 | Surveys — Core | 4 | [#62](https://github.com/nikoleesg/nfield-admin/issues/62) |
 | Surveys — Publishing & Script | 6 | [#64](https://github.com/nikoleesg/nfield-admin/issues/64) |
 | Surveys — Settings & Content | 5 | [#65](https://github.com/nikoleesg/nfield-admin/issues/65) |
 | Themes | 3 | [#66](https://github.com/nikoleesg/nfield-admin/issues/66) |
-| **Total** | **46** | |
+| **Total** | **42** | |
 
 Survey Groups is only partly planned: the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
 
@@ -507,14 +506,14 @@ Survey Groups is only partly planned: the write operations (`POST /v2/surveyGrou
 
 ### Response Codes (tenant)
 
-*0/4 implemented.*
+*4/4 implemented.*
 
 | ✓ | Method | Path | Implementation |
 |---|---|---|---|
-| 🗓️ | GET | `/v2/responseCodes` | Planned for Development (#59) |
-| 🗓️ | POST | `/v2/responseCodes` | Planned for Development (#59) |
-| 🗓️ | DELETE | `/v2/responseCodes/{responseCodeId}` | Planned for Development (#59) |
-| 🗓️ | PATCH | `/v2/responseCodes/{responseCodeId}` | Planned for Development (#59) |
+| ✅ | GET | `/v2/responseCodes` | `ResponseCodeCollectionEndpoint::list` |
+| ✅ | POST | `/v2/responseCodes` | `ResponseCodeCollectionEndpoint::create` |
+| ✅ | DELETE | `/v2/responseCodes/{responseCodeId}` | `ResponseCodeEndpoint::delete` |
+| ✅ | PATCH | `/v2/responseCodes/{responseCodeId}` | `ResponseCodeEndpoint::update` |
 
 ### Themes
 
@@ -639,7 +638,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 ## Pending endpoints (flat list)
 
-Everything not yet implemented (189 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
+Everything not yet implemented (185 operations), grouped by section. Items marked "Planned for Development" have a tracking issue; the rest are not yet planned.
 
 **Access & Authentication** (16 pending)
 
@@ -759,13 +758,6 @@ Everything not yet implemented (189 operations), grouped by section. Items marke
 - `PUT /v2/surveyWaves/{waveId}/startDate` — Planned for Development (#67)
 - `GET /v2/surveyWaves/{waveId}/stopDate` — Planned for Development (#67)
 - `PUT /v2/surveyWaves/{waveId}/stopDate` — Planned for Development (#67)
-
-**Response Codes (tenant)** (4 pending)
-
-- `GET /v2/responseCodes` — Planned for Development (#59)
-- `POST /v2/responseCodes` — Planned for Development (#59)
-- `DELETE /v2/responseCodes/{responseCodeId}` — Planned for Development (#59)
-- `PATCH /v2/responseCodes/{responseCodeId}` — Planned for Development (#59)
 
 **Screeners** (10 pending)
 

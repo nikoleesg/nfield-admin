@@ -34,6 +34,8 @@ class NfieldAdminServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(Contracts\BackgroundActivitiesEndpointInterface::class, Endpoints\BackgroundActivitiesEndpoint::class);
         $this->app->singleton(Contracts\InterviewersWorklogEndpointInterface::class, Endpoints\InterviewersWorklogEndpoint::class);
+        $this->app->singleton(Contracts\ResponseCodeCollectionEndpointInterface::class, Endpoints\ResponseCodeCollectionEndpoint::class);
+        $this->app->singleton(Contracts\ResponseCodeEndpointInterface::class, Endpoints\ResponseCodeEndpoint::class);
 
         // CAPI Interviewers
         $this->app->singleton(Contracts\CapiInterviewersCollectionEndpointInterface::class, Endpoints\CapiInterviewersCollectionEndpoint::class);

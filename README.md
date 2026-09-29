@@ -337,6 +337,18 @@ $subscription->update(['eventTypes' => ['...']]);      // only the fields you pa
 $subscription->delete();
 ```
 
+### Response codes (domain)
+
+```php
+$codes = NfieldManager::responseCodes();
+
+$codes->list();                                        // Collection<DomainResponseCodeResponseModel>
+$codes->create(['id' => 210, 'description' => 'Discarded', 'isDefinite' => true]);
+
+$codes->forResponseCode(210)->update(['url' => 'https://example.com']);  // only the fields you pass are sent
+$codes->forResponseCode(210)->delete();
+```
+
 ### Roles
 
 ```php

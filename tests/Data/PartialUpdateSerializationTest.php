@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Tests\Data;
 
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
+use Nikoleesg\NfieldAdmin\Data\Domain\ResponseCodes\DomainResponseCodeUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Events\UpdateSubscriptionModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingMethodModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\ActivateSpareSamplingPointRequestModel;
@@ -146,4 +147,13 @@ it('omits unset properties on ReplaceSamplingPointWithSpareRequestModel', functi
         ->toBe(['target' => 10])
         ->and(ReplaceSamplingPointWithSpareRequestModel::from([])->toArray())
         ->toBe([]);
+});
+
+it('omits unset properties on DomainResponseCodeUpdateModel', function () {
+    expect(DomainResponseCodeUpdateModel::from(['url' => 'https://example.com'])->toArray())
+        ->toBe(['url' => 'https://example.com'])
+        ->and(DomainResponseCodeUpdateModel::from([])->toArray())->toBe([])
+        // An explicit null is still sent, so a field can be cleared.
+        ->and(DomainResponseCodeUpdateModel::from(['description' => null, 'channelCati' => false])->toArray())
+        ->toBe(['description' => null, 'channelCati' => false]);
 });
