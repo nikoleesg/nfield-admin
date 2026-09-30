@@ -703,3 +703,48 @@ it('never takes the item id on a service get, update or delete', function () {
 
     expect($offenders)->toBe([]);
 });
+
+it('names every service after an endpoint it injects', function () {
+    // #74: a service mirrors its endpoint's name (XCollectionService with
+    // XCollectionEndpoint, XService with XEndpoint), so the endpoint behind any
+    // service can be read off its name. A service that injects no endpoint
+    // (an entry point holding only a forX() selector) has nothing to mirror.
+    $exceptions = [
+        // Spans two endpoints because the API does: interview data download
+        // lives under dataDownload, deletion under interviews (#70).
+        'SurveyInterviewDataService',
+        // Version-scoped views of {eTag} paths on another resource's endpoint
+        // (#69, #64): one quota version, the targets of one quota version, and
+        // the script and var file of one survey version.
+        'SurveyQuotaVersionService',
+        'SurveyQuotaVersionTargetsService',
+        'SurveyVersionService',
+    ];
+    $offenders = [];
+
+    foreach (glob(__DIR__.'/../src/Services/*Service.php') as $file) {
+        $class = 'Nikoleesg\NfieldAdmin\Services\\'.basename($file, '.php');
+
+        if (in_array(class_basename($class), $exceptions, true)) {
+            continue;
+        }
+
+        $nouns = [];
+
+        foreach ((new ReflectionClass($class))->getConstructor()?->getParameters() ?? [] as $parameter) {
+            $type = (string) $parameter->getType();
+
+            if (str_starts_with($type, 'Nikoleesg\NfieldAdmin\Contracts\Endpoints\\')) {
+                $nouns[] = preg_replace('/(Collection)?EndpointInterface$/', '', class_basename($type));
+            }
+        }
+
+        $noun = preg_replace('/(Collection)?Service$/', '', class_basename($class));
+
+        if ($nouns !== [] && ! in_array($noun, $nouns, true)) {
+            $offenders[] = class_basename($class).' injects '.implode(', ', $nouns).' but is not named after any of them';
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});

@@ -14,13 +14,13 @@ use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyGroupCollectionService surveyGroups()
  * @method static \Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService surveyResourceUsage()
  * @method static \Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesCollectionService backgroundActivities()
- * @method static \Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService capiInterviewers()
- * @method static \Nikoleesg\NfieldAdmin\Services\EventSubscriptionCollectionService eventSubscriptions()
+ * @method static \Nikoleesg\NfieldAdmin\Services\CapiInterviewersCollectionService capiInterviewers()
+ * @method static \Nikoleesg\NfieldAdmin\Services\SubscriptionCollectionService eventSubscriptions()
  * @method static \Nikoleesg\NfieldAdmin\Services\InterviewersWorklogService interviewersWorklog()
  * @method static \Nikoleesg\NfieldAdmin\Services\RequestConfigurationCollectionService requestConfigurations()
  * @method static \Nikoleesg\NfieldAdmin\Services\ResponseCodeCollectionService responseCodes()
  * @method static \Nikoleesg\NfieldAdmin\Services\ThemeCollectionService themes()
- * @method static \Nikoleesg\NfieldAdmin\Services\RoleService roles()
+ * @method static \Nikoleesg\NfieldAdmin\Services\RolesService roles()
  *
  * @see NfieldManagerService
  */

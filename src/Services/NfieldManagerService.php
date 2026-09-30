@@ -22,10 +22,10 @@ class NfieldManagerService
 {
     public function __construct(
         protected SurveyCollectionService $surveyCollectionService,
-        protected CapiInterviewerCollectionService $capiInterviewerCollectionService,
+        protected CapiInterviewersCollectionService $capiInterviewersCollectionService,
         protected BackgroundActivitiesCollectionService $backgroundActivitiesCollectionService,
-        protected RoleService $roleService,
-        protected EventSubscriptionCollectionService $eventSubscriptionCollectionService,
+        protected RolesService $rolesService,
+        protected SubscriptionCollectionService $subscriptionCollectionService,
         protected InterviewersWorklogService $interviewersWorklogService,
         protected SurveyResourceUsageService $surveyResourceUsageService,
         protected ResponseCodeCollectionService $responseCodeCollectionService,
@@ -89,9 +89,9 @@ class NfieldManagerService
     // CAPI Interviewer Methods
     // ========================================
 
-    public function capiInterviewers(): CapiInterviewerCollectionService
+    public function capiInterviewers(): CapiInterviewersCollectionService
     {
-        return $this->capiInterviewerCollectionService;
+        return $this->capiInterviewersCollectionService;
     }
 
     public function interviewersWorklog(): InterviewersWorklogService
@@ -103,17 +103,17 @@ class NfieldManagerService
     // Event Subscriptions
     // ========================================
 
-    public function eventSubscriptions(): EventSubscriptionCollectionService
+    public function eventSubscriptions(): SubscriptionCollectionService
     {
-        return $this->eventSubscriptionCollectionService;
+        return $this->subscriptionCollectionService;
     }
 
     // ========================================
     // Role Methods
     // ========================================
 
-    public function roles(): RoleService
+    public function roles(): RolesService
     {
-        return $this->roleService;
+        return $this->rolesService;
     }
 }

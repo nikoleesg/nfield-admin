@@ -15,9 +15,10 @@ use Nikoleesg\NfieldAdmin\Traits\ScopedToParentSurvey;
  * A parent survey's waves, reached through `$parentSurvey->waves()`.
  *
  * Services mirror the endpoint naming: this pairs with
- * ParentSurveyWaveCollectionEndpoint; one wave is {@see SurveyWaveService}.
+ * ParentSurveyWaveCollectionEndpoint, and {@see ParentSurveyWaveService} with
+ * ParentSurveyWaveEndpoint.
  */
-class ParentSurveyWavesService implements ParentSurveyScopedInterface
+class ParentSurveyWaveCollectionService implements ParentSurveyScopedInterface
 {
     use ScopedToParentSurvey;
 
@@ -63,11 +64,11 @@ class ParentSurveyWavesService implements ParentSurveyScopedInterface
     }
 
     /**
-     * One wave of this parent survey. Both scopes are set, so copy() works.
+     * One wave of this parent survey.
      */
-    public function forWave(string $waveId): SurveyWaveService
+    public function forWave(string $waveId): ParentSurveyWaveService
     {
-        return app(SurveyWaveService::class)
+        return app(ParentSurveyWaveService::class)
             ->setParentSurveyId($this->getParentSurveyId())
             ->setWaveId($waveId);
     }

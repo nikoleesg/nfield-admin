@@ -11,7 +11,7 @@ use Nikoleesg\NfieldAdmin\Data\Roles\PermissionModel;
 use Nikoleesg\NfieldAdmin\Data\Roles\UserRoleModel;
 use Nikoleesg\NfieldAdmin\Services\Http\ResponseKeyNormalizer;
 
-class RoleService
+class RolesService
 {
     public function __construct(
         protected UserRoleEndpointInterface $userRoleEndpoint,

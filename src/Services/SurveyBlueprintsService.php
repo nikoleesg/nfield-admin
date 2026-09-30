@@ -15,7 +15,7 @@ use Nikoleesg\NfieldAdmin\Traits\ScopedToBlueprint;
  *
  * Services mirror the endpoint naming: this pairs with SurveyBlueprintsEndpoint.
  */
-class SurveyBlueprintService implements BlueprintScopedInterface
+class SurveyBlueprintsService implements BlueprintScopedInterface
 {
     use ScopedToBlueprint;
 

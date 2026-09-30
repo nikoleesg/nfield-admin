@@ -9,7 +9,7 @@ use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointInterviewerAssignmentsModel;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyAssignmentService implements SurveyScopedInterface
+class SurveySamplingPointsAssignmentsService implements SurveyScopedInterface
 {
     use ScopedToSurvey;
 

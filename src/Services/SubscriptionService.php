@@ -15,9 +15,9 @@ use Nikoleesg\NfieldAdmin\Traits\ScopedToEventSubscription;
  * `NfieldManager::eventSubscriptions()->forSubscription($name)`.
  *
  * Services mirror the endpoint naming: this pairs with SubscriptionEndpoint,
- * and {@see EventSubscriptionCollectionService} with SubscriptionCollectionEndpoint.
+ * and {@see SubscriptionCollectionService} with SubscriptionCollectionEndpoint.
  */
-class EventSubscriptionService implements EventSubscriptionScopedInterface
+class SubscriptionService implements EventSubscriptionScopedInterface
 {
     use ScopedToEventSubscription;
 

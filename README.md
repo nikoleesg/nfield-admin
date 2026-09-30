@@ -333,7 +333,7 @@ $tracker->updateCheckMinSuccessfulsBeforeAutoStart(true);
 
 $tracker->waves()->list();                             // Collection<SurveyModel>
 $tracker->waves()->create(['surveyName' => 'Wave 1']);
-$tracker->waves()->forWave('wave-id')->copy('Wave 2'); // copy needs the parent
+$tracker->waves()->forWave('wave-id')->copy('Wave 2'); // a new wave copied from this one
 
 // Wave settings, by the wave id alone:
 $wave = NfieldManager::surveyWaves()->forWave('wave-id');

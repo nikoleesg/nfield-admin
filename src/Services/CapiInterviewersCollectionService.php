@@ -14,10 +14,10 @@ use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
  * The CAPI interviewers, reached through `NfieldManager::capiInterviewers()`.
  *
  * Services mirror the endpoint naming: this pairs with
- * CapiInterviewersCollectionEndpoint, and {@see CapiInterviewerService} with
+ * CapiInterviewersCollectionEndpoint, and {@see CapiInterviewersService} with
  * CapiInterviewersEndpoint.
  */
-class CapiInterviewerCollectionService
+class CapiInterviewersCollectionService
 {
     public function __construct(
         protected CapiInterviewersCollectionEndpointInterface $capiInterviewersCollectionEndpoint,
@@ -77,8 +77,8 @@ class CapiInterviewerCollectionService
     /**
      * One CAPI interviewer.
      */
-    public function forInterviewer(string $interviewerId): CapiInterviewerService
+    public function forInterviewer(string $interviewerId): CapiInterviewersService
     {
-        return app(CapiInterviewerService::class)->setInterviewerId($interviewerId);
+        return app(CapiInterviewersService::class)->setInterviewerId($interviewerId);
     }
 }

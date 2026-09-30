@@ -15,16 +15,16 @@ use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesCollectionService;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
-use Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService;
-use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
-use Nikoleesg\NfieldAdmin\Services\EventSubscriptionCollectionService;
+use Nikoleesg\NfieldAdmin\Services\CapiInterviewersCollectionService;
+use Nikoleesg\NfieldAdmin\Services\CapiInterviewersService;
 use Nikoleesg\NfieldAdmin\Services\InterviewersWorklogService;
 use Nikoleesg\NfieldAdmin\Services\NfieldManagerService;
 use Nikoleesg\NfieldAdmin\Services\ParentSurveyCollectionService;
 use Nikoleesg\NfieldAdmin\Services\RequestConfigurationCollectionService;
 use Nikoleesg\NfieldAdmin\Services\ResponseCodeCollectionService;
-use Nikoleesg\NfieldAdmin\Services\RoleService;
-use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
+use Nikoleesg\NfieldAdmin\Services\RolesService;
+use Nikoleesg\NfieldAdmin\Services\SubscriptionCollectionService;
+use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyGroupCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyResourceUsageService;
@@ -39,10 +39,10 @@ function managerWith(SurveyCollectionService $surveyService, ?BackgroundActiviti
 {
     return new NfieldManagerService(
         $surveyService,
-        app(CapiInterviewerCollectionService::class),
+        app(CapiInterviewersCollectionService::class),
         $activities ?? app(BackgroundActivitiesCollectionService::class),
-        Mockery::mock(RoleService::class),
-        Mockery::mock(EventSubscriptionCollectionService::class),
+        Mockery::mock(RolesService::class),
+        Mockery::mock(SubscriptionCollectionService::class),
         app(InterviewersWorklogService::class),
         app(SurveyResourceUsageService::class),
         app(ResponseCodeCollectionService::class),
@@ -111,7 +111,7 @@ it('returns scoped resources for a survey and a blueprint', function () {
 
     expect($service->forSurvey('survey-1'))->toBeInstanceOf(SurveyResource::class)
         ->and($service->forSurvey('survey-1')->getSurveyId())->toBe('survey-1')
-        ->and($service->forBlueprintSurvey('bp-1'))->toBeInstanceOf(SurveyBlueprintService::class);
+        ->and($service->forBlueprintSurvey('bp-1'))->toBeInstanceOf(SurveyBlueprintsService::class);
 });
 
 // ── BackgroundActivitiesService ──────────────────────────────────────────
@@ -160,18 +160,18 @@ it('exposes the background activities domain service', function () {
 it('opens the CAPI interviewer chain from the service and the manager', function () {
     $manager = app(NfieldManagerService::class);
 
-    expect($manager->capiInterviewers())->toBeInstanceOf(CapiInterviewerCollectionService::class)
-        ->and($manager->capiInterviewers()->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewerService::class);
+    expect($manager->capiInterviewers())->toBeInstanceOf(CapiInterviewersCollectionService::class)
+        ->and($manager->capiInterviewers()->forInterviewer('ivw-1'))->toBeInstanceOf(CapiInterviewersService::class);
 });
 
 it('exposes the event subscriptions service', function () {
     $manager = app(NfieldManagerService::class);
 
-    expect($manager->eventSubscriptions())->toBeInstanceOf(EventSubscriptionCollectionService::class);
+    expect($manager->eventSubscriptions())->toBeInstanceOf(SubscriptionCollectionService::class);
 });
 
 it('exposes the roles service', function () {
     $manager = app(NfieldManagerService::class);
 
-    expect($manager->roles())->toBeInstanceOf(RoleService::class);
+    expect($manager->roles())->toBeInstanceOf(RolesService::class);
 });

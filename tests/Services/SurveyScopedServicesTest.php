@@ -29,7 +29,6 @@ use Nikoleesg\NfieldAdmin\Enums\SurveyPublishForceUpgradeEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyPublishStateEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveySettingNameEnum;
 use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
-use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
 use Nikoleesg\NfieldAdmin\Services\SurveyGeneralSettingsService;
@@ -37,6 +36,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyInterviewDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
+use Nikoleesg\NfieldAdmin\Services\SurveySamplingPointsAssignmentsService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
 
 /**
@@ -421,7 +421,7 @@ it('assigns and unassigns interviewers in bulk', function () {
     $endpoint->shouldReceive('massAssign')->with('survey-1', $payload)->once()->andReturn($payload);
     $endpoint->shouldReceive('massUnassign')->with('survey-1', $payload)->once()->andReturn([]);
 
-    $service = (new SurveyAssignmentService($endpoint))->setSurveyId('survey-1');
+    $service = (new SurveySamplingPointsAssignmentsService($endpoint))->setSurveyId('survey-1');
 
     $assigned = $service->assignInterviewers(['sp-1', 'sp-2'], ['ivw-1']);
 

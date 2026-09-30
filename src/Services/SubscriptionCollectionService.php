@@ -13,10 +13,10 @@ use Nikoleesg\NfieldAdmin\Data\Events\SubscriptionModel;
  * The event subscriptions, reached through `NfieldManager::eventSubscriptions()`.
  *
  * Services mirror the endpoint naming: this pairs with
- * SubscriptionCollectionEndpoint, and {@see EventSubscriptionService} with
+ * SubscriptionCollectionEndpoint, and {@see SubscriptionService} with
  * SubscriptionEndpoint.
  */
-class EventSubscriptionCollectionService
+class SubscriptionCollectionService
 {
     public function __construct(
         protected SubscriptionCollectionEndpointInterface $subscriptionCollectionEndpoint,
@@ -48,8 +48,8 @@ class EventSubscriptionCollectionService
     /**
      * One event subscription, by name.
      */
-    public function forSubscription(string $name): EventSubscriptionService
+    public function forSubscription(string $name): SubscriptionService
     {
-        return app(EventSubscriptionService::class)->setSubscriptionName($name);
+        return app(SubscriptionService::class)->setSubscriptionName($name);
     }
 }

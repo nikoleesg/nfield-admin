@@ -13,9 +13,7 @@ namespace Nikoleesg\NfieldAdmin\Services;
 class SurveyWavesService
 {
     /**
-     * One wave, without its parent survey. Its settings are available;
-     * copy() needs the parent, so reach the wave through its parent survey
-     * to copy it.
+     * The settings of one wave.
      */
     public function forWave(string $waveId): SurveyWaveService
     {

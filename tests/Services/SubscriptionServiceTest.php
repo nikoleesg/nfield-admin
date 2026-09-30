@@ -9,8 +9,8 @@ use Mockery;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SubscriptionCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SubscriptionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Data\Events\SubscriptionModel;
-use Nikoleesg\NfieldAdmin\Services\EventSubscriptionCollectionService;
-use Nikoleesg\NfieldAdmin\Services\EventSubscriptionService;
+use Nikoleesg\NfieldAdmin\Services\SubscriptionCollectionService;
+use Nikoleesg\NfieldAdmin\Services\SubscriptionService;
 
 it('lists subscriptions as models', function () {
     $collection = Mockery::mock(SubscriptionCollectionEndpointInterface::class);
@@ -24,7 +24,7 @@ it('lists subscriptions as models', function () {
         ],
     ]);
 
-    $service = new EventSubscriptionCollectionService($collection);
+    $service = new SubscriptionCollectionService($collection);
 
     $all = $service->list();
 
@@ -46,7 +46,7 @@ it('creates a subscription and returns the model', function () {
             'eventTypes' => ['Event.Created'],
         ]);
 
-    $service = new EventSubscriptionCollectionService($collection);
+    $service = new SubscriptionCollectionService($collection);
 
     $created = $service->create([
         'eventSubscriptionName' => 'sub-1',
@@ -60,10 +60,10 @@ it('creates a subscription and returns the model', function () {
 });
 
 it('returns a scoped service for an event subscription', function () {
-    $service = new EventSubscriptionCollectionService(Mockery::mock(SubscriptionCollectionEndpointInterface::class));
+    $service = new SubscriptionCollectionService(Mockery::mock(SubscriptionCollectionEndpointInterface::class));
 
     $resource = $service->forSubscription('sub-1');
-    expect($resource)->toBeInstanceOf(EventSubscriptionService::class);
+    expect($resource)->toBeInstanceOf(SubscriptionService::class);
 });
 
 it('gets a subscription via its service', function () {
@@ -75,7 +75,7 @@ it('gets a subscription via its service', function () {
         'eventTypes' => ['Event.Created'],
     ]);
 
-    $resource = (new EventSubscriptionService($endpoint))->setSubscriptionName('sub-1');
+    $resource = (new SubscriptionService($endpoint))->setSubscriptionName('sub-1');
     $model = $resource->get();
 
     expect($model)->toBeInstanceOf(SubscriptionModel::class)
@@ -88,7 +88,7 @@ it('updates a subscription via its service', function () {
         ->with('sub-1', ['endpoint' => 'https://example.com/new', 'eventTypes' => ['Event.Updated']])
         ->once();
 
-    $resource = (new EventSubscriptionService($endpoint))->setSubscriptionName('sub-1');
+    $resource = (new SubscriptionService($endpoint))->setSubscriptionName('sub-1');
     $resource->update([
         'endpoint' => 'https://example.com/new',
         'eventTypes' => ['Event.Updated'],
@@ -101,7 +101,7 @@ it('partially updates a subscription with only changed fields', function () {
         ->with('sub-1', ['endpoint' => 'https://example.com/new'])
         ->once();
 
-    $resource = (new EventSubscriptionService($endpoint))->setSubscriptionName('sub-1');
+    $resource = (new SubscriptionService($endpoint))->setSubscriptionName('sub-1');
     $resource->update([
         'endpoint' => 'https://example.com/new',
     ]);
@@ -111,6 +111,6 @@ it('deletes a subscription via its service', function () {
     $endpoint = Mockery::mock(SubscriptionEndpointInterface::class);
     $endpoint->shouldReceive('delete')->with('sub-1')->once();
 
-    $resource = (new EventSubscriptionService($endpoint))->setSubscriptionName('sub-1');
+    $resource = (new SubscriptionService($endpoint))->setSubscriptionName('sub-1');
     $resource->delete();
 });

@@ -15,8 +15,8 @@ use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
 use Nikoleesg\NfieldAdmin\Facades\NfieldManager;
 use Nikoleesg\NfieldAdmin\Resources\ParentSurveyResource;
 use Nikoleesg\NfieldAdmin\Services\ParentSurveyCollectionService;
-use Nikoleesg\NfieldAdmin\Services\ParentSurveyWavesService;
-use Nikoleesg\NfieldAdmin\Services\SurveyWaveService;
+use Nikoleesg\NfieldAdmin\Services\ParentSurveyWaveCollectionService;
+use Nikoleesg\NfieldAdmin\Services\ParentSurveyWaveService;
 
 afterEach(function () {
     Mockery::close();
@@ -76,7 +76,7 @@ it('lists and creates the waves of a parent survey', function () {
         ->once()
         ->andReturn(surveyPayload(['surveyName' => 'Wave 2']));
 
-    $waves = (new ParentSurveyWavesService($endpoint))->setParentSurveyId('parent-1');
+    $waves = (new ParentSurveyWaveCollectionService($endpoint))->setParentSurveyId('parent-1');
 
     expect($waves->list()->first()->surveyName)->toBe('Wave 1')
         ->and($waves->create(['surveyName' => 'Wave 2'])->surveyName)->toBe('Wave 2');
@@ -91,8 +91,9 @@ it('copies a wave reached through its parent survey', function () {
 
     $wave = NfieldManager::parentSurveys()->forParentSurvey('parent-1')->waves()->forWave('wave-1');
 
-    expect($wave)->toBeInstanceOf(SurveyWaveService::class)
+    expect($wave)->toBeInstanceOf(ParentSurveyWaveService::class)
         ->and($wave->getParentSurveyId())->toBe('parent-1')
+        ->and($wave->getWaveId())->toBe('wave-1')
         ->and($wave->copy('Wave 2')->surveyName)->toBe('Wave 2');
 });
 
@@ -122,10 +123,8 @@ it('manages a wave\'s auto-start threshold and dates by the wave id alone', func
     $wave->updateStopDate(null);
 });
 
-it('refuses to copy a wave reached without its parent survey', function () {
-    // The copy path needs the parent survey, which a wave addressed by id
-    // alone does not carry.
-    $wave = NfieldManager::surveyWaves()->forWave('wave-1');
+it('refuses to copy a wave before its parent survey is set', function () {
+    $service = (new ParentSurveyWaveService(Mockery::mock(ParentSurveyWaveEndpointInterface::class)))->setWaveId('wave-1');
 
-    expect(fn () => $wave->copy('Wave 2'))->toThrow(MissingScopeException::class);
+    expect(fn () => $service->copy('Wave 2'))->toThrow(MissingScopeException::class);
 });

@@ -7,7 +7,7 @@ namespace Nikoleesg\NfieldAdmin\Resources;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\ParentSurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Waves\WaveCheckMinSuccessfulsBeforeAutoStartModel;
 use Nikoleesg\NfieldAdmin\Services\ParentSurveyService;
-use Nikoleesg\NfieldAdmin\Services\ParentSurveyWavesService;
+use Nikoleesg\NfieldAdmin\Services\ParentSurveyWaveCollectionService;
 use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToParentSurvey;
 
@@ -21,9 +21,9 @@ class ParentSurveyResource implements ParentSurveyScopedInterface
     use ResolvesScopedServices;
     use ScopedToParentSurvey;
 
-    public function waves(): ParentSurveyWavesService
+    public function waves(): ParentSurveyWaveCollectionService
     {
-        return $this->resolveService(ParentSurveyWavesService::class);
+        return $this->resolveService(ParentSurveyWaveCollectionService::class);
     }
 
     public function checkMinSuccessfulsBeforeAutoStart(): WaveCheckMinSuccessfulsBeforeAutoStartModel

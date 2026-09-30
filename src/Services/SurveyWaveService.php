@@ -5,49 +5,32 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use DateTimeInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\ParentSurveyWaveEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyWaveEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\ParentSurveyScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyWaveScopedInterface;
-use Nikoleesg\NfieldAdmin\Data\ParentSurvey\ParentSurveyWaveCopyRequestModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Waves\WaveMinSuccessfulsBeforeAutoStartModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Waves\WaveStartDateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\Waves\WaveStopDateModel;
-use Nikoleesg\NfieldAdmin\Traits\ScopedToParentSurvey;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurveyWave;
 
 /**
- * One wave, reached through `$parentSurvey->waves()->forWave($waveId)` or
- * directly through `NfieldManager::surveyWaves()->forWave($waveId)`.
+ * The settings of one wave, reached through
+ * `NfieldManager::surveyWaves()->forWave($waveId)`: its minimum successfuls
+ * before auto-start, and its start and stop dates. The API addresses these by
+ * the wave id alone.
  *
  * A wave is a survey; manage it as one through
- * `NfieldManager::surveys()->forSurvey($waveId)`. This service holds what is
- * wave-specific: its auto-start threshold and dates (SurveyWaveEndpoint), and
- * copying it (ParentSurveyWaveEndpoint, which needs the parent survey).
+ * `NfieldManager::surveys()->forSurvey($waveId)`. Copying a wave needs its
+ * parent survey: see {@see ParentSurveyWaveService}.
+ *
+ * Services mirror the endpoint naming: this pairs with SurveyWaveEndpoint.
  */
-class SurveyWaveService implements ParentSurveyScopedInterface, SurveyWaveScopedInterface
+class SurveyWaveService implements SurveyWaveScopedInterface
 {
-    use ScopedToParentSurvey;
     use ScopedToSurveyWave;
 
     public function __construct(
         protected SurveyWaveEndpointInterface $surveyWaveEndpoint,
-        protected ParentSurveyWaveEndpointInterface $parentSurveyWaveEndpoint,
     ) {}
-
-    /**
-     * Create a new Online wave under the same parent survey, copied from this
-     * one. Needs the parent survey scope.
-     */
-    public function copy(string $surveyName): SurveyModel
-    {
-        $payload = (new ParentSurveyWaveCopyRequestModel($surveyName))->toArray();
-
-        return SurveyModel::from(
-            $this->parentSurveyWaveEndpoint->copy($this->getParentSurveyId(), $this->getWaveId(), $payload)
-        );
-    }
 
     public function minSuccessfulsBeforeAutoStart(): WaveMinSuccessfulsBeforeAutoStartModel
     {

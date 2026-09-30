@@ -68,9 +68,9 @@ class SurveyCollectionService
     /**
      * One blueprint survey.
      */
-    public function forBlueprintSurvey(string $blueprintId): SurveyBlueprintService
+    public function forBlueprintSurvey(string $blueprintId): SurveyBlueprintsService
     {
-        return app(SurveyBlueprintService::class)->setBlueprintId($blueprintId);
+        return app(SurveyBlueprintsService::class)->setBlueprintId($blueprintId);
     }
 
     public function forSurvey(string $surveyId): SurveyResource

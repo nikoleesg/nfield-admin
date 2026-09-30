@@ -21,9 +21,9 @@ use Nikoleesg\NfieldAdmin\Traits\ScopedToCapiInterviewer;
  *
  * Services mirror the endpoint naming: this pairs with CapiInterviewersEndpoint
  * (and its assignments and offices sub-resources), and
- * {@see CapiInterviewerCollectionService} with CapiInterviewersCollectionEndpoint.
+ * {@see CapiInterviewersCollectionService} with CapiInterviewersCollectionEndpoint.
  */
-class CapiInterviewerService implements CapiInterviewerScopedInterface
+class CapiInterviewersService implements CapiInterviewerScopedInterface
 {
     use ScopedToCapiInterviewer;
 

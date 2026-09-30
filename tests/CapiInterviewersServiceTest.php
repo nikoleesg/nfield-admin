@@ -14,8 +14,8 @@ use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\CapiInterviewerResponseModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\EditCapiInterviewerRequestModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\NewCapiInterviewerRequestModel;
 use Nikoleesg\NfieldAdmin\Data\CapiInterviewers\ResetCapiInterviewerPasswordRequestModel;
-use Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService;
-use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
+use Nikoleesg\NfieldAdmin\Services\CapiInterviewersCollectionService;
+use Nikoleesg\NfieldAdmin\Services\CapiInterviewersService;
 
 afterEach(function () {
     Mockery::close();
@@ -94,7 +94,7 @@ it('lists capi interviewers as DTO collection', function () {
             capiInterviewerPayload(['interviewerId' => 'int-2', 'userName' => 'user-2']),
         ]);
 
-    $service = new CapiInterviewerCollectionService($collectionEndpoint);
+    $service = new CapiInterviewersCollectionService($collectionEndpoint);
 
     $result = $service->list();
 
@@ -118,7 +118,7 @@ it('finds capi interviewers as DTO collection', function () {
         ->once()
         ->andReturn([capiInterviewerPayload(['interviewerId' => 'int-99'])]);
 
-    $service = new CapiInterviewerCollectionService($collectionEndpoint);
+    $service = new CapiInterviewersCollectionService($collectionEndpoint);
 
     $result = $service->find($filter);
 
@@ -150,7 +150,7 @@ it('creates a capi interviewer from DTO and returns response DTO', function () {
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['isSupervisor' => true]));
 
-    $service = new CapiInterviewerCollectionService($collectionEndpoint);
+    $service = new CapiInterviewersCollectionService($collectionEndpoint);
 
     $result = $service->create($dto);
 
@@ -171,7 +171,7 @@ it('gets an interviewer by client id and returns DTO', function () {
         ->once()
         ->andReturn(capiInterviewerPayload(['clientInterviewerId' => 'C0000001']));
 
-    $service = new CapiInterviewerCollectionService($collectionEndpoint);
+    $service = new CapiInterviewersCollectionService($collectionEndpoint);
 
     $result = $service->getByClientId('C0000001');
 
@@ -191,7 +191,7 @@ it('gets an interviewer by id and returns DTO', function () {
         ->once()
         ->andReturn(capiInterviewerPayload(['interviewerId' => 'int-1']));
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $result = $service->get();
 
@@ -213,7 +213,7 @@ it('updates an interviewer from DTO and returns response DTO', function () {
         ->once()
         ->andReturn(capiInterviewerResponsePayload(['firstName' => 'Jane']));
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $result = $service->update($dto);
 
@@ -235,7 +235,7 @@ it('resets password and returns response DTO', function () {
         ->once()
         ->andReturn(capiInterviewerResponsePayload());
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $result = $service->resetPassword($dto);
 
@@ -254,7 +254,7 @@ it('deletes an interviewer', function () {
         ->once()
         ->andReturnNull();
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $service->delete();
 });
@@ -274,7 +274,7 @@ it('gets assignments as DTO collection', function () {
             capiAssignmentPayload(['surveyId' => 'survey-2', 'successful' => 3]),
         ]);
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $result = $service->assignments();
 
@@ -295,7 +295,7 @@ it('gets offices as collection of strings', function () {
         ->once()
         ->andReturn(['office-1', 'office-2']);
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $result = $service->offices();
 
@@ -321,7 +321,7 @@ it('adds and removes office assignments', function () {
         ->once()
         ->andReturnNull();
 
-    $service = (new CapiInterviewerService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
+    $service = (new CapiInterviewersService($endpoint, $assignmentsEndpoint, $officesEndpoint))->setInterviewerId('int-1');
 
     $service->assignOffice('office-1');
     $service->unassignOffice('office-1');
@@ -384,10 +384,10 @@ it('reaches one interviewer through forInterviewer()', function () {
     app()->instance(CapiInterviewersAssignmentsEndpointInterface::class, $assignmentsEndpoint);
     app()->instance(CapiInterviewersOfficesEndpointInterface::class, $officesEndpoint);
 
-    $resource = (new CapiInterviewerCollectionService(Mockery::mock(CapiInterviewersCollectionEndpointInterface::class)))
+    $resource = (new CapiInterviewersCollectionService(Mockery::mock(CapiInterviewersCollectionEndpointInterface::class)))
         ->forInterviewer('int-1');
 
-    expect($resource)->toBeInstanceOf(CapiInterviewerService::class)
+    expect($resource)->toBeInstanceOf(CapiInterviewersService::class)
         ->and($resource->getInterviewerId())->toBe('int-1');
 
     expect($resource->get())->toBeInstanceOf(CapiInterviewerModel::class);

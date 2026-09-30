@@ -13,7 +13,6 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyMoveModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyUpdateModel;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
-use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataRetentionSettingsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
@@ -26,6 +25,7 @@ use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
 use Nikoleesg\NfieldAdmin\Services\SurveyResponseCodeCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveySamplingMethodService;
+use Nikoleesg\NfieldAdmin\Services\SurveySamplingPointsAssignmentsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyScriptService;
 use Nikoleesg\NfieldAdmin\Services\SurveyService;
 use Nikoleesg\NfieldAdmin\Services\SurveySettingsService;
@@ -88,9 +88,9 @@ class SurveyResource implements SurveyScopedInterface
         return $this->resolveService(SamplingPointCollectionService::class);
     }
 
-    public function assignments(): SurveyAssignmentService
+    public function assignments(): SurveySamplingPointsAssignmentsService
     {
-        return $this->resolveService(SurveyAssignmentService::class);
+        return $this->resolveService(SurveySamplingPointsAssignmentsService::class);
     }
 
     public function fieldwork(): SurveyFieldworkService
