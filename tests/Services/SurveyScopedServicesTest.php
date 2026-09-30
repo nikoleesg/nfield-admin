@@ -32,6 +32,7 @@ use Nikoleesg\NfieldAdmin\Exceptions\MissingScopeException;
 use Nikoleesg\NfieldAdmin\Services\SurveyAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SurveyDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyFieldworkService;
+use Nikoleesg\NfieldAdmin\Services\SurveyGeneralSettingsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyInterviewDataService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublicIdsService;
 use Nikoleesg\NfieldAdmin\Services\SurveyPublishService;
@@ -266,9 +267,10 @@ it('sends the package type and upgrade flag as integers', function () {
 
     $service = (new SurveyPublishService($endpoint))->setSurveyId('survey-1');
 
-    $service->publishLive();
-    $service->forcePublishLive();
-    $service->publishTest();
+    // #73: one name per operation; the enums say what the shortcuts used to.
+    $service->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
+    $service->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
+    $service->publish(SurveyPackageTypeEnum::Test, SurveyPublishForceUpgradeEnum::NoUpgrade);
 });
 
 it('starts a publish as a background activity', function () {
@@ -292,8 +294,8 @@ it('starts a publish as a background activity', function () {
 
     $service = (new SurveyPublishService($endpoint))->setSurveyId('survey-1');
 
-    expect($service->startPublishLive()->activityId)->toBe('publish-1')
-        ->and($service->startForcePublishLive()->activityId)->toBe('publish-2');
+    expect($service->start(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade)->activityId)->toBe('publish-1')
+        ->and($service->start(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade)->activityId)->toBe('publish-2');
 });
 
 // ── Public ids ───────────────────────────────────────────────────────────
@@ -353,14 +355,13 @@ it('reads and writes the sampling method', function () {
 
 it('lists settings as a collection of models', function () {
     $settings = Mockery::mock(SurveySettingsEndpointInterface::class);
-    $general = Mockery::mock(SurveyGeneralSettingsEndpointInterface::class);
 
     $settings->shouldReceive('list')->with('survey-1')->once()->andReturn([
         ['name' => 'InterviewerAuthentication', 'value' => 'true'],
         ['name' => 'AllowRefusal', 'value' => 'false'],
     ]);
 
-    $list = (new SurveySettingsService($settings, $general))->setSurveyId('survey-1')->list();
+    $list = (new SurveySettingsService($settings))->setSurveyId('survey-1')->list();
 
     expect($list)->toBeInstanceOf(Collection::class)
         ->and($list)->toHaveCount(2)
@@ -370,7 +371,6 @@ it('lists settings as a collection of models', function () {
 
 it('accepts a setting name as a string or as an enum', function () {
     $settings = Mockery::mock(SurveySettingsEndpointInterface::class);
-    $general = Mockery::mock(SurveyGeneralSettingsEndpointInterface::class);
 
     $name = SurveySettingNameEnum::cases()[0];
 
@@ -379,7 +379,7 @@ it('accepts a setting name as a string or as an enum', function () {
         ->twice()
         ->andReturn(['name' => $name->value, 'value' => 'true']);
 
-    $service = (new SurveySettingsService($settings, $general))->setSurveyId('survey-1');
+    $service = (new SurveySettingsService($settings))->setSurveyId('survey-1');
 
     expect($service->set($name, 'true')->value)->toBe('true')
         ->and($service->set($name->value, 'true')->name)->toBe($name->value);
@@ -401,14 +401,14 @@ it('reads and updates the general settings', function () {
         ->with('survey-1', ['name' => 'Renamed'])
         ->once();
 
-    $service = (new SurveySettingsService($settings, $general))->setSurveyId('survey-1');
+    $service = (new SurveyGeneralSettingsService($general))->setSurveyId('survey-1');
 
-    $model = $service->general();
+    $model = $service->get();
 
     expect($model)->toBeInstanceOf(SurveyGeneralSettingsModel::class)
         ->and($model->owner->userName)->toBe('ada');
 
-    $service->updateGeneral(new SurveyGeneralSettingsUpdateModel(name: 'Renamed'));
+    $service->update(new SurveyGeneralSettingsUpdateModel(name: 'Renamed'));
 });
 
 // ── Mass assignment ──────────────────────────────────────────────────────

@@ -44,29 +44,4 @@ class SurveyPublishService implements SurveyScopedInterface
             ])
         );
     }
-
-    public function publishLive(): void
-    {
-        $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
-    }
-
-    public function forcePublishLive(): void
-    {
-        $this->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
-    }
-
-    public function publishTest(): void
-    {
-        $this->publish(SurveyPackageTypeEnum::Test, SurveyPublishForceUpgradeEnum::NoUpgrade);
-    }
-
-    public function startPublishLive(): BackgroundActivityStatus
-    {
-        return $this->start(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
-    }
-
-    public function startForcePublishLive(): BackgroundActivityStatus
-    {
-        return $this->start(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::ForceUpgrade);
-    }
 }

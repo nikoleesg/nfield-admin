@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SamplingPointCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyFieldworkEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySampleCollectionEndpointInterface;
@@ -121,13 +120,12 @@ it('returns fieldwork counts as a DTO', function () {
 
 it('returns survey settings as an Illuminate collection of DTOs', function () {
     $settingsEndpoint = Mockery::mock(SurveySettingsEndpointInterface::class);
-    $generalEndpoint = Mockery::mock(SurveyGeneralSettingsEndpointInterface::class);
 
     $settingsEndpoint->shouldReceive('list')->with('survey-1')->once()->andReturn([
         ['name' => 'Foo', 'value' => 'bar'],
     ]);
 
-    $result = (new SurveySettingsService($settingsEndpoint, $generalEndpoint))->setSurveyId('survey-1')->list();
+    $result = (new SurveySettingsService($settingsEndpoint))->setSurveyId('survey-1')->list();
 
     expect($result)->toBeInstanceOf(Collection::class)
         ->and($result->first())->toBeInstanceOf(SurveySettingModel::class)

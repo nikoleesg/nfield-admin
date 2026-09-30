@@ -229,15 +229,13 @@ $quota->versions()->forVersion($eTag)->get();          // QuotaFrameModel
 
 ```php
 $survey->publish()->state();                           // SurveyPublishStateModel
-$survey->publish()->publishLive();
-$survey->publish()->forcePublishLive();
-$survey->publish()->publishTest();
-$survey->publish()->startPublishLive();                // BackgroundActivityStatus
+$survey->publish()->publish(SurveyPackageTypeEnum::Live, SurveyPublishForceUpgradeEnum::NoUpgrade);
+$survey->publish()->start(SurveyPackageTypeEnum::Test, SurveyPublishForceUpgradeEnum::ForceUpgrade);  // BackgroundActivityStatus
 
 $survey->settings()->list();                           // Collection<SurveySettingModel>
 $survey->settings()->set(SurveySettingNameEnum::HideQuotaPage, 'true');
-$survey->settings()->general();                        // SurveyGeneralSettingsModel
-$survey->settings()->updateGeneral(['description' => 'Wave 1']);
+$survey->generalSettings()->get();                     // SurveyGeneralSettingsModel
+$survey->generalSettings()->update(['description' => 'Wave 1']);
 
 $survey->samplingMethod()->get();
 $survey->samplingMethod()->update(['samplingMethod' => 'Random']);
@@ -441,7 +439,7 @@ NfieldManager::themes()->forTheme('theme-id')->delete();
 ### Roles
 
 ```php
-NfieldManager::roles()->getUserRole();                 // UserRoleModel for the current user
+NfieldManager::roles()->current();                     // UserRoleModel for the current user
 NfieldManager::roles()->list();                        // role name => Collection<PermissionModel>
 ```
 

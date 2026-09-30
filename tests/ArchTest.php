@@ -625,11 +625,11 @@ it('never repeats the class noun in a CRUD method name', function () {
     // #68: the class and the chain already name the resource, so
     // `$survey->getSurvey()` is `$survey->get()`. A verb followed only by
     // words of the class's own name is the redundant form; a verb followed by
-    // anything else (`getByClientId`, `createColumns`, `updateGeneral`) is a
+    // anything else (`getByClientId`, `createColumns`, `updateStartDate`) is a
     // distinct operation and keeps its noun.
     $singular = fn (string $word) => preg_replace('/(?<=ss)es$|(?<!s)s$/', '', strtolower($word));
     $words = fn (string $name) => array_map($singular, preg_split('/(?=[A-Z])/', $name, -1, PREG_SPLIT_NO_EMPTY));
-    $verbs = 'get|list|find|create|update|delete|set|activate|replace|assign|unassign';
+    $verbs = 'get|list|find|create|update|delete|set|activate|replace|assign|unassign|publish|start';
     $offenders = [];
 
     foreach ([...publicSdkMethods(), ...endpointContractMethods()] as [$class, $method]) {

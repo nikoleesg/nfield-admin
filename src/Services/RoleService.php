@@ -21,7 +21,7 @@ class RoleService
     /**
      * Get the current user's role and permissions.
      */
-    public function getUserRole(): UserRoleModel
+    public function current(): UserRoleModel
     {
         return UserRoleModel::from($this->userRoleEndpoint->get());
     }

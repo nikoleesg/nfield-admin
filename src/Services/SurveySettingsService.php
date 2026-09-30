@@ -5,22 +5,24 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Services;
 
 use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyGeneralSettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveySettingsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyGeneralSettingsUpdateModel;
 use Nikoleesg\NfieldAdmin\Data\Surveys\SurveySettingModel;
 use Nikoleesg\NfieldAdmin\Enums\SurveySettingNameEnum;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
+/**
+ * A survey's named settings, reached through `$survey->settings()`.
+ *
+ * Services mirror the endpoint naming: this pairs with SurveySettingsEndpoint.
+ * The general settings are {@see SurveyGeneralSettingsService}.
+ */
 class SurveySettingsService implements SurveyScopedInterface
 {
     use ScopedToSurvey;
 
     public function __construct(
         protected SurveySettingsEndpointInterface $surveySettingsEndpoint,
-        protected SurveyGeneralSettingsEndpointInterface $surveyGeneralSettingsEndpoint,
     ) {}
 
     /** @return Collection<int, SurveySettingModel> */
@@ -41,22 +43,5 @@ class SurveySettingsService implements SurveyScopedInterface
         $data = $this->surveySettingsEndpoint->set($this->getSurveyId(), $setting->toArray());
 
         return SurveySettingModel::from($data);
-    }
-
-    public function general(): SurveyGeneralSettingsModel
-    {
-        $data = $this->surveyGeneralSettingsEndpoint->get($this->getSurveyId());
-
-        return SurveyGeneralSettingsModel::from($data);
-    }
-
-    /**
-     * @param  array<string, mixed>|SurveyGeneralSettingsUpdateModel  $data
-     */
-    public function updateGeneral(array|SurveyGeneralSettingsUpdateModel $data): void
-    {
-        $payload = SurveyGeneralSettingsUpdateModel::from($data)->toArray();
-
-        $this->surveyGeneralSettingsEndpoint->update($this->getSurveyId(), $payload);
     }
 }
