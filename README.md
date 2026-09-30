@@ -192,7 +192,7 @@ $samplingPoint->assignments()->assign('interviewer-id');
 $samplingPoint->assignments()->unassign('interviewer-id');
 
 $samplingPoint->quotaTargets()->list();
-$samplingPoint->quotaTargets()->update('level-id', ['target' => 20]);
+$samplingPoint->quotaTargets()->forQuotaLevel('level-id')->update(['target' => 20]);
 
 $addresses = $samplingPoint->addresses();
 
@@ -274,7 +274,7 @@ $activity = $survey->data()->download([
     'includeSuccessful' => true,
 ]);
 
-NfieldManager::backgroundActivities()->get($activity->activityId)->status;  // ActivityStatusEnum
+NfieldManager::backgroundActivities()->forActivity($activity->activityId)->get()->status;  // ActivityStatusEnum
 
 $interview = $survey->data()->forInterview(42);
 
@@ -316,7 +316,7 @@ $activity = NfieldManager::interviewersWorklog()->download([
     'to' => '2026-09-30 23:59:59',
 ]);                                                    // BackgroundActivityStatus; dates are sent in UTC
 
-NfieldManager::backgroundActivities()->get($activity->activityId)->status;
+NfieldManager::backgroundActivities()->forActivity($activity->activityId)->get()->status;
 ```
 
 ### Parent surveys and waves

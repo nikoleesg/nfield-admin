@@ -31,7 +31,7 @@ use Nikoleesg\NfieldAdmin\Services\EventSubscriptionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SurveyBlueprintService;
 use Nikoleesg\NfieldAdmin\Services\SurveySampleService;
 
@@ -156,7 +156,7 @@ it('hands both scopes to every service it resolves', function () {
     foreach ([
         'addresses' => SamplingPointAddressCollectionService::class,
         'assignments' => SamplingPointAssignmentService::class,
-        'quotaTargets' => SamplingPointQuotaTargetsService::class,
+        'quotaTargets' => SamplingPointQuotaTargetsCollectionService::class,
     ] as $accessor => $class) {
         $service = $resource->{$accessor}();
 

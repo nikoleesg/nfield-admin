@@ -236,7 +236,7 @@ it('hydrates the interview quality DTOs from real PascalCase payloads', function
         ->and($collection->first()->id)->toBe('int-1')
         ->and($collection->first()->interviewQuality->value)->toBe(1);
 
-    $item = $service->get('int-1');
+    $item = $service->forInterview('int-1')->get();
     expect($item)->toBeInstanceOf(InterviewDetailsModel::class)
         ->and($item->id)->toBe('int-1')
         ->and($item->interviewQuality->value)->toBe(2);

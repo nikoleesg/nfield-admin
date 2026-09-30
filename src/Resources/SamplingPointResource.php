@@ -13,7 +13,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointResponseModel
 use Nikoleesg\NfieldAdmin\Data\Surveys\SamplingPoints\SamplingPointUpdateRequestModel;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
-use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointService;
 use Nikoleesg\NfieldAdmin\Traits\ResolvesScopedServices;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSamplingPoint;
@@ -69,9 +69,9 @@ class SamplingPointResource implements SamplingPointScopedInterface
         return $this->resolveService(SamplingPointAssignmentService::class);
     }
 
-    public function quotaTargets(): SamplingPointQuotaTargetsService
+    public function quotaTargets(): SamplingPointQuotaTargetsCollectionService
     {
-        return $this->resolveService(SamplingPointQuotaTargetsService::class);
+        return $this->resolveService(SamplingPointQuotaTargetsCollectionService::class);
     }
 
     private function item(): SamplingPointService

@@ -23,7 +23,7 @@ class NfieldManagerService
     public function __construct(
         protected SurveyCollectionService $surveyCollectionService,
         protected CapiInterviewerCollectionService $capiInterviewerCollectionService,
-        protected BackgroundActivitiesService $backgroundActivitiesService,
+        protected BackgroundActivitiesCollectionService $backgroundActivitiesCollectionService,
         protected RoleService $roleService,
         protected EventSubscriptionCollectionService $eventSubscriptionCollectionService,
         protected InterviewersWorklogService $interviewersWorklogService,
@@ -80,9 +80,9 @@ class NfieldManagerService
         return $this->responseCodeCollectionService;
     }
 
-    public function backgroundActivities(): BackgroundActivitiesService
+    public function backgroundActivities(): BackgroundActivitiesCollectionService
     {
-        return $this->backgroundActivitiesService;
+        return $this->backgroundActivitiesCollectionService;
     }
 
     // ========================================

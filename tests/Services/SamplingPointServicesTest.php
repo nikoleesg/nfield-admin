@@ -21,6 +21,7 @@ use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAddressService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointAssignmentService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointCollectionService;
+use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsCollectionService;
 use Nikoleesg\NfieldAdmin\Services\SamplingPointQuotaTargetsService;
 
 afterEach(function () {
@@ -216,13 +217,21 @@ it('lists, reads and sets sampling point quota targets', function () {
         ->once()
         ->andReturn(['levelId' => 'level-1', 'target' => 20]);
 
-    $service = (new SamplingPointQuotaTargetsService($endpoint))
+    app()->instance(SamplingPointQuotaTargetsEndpointInterface::class, $endpoint);
+
+    $service = (new SamplingPointQuotaTargetsCollectionService($endpoint))
         ->setSurveyId('survey-1')
         ->setSamplingPointId('sp-1');
 
+    // #72: the level is selected once; get() and update() take no id.
+    $level = $service->forQuotaLevel('level-1');
+
     expect($service->list()->first())->toBeInstanceOf(SamplingPointQuotaTargetModel::class)
-        ->and($service->get('level-1')->target)->toBe(10)
-        ->and($service->update('level-1', new SamplingPointQuotaLevelTargetUpdateRequestModel(target: 20))->target)->toBe(20);
+        ->and($level)->toBeInstanceOf(SamplingPointQuotaTargetsService::class)
+        ->and($level->getQuotaLevelId())->toBe('level-1')
+        ->and($level->getSamplingPointId())->toBe('sp-1')
+        ->and($level->get()->target)->toBe(10)
+        ->and($level->update(new SamplingPointQuotaLevelTargetUpdateRequestModel(target: 20))->target)->toBe(20);
 });
 
 // ── SamplingPointAddressService ──────────────────────────────────────────

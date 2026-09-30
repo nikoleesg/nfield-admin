@@ -4,42 +4,33 @@ declare(strict_types=1);
 
 namespace Nikoleesg\NfieldAdmin\Services;
 
-use Illuminate\Support\Collection;
-use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyInterviewQualityCollectionEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyInterviewQualityEndpointInterface;
-use Nikoleesg\NfieldAdmin\Contracts\Scoping\SurveyScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewQualityScopedInterface;
 use Nikoleesg\NfieldAdmin\Data\Surveys\InterviewDetailsModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\ManagerInterviewDetailsModel;
-use Nikoleesg\NfieldAdmin\Data\Surveys\QualityNewStateChangeModel;
+use Nikoleesg\NfieldAdmin\Traits\ScopedToInterviewQuality;
 use Nikoleesg\NfieldAdmin\Traits\ScopedToSurvey;
 
-class SurveyInterviewQualityService implements SurveyScopedInterface
+/**
+ * The quality record of one interview, reached through
+ * `$survey->interviewQuality()->forInterview($interviewId)`.
+ *
+ * Services mirror the endpoint naming: this pairs with
+ * SurveyInterviewQualityEndpoint, and {@see SurveyInterviewQualityCollectionService}
+ * with SurveyInterviewQualityCollectionEndpoint.
+ */
+class SurveyInterviewQualityService implements InterviewQualityScopedInterface
 {
+    use ScopedToInterviewQuality;
     use ScopedToSurvey;
 
     public function __construct(
-        private readonly SurveyInterviewQualityCollectionEndpointInterface $collectionEndpoint,
-        private readonly SurveyInterviewQualityEndpointInterface $itemEndpoint
+        protected SurveyInterviewQualityEndpointInterface $surveyInterviewQualityEndpoint,
     ) {}
 
-    /** @return Collection<int, InterviewDetailsModel> */
-    public function list(): Collection
+    public function get(): InterviewDetailsModel
     {
-        return InterviewDetailsModel::collect($this->collectionEndpoint->list($this->getSurveyId()), Collection::class);
-    }
-
-    public function get(string $interviewId): InterviewDetailsModel
-    {
-        return InterviewDetailsModel::from($this->itemEndpoint->get($this->getSurveyId(), $interviewId));
-    }
-
-    /**
-     * @param  array<string, mixed>|QualityNewStateChangeModel  $data
-     */
-    public function update(array|QualityNewStateChangeModel $data): ManagerInterviewDetailsModel
-    {
-        $payload = QualityNewStateChangeModel::from($data)->toArray();
-
-        return ManagerInterviewDetailsModel::from($this->collectionEndpoint->update($this->getSurveyId(), $payload));
+        return InterviewDetailsModel::from(
+            $this->surveyInterviewQualityEndpoint->get($this->getSurveyId(), $this->getQualityInterviewId())
+        );
     }
 }

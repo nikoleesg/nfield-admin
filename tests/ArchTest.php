@@ -683,3 +683,23 @@ it('documents every manager entry point on the facade', function () {
 
     expect($documented)->toBe($expected);
 });
+
+it('never takes the item id on a service get, update or delete', function () {
+    // #72: an operation on one item selects it once, through a forX($id)
+    // scope, so get(), update() and delete() never take its id.
+    $offenders = [];
+
+    foreach (publicSdkMethods() as [$class, $method]) {
+        if (! in_array($method->getName(), ['get', 'update', 'delete'], true)) {
+            continue;
+        }
+
+        foreach ($method->getParameters() as $parameter) {
+            if (preg_match('/(Id|Code|ETag|eTag)$/', $parameter->getName())) {
+                $offenders[] = class_basename($class).'::'.$method->getName().'($'.$parameter->getName().') takes the item id; scope it with forX()';
+            }
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});

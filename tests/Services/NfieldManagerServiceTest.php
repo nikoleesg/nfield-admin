@@ -13,6 +13,7 @@ use Nikoleesg\NfieldAdmin\Data\Surveys\SurveyModel;
 use Nikoleesg\NfieldAdmin\Enums\ActivityStatusEnum;
 use Nikoleesg\NfieldAdmin\Enums\SurveyStateEnum;
 use Nikoleesg\NfieldAdmin\Resources\SurveyResource;
+use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesCollectionService;
 use Nikoleesg\NfieldAdmin\Services\BackgroundActivitiesService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerCollectionService;
 use Nikoleesg\NfieldAdmin\Services\CapiInterviewerService;
@@ -34,12 +35,12 @@ afterEach(function () {
     Mockery::close();
 });
 
-function managerWith(SurveyCollectionService $surveyService, ?BackgroundActivitiesService $activities = null): NfieldManagerService
+function managerWith(SurveyCollectionService $surveyService, ?BackgroundActivitiesCollectionService $activities = null): NfieldManagerService
 {
     return new NfieldManagerService(
         $surveyService,
         app(CapiInterviewerCollectionService::class),
-        $activities ?? app(BackgroundActivitiesService::class),
+        $activities ?? app(BackgroundActivitiesCollectionService::class),
         Mockery::mock(RoleService::class),
         Mockery::mock(EventSubscriptionCollectionService::class),
         app(InterviewersWorklogService::class),
@@ -132,7 +133,7 @@ it('hydrates a background activity, dates and status included', function () {
         'downloadDataUrl' => null,
     ]);
 
-    $activity = (new BackgroundActivitiesService($endpoint))->get('activity-1');
+    $activity = (new BackgroundActivitiesService($endpoint))->setActivityId('activity-1')->get();
 
     expect($activity)->toBeInstanceOf(BackgroundActivityResponseModel::class)
         ->and($activity->status)->toBe(ActivityStatusEnum::cases()[0])
@@ -151,7 +152,9 @@ it('exposes the surveys domain service', function () {
 it('exposes the background activities domain service', function () {
     $manager = managerWith(app(SurveyCollectionService::class));
 
-    expect($manager->backgroundActivities())->toBeInstanceOf(BackgroundActivitiesService::class);
+    expect($manager->backgroundActivities())->toBeInstanceOf(BackgroundActivitiesCollectionService::class)
+        ->and($manager->backgroundActivities()->forActivity('activity-1'))->toBeInstanceOf(BackgroundActivitiesService::class)
+        ->and($manager->backgroundActivities()->forActivity('activity-1')->getActivityId())->toBe('activity-1');
 });
 
 it('opens the CAPI interviewer chain from the service and the manager', function () {

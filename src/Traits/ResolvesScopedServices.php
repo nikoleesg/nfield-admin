@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Nikoleesg\NfieldAdmin\Traits;
 
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\AddressScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\BackgroundActivityScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\BlueprintScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\CapiInterviewerScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\EventSubscriptionScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewQualityScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\InterviewScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\ParentSurveyScopedInterface;
+use Nikoleesg\NfieldAdmin\Contracts\Scoping\QuotaLevelScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\QuotaVersionScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\RequestConfigurationScopedInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Scoping\ResponseCodeScopedInterface;
@@ -101,6 +104,18 @@ trait ResolvesScopedServices
             $service->setWaveId($this->getWaveId());
         }
 
+        if ($service instanceof QuotaLevelScopedInterface && $this instanceof QuotaLevelScopedInterface) {
+            $service->setQuotaLevelId($this->getQuotaLevelId());
+        }
+
+        if ($service instanceof InterviewQualityScopedInterface && $this instanceof InterviewQualityScopedInterface) {
+            $service->setQualityInterviewId($this->getQualityInterviewId());
+        }
+
+        if ($service instanceof BackgroundActivityScopedInterface && $this instanceof BackgroundActivityScopedInterface) {
+            $service->setActivityId($this->getActivityId());
+        }
+
         if ($service instanceof BlueprintScopedInterface && $this instanceof BlueprintScopedInterface) {
             $service->setBlueprintId($this->getBlueprintId());
         }
@@ -173,6 +188,18 @@ trait ResolvesScopedServices
 
         if ($this instanceof SurveyWaveScopedInterface) {
             $key .= '|'.$this->getWaveId();
+        }
+
+        if ($this instanceof QuotaLevelScopedInterface) {
+            $key .= '|'.$this->getQuotaLevelId();
+        }
+
+        if ($this instanceof InterviewQualityScopedInterface) {
+            $key .= '|'.$this->getQualityInterviewId();
+        }
+
+        if ($this instanceof BackgroundActivityScopedInterface) {
+            $key .= '|'.$this->getActivityId();
         }
 
         if ($this instanceof BlueprintScopedInterface) {
