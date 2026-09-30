@@ -1,50 +1,50 @@
 # NField API v2 — Endpoint Coverage
 
-Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-23 against `src/` on branch `dev` (HEAD `d9c8a84`): every ✅ row names a class and method that exists.
+Generated 2026-09-22 from the `nfield-api-spec` OpenAPI document (`openapi://paths`). Re-verified 2026-09-30 against `src/` on branch `dev`: all 282 spec operations are listed, and every ✅ row names an endpoint class and method that exists.
 
 **Overall: 139 of 282 operations implemented (49%), across 182 paths.**
 
-**Planned for development: all 50 planned operations (11 sections, #57–#67) are implemented** (see [Planned for development](#planned-for-development)).
+**Planned for development: none open.** The 50 operations planned on 2026-09-23 (#57–#67) are all implemented (see [Planned for development](#planned-for-development)).
 
 Status legend: ✅ implemented · 🗓️ planned for development (tracking issue linked) · ❌ pending, not yet planned.
 
-Counting is per *operation* (method + path), not per path. "Implemented" means a class in `src/Endpoints/v2/` (or `HttpClient`) issues that exact request.
+Counting is per *operation* (method + path), not per path. "Implemented" means a class in `src/Endpoints/v2/` (or `HttpClient`) issues that exact request, and a service exposes it (see [SDK entry points](#sdk-entry-points)).
 
 ## Summary by section
 
 | Section | Implemented | Planned | Total | Coverage |
 |---|---:|---:|---:|---:|
+| Parent Surveys & Waves | 14 | — | 14 | 100% |
 | CAPI Interviewers | 11 | — | 11 | 100% |
 | Surveys — Quota | 7 | — | 7 | 100% |
-| Surveys — Fieldwork | 4 | — | 4 | 100% |
-| Background Activities | 1 | — | 1 | 100% |
-| Survey Blueprints | 1 | — | 1 | 100% |
 | Event Subscriptions | 5 | — | 5 | 100% |
-| Interviewers Worklog | 1 | — | 1 | 100% |
-| Survey Resources | 1 | — | 1 | 100% |
 | Response Codes (tenant) | 4 | — | 4 | 100% |
+| Surveys — Fieldwork | 4 | — | 4 | 100% |
 | Themes | 3 | — | 3 | 100% |
-| Parent Surveys & Waves | 14 | — | 14 | 100% |
+| Background Activities | 1 | — | 1 | 100% |
+| Interviewers Worklog | 1 | — | 1 | 100% |
+| Survey Blueprints | 1 | — | 1 | 100% |
+| Survey Resources | 1 | — | 1 | 100% |
+| Surveys — Core | 13 | — | 14 | 93% |
 | Surveys — Sampling Points | 22 | — | 25 | 88% |
 | Surveys — Sample | 10 | — | 12 | 83% |
-| Surveys — Core | 13 | — | 14 | 93% |
-| Surveys — Settings & Content | 11 | — | 23 | 48% |
 | Surveys — Publishing & Script | 9 | — | 13 | 69% |
 | Surveys — Interviews & Data | 8 | — | 16 | 50% |
+| Surveys — Settings & Content | 11 | — | 23 | 48% |
 | Access & Authentication | 9 | — | 20 | 45% |
-| Data Delivery | 0 | — | 38 | 0% |
-| Surveys — Invitations & Distribution | 0 | — | 16 | 0% |
 | Survey Groups | 5 | — | 12 | 42% |
-| Screeners | 0 | — | 10 | 0% |
-| Surveys — Interviewers & Assignments | 0 | — | 7 | 0% |
-| CATI Interviewers | 0 | — | 5 | 0% |
-| Offices | 0 | — | 5 | 0% |
-| Language Translations (tenant) | 0 | — | 4 | 0% |
 | Blacklist | 0 | — | 2 | 0% |
+| CATI Interviewers | 0 | — | 5 | 0% |
+| Data Delivery | 0 | — | 38 | 0% |
 | Default Texts | 0 | — | 2 | 0% |
 | Email Settings (tenant) | 0 | — | 2 | 0% |
-| Search Fields Setting | 0 | — | 2 | 0% |
+| Language Translations (tenant) | 0 | — | 4 | 0% |
 | Manual Tests (tenant) | 0 | — | 1 | 0% |
+| Offices | 0 | — | 5 | 0% |
+| Screeners | 0 | — | 10 | 0% |
+| Search Fields Setting | 0 | — | 2 | 0% |
+| Surveys — Interviewers & Assignments | 0 | — | 7 | 0% |
+| Surveys — Invitations & Distribution | 0 | — | 16 | 0% |
 | Templates | 0 | — | 1 | 0% |
 | **Total** | **139** | **—** | **282** | **49%** |
 
@@ -52,11 +52,39 @@ Counting is per *operation* (method + path), not per path. "Implemented" means a
 
 ## Planned for development
 
-Planned for the next release (2026-09-23). Work proceeds section by section; each issue carries a checkbox per operation and is closed once all of them are implemented. When an operation lands, change its row in the detail tables below from 🗓️ to ✅, name the implementing class, and update the counts.
+Nothing is planned at the moment. The 50 operations planned on 2026-09-23 are all implemented and their tracking issues (#57–#67) are closed.
 
-All 50 operations planned on 2026-09-23 are implemented, and their tracking issues (#57–#67) are closed. New work is planned by opening an issue and marking its rows 🗓️ here.
+To plan new work: open one GitHub issue per section with a checkbox per operation, mark its rows 🗓️ "Planned for Development (#NN)" in the detail tables below, and add a Planned column count. When an operation lands, change its row to ✅, name the implementing endpoint class and method, and update the section heading, the summary table, the overall count and the flat pending list.
 
-Survey Groups was only partly planned (#60, now implemented): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
+Survey Groups was only partly planned (#60): the write operations (`POST /v2/surveyGroups`, `PATCH`/`DELETE /v2/surveyGroups/{surveyGroupId}`, and `assignDirectory` / `assignLocal` / `unassignDirectory` / `unassignLocal`) remain ❌ pending.
+
+---
+
+## SDK entry points
+
+Where each implemented section is reached. Services are named after the endpoint they call (`XCollectionService` ↔ `XCollectionEndpoint`, `XService` ↔ `XEndpoint`), and an operation on one item is reached through a `forX($id)` selector, so its methods take no id.
+
+| Section | Reached through |
+|---|---|
+| Surveys — Core | `NfieldManager::surveys()` (`SurveyCollectionService`); `->forSurvey($id)` → `SurveyResource`, its `versions()`, `dataRetentionSettings()`, `moveToGroup()` |
+| Surveys — Fieldwork | `$survey->fieldwork()` |
+| Surveys — Sampling Points | `$survey->samplingPoints()`, `->forSamplingPoint($id)` → `SamplingPointResource` (`addresses()`, `assignments()`, `quotaTargets()->forQuotaLevel($id)`); `$survey->assignments()`; `$survey->samplingMethod()` |
+| Surveys — Sample | `$survey->samples()`, `->forInterview($id)` |
+| Surveys — Quota | `$survey->quota()` → `frame()`, `targets()`, `versions()`, `->forVersion($eTag)` |
+| Surveys — Settings & Content | `$survey->settings()`, `$survey->generalSettings()`, `$survey->publicIds()`, `$survey->responseCodes()->forResponseCode($code)` |
+| Surveys — Publishing & Script | `$survey->publish()`, `$survey->package()`, `$survey->script()`, `$survey->varFile()`, `$survey->versions()->forVersion($eTag)` |
+| Surveys — Interviews & Data | `$survey->data()->forInterview($id)`, `$survey->interviewQuality()->forInterview($id)`, `$survey->performance()` |
+| Survey Blueprints | `NfieldManager::surveys()->forBlueprintSurvey($id)` |
+| Survey Groups | `NfieldManager::surveyGroups()->forSurveyGroup($id)` |
+| Parent Surveys & Waves | `NfieldManager::parentSurveys()->forParentSurvey($id)` → `ParentSurveyResource` (`waves()->forWave($id)`); `NfieldManager::surveyWaves()->forWave($id)` |
+| Survey Resources | `NfieldManager::surveyResourceUsage()` |
+| CAPI Interviewers | `NfieldManager::capiInterviewers()->forInterviewer($id)` |
+| Background Activities | `NfieldManager::backgroundActivities()->forActivity($id)` |
+| Interviewers Worklog | `NfieldManager::interviewersWorklog()` |
+| Event Subscriptions | `NfieldManager::eventSubscriptions()->forSubscription($name)` |
+| Response Codes (tenant) | `NfieldManager::responseCodes()->forResponseCode($code)` |
+| Themes | `NfieldManager::themes()->forTheme($id)` |
+| Access & Authentication | `NfieldManager::requestConfigurations()->forRequestConfiguration($id)` (`/v2/requests`); `NfieldManager::roles()` (`list()`, `current()` for `/v2/me/role`); tokens inside `HttpClient` |
 
 ---
 
@@ -573,15 +601,15 @@ Survey Groups was only partly planned (#60, now implemented): the write operatio
 
 ## Notes & observations
 
-- **The package is survey-centric.** 80 of the 89 implemented operations live under `/v2/surveys`, `/v2/capiInterviewers`, `/v2/surveyBlueprints` and `/v2/BackgroundActivities`; the remaining 9 are the two token endpoints, `GET /v2/me/role`, `GET /v2/roles` and the five `/v2/events/subscriptions` operations. Whole top-level areas (Data Delivery, Survey Groups, Offices, Screeners, Parent Surveys/Waves, Themes, Templates) are untouched; Survey Groups, Parent Surveys/Waves and Themes are now planned.
-- **Largest single gap: Data Delivery** (38 operations, 0 implemented) — repositories, subscriptions, users, firewall rules, Fabric data shares and delivery survey properties.
+- **Coverage is 139 of 282 operations (49%).** It is still survey-centric, but every top-level area planned on 2026-09-23 now exists: survey groups (reads), parent surveys and waves, themes, tenant response codes, request configurations, survey resource usage and the interviewers worklog.
+- **Largest single gap: Data Delivery** (38 operations, 0 implemented): repositories, subscriptions, users, firewall rules, Fabric data shares and delivery survey properties.
+- **Next largest gaps:** Surveys — Invitations & Distribution (16), Settings & Content (12 left: interviewer instructions, language translations, media files), Access & Authentication (11 left: local users, domain assignments, password settings) and Screeners (10).
 - **CAPI is complete, CATI is absent.** `/v2/capiInterviewers` is fully covered (11/11); `/v2/catiInterviewers` (5 operations) has no counterpart.
-- **Survey-level interviewer management is missing** (7 operations): assign/unassign an interviewer to a survey, per-interviewer quota level targets and workpackage target distribution. Note this is distinct from *sampling-point* assignments, which are implemented.
-- **Sampling points are near-complete** (22/25); only the sampling-point image endpoints (GET/DELETE/POST `.../samplingPoint/{samplingPointId}/image`) are pending.
-- **Sample is near-complete** (10/12); the two pending ones are `GET`/`PUT /v2/surveys/{surveyId}/sampleMask`.
-- **Script & questionnaire content is a notable hole** for a publishing workflow: `script`, `scriptFragments`, `varFile`, `package` and `versions` are all unimplemented, even though `publish` itself is covered.
+- **Survey-level interviewer management is missing** (7 operations): assign/unassign an interviewer to a survey, per-interviewer quota level targets and workpackage target distribution. This is distinct from *sampling-point* assignments, which are implemented.
+- **Near-complete sections:** sampling points (22/25; only the sampling-point image endpoints), sample (10/12; only `sampleMask`), survey core (13/14; only `respondentDataEncrypt`) and publishing & script (9/13; only `scriptFragments`).
+- **File transfers:** sample upload (`POST .../sample`) and theme upload (`PUT /v2/themes`) are multipart; script, var file and package are JSON with the content inside the model. The sample downloads are TSV bodies, not JSON.
 - **Token endpoints** are implemented inside `src/Services/Http/HttpClient.php` rather than as an endpoint class, which is why they have no `Endpoints/v2` counterpart.
-- ~~`SurveySettingsEndpoint::buildPath()` hardcodes `'/v2/surveys'`~~ — fixed in #35; `$version` now lives only on `BaseEndpoint` and `tests/ArchTest.php` fails on a hardcoded version prefix.
+- **Spec quirks handled in code:** `GET /v2/requests` is documented as returning one object although it lists; the interview quality paths type `interviewId` as a string (int32 elsewhere); the quota and survey `{eTag}` paths mix string and int64. These are noted in the relevant classes. Response casing in the spec is wrong throughout: the API returns PascalCase, normalised once in `HttpClient`.
 
 ---
 
@@ -600,7 +628,7 @@ The OpenAPI document marks exactly two operations `deprecated: true`:
 
 ### Stale calls (endpoints that no longer exist)
 
-None. All 89 implemented operations resolve to a live method+path pair in the v2 spec. The v1 stack was fully removed (`930bf06`, finished in `3c5d8aa`) — `src/Endpoints/v1/` and `src/Services/v1/` no longer exist and nothing in `src/` references them.
+None. All 139 implemented operations resolve to a live method+path pair in the v2 spec. The v1 stack was fully removed (`930bf06`, finished in `3c5d8aa`) — `src/Endpoints/v1/` and `src/Services/v1/` no longer exist and nothing in `src/` references them.
 
 ### Stale leftovers in the code
 
@@ -608,7 +636,7 @@ None. All 89 implemented operations resolve to a live method+path pair in the v2
 
 - `src/Data/` has no root-level classes, and `Data/SurveyQuotaFrame/` and `Data/Quota/QuotaAttribute` are gone.
 - `*DTO` / `*Data` suffixes are retired and `tests/ArchTest.php` rejects them (#28).
-- The request models are wired into services (`array|RequestModel` input), and `SampleFilterModel` is a real model used by `SurveySampleService`.
+- The request models are wired into services (`array|RequestModel` input), and `SampleFilterModel` is a real model used by `SurveySampleCollectionService`.
 - Both enums are referenced (`SurveyFieldworkService`, `SurveysFieldworkStopRequestModel`).
 
 ### Minor drift in implemented calls
