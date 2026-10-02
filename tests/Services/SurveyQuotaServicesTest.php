@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
+use Mockery\MockInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaFrameEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
@@ -75,6 +76,7 @@ it('refuses a version call before the version scope is set', function () {
 });
 
 it('reads the quota frame', function () {
+    /** @var SurveyQuotaFrameEndpointInterface&MockInterface $frame */
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
     $frame->shouldReceive('get')->with('survey-1')->once()->andReturn([
@@ -92,6 +94,7 @@ it('reads the quota frame', function () {
 });
 
 it('writes the quota frame from an array or a request model', function () {
+    /** @var SurveyQuotaFrameEndpointInterface&MockInterface $frame */
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
     $frame->shouldReceive('update')
@@ -112,6 +115,7 @@ it('writes the quota frame from an array or a request model', function () {
 });
 
 it('updates the targets of a frame version', function () {
+    /** @var SurveyQuotaFrameEndpointInterface&MockInterface $frame */
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
     $levels = [['id' => 'level-1', 'target' => 10, 'maxTarget' => 20, 'maxOvershoot' => 0]];
@@ -134,6 +138,7 @@ it('updates the targets of a frame version', function () {
 });
 
 it('reads the current targets and the targets of one version', function () {
+    /** @var SurveyQuotaTargetsEndpointInterface&MockInterface $targets */
     $targets = Mockery::mock(SurveyQuotaTargetsEndpointInterface::class);
 
     $targets->shouldReceive('get')->with('survey-1')->once()->andReturn([
@@ -169,11 +174,12 @@ it('reads the current targets and the targets of one version', function () {
         ->and($versioned->successful)->toBe(12);
 });
 
-it('lists the quota versions and reads one by its eTag', function () {
+it('lists the quota versions and reads one by its eTag', function (?string $publishedDate, ?string $expectedDate) {
+    /** @var SurveyQuotaVersionsEndpointInterface&MockInterface $versions */
     $versions = Mockery::mock(SurveyQuotaVersionsEndpointInterface::class);
 
     $versions->shouldReceive('list')->with('survey-1')->once()->andReturn([
-        ['id' => 'version-1', 'eTag' => '7', 'publishedDate' => '2026-09-23T10:00:00Z'],
+        ['id' => 'version-1', 'eTag' => '7', 'publishedDate' => $publishedDate],
     ]);
 
     $versions->shouldReceive('get')->with('survey-1', '7')->once()->andReturn([
@@ -189,6 +195,12 @@ it('lists the quota versions and reads one by its eTag', function () {
 
     expect($list)->toBeInstanceOf(Collection::class)
         ->and($list->first())->toBeInstanceOf(QuotaFrameVersionModel::class)
-        ->and($list->first()->publishedDate->format('Y-m-d'))->toBe('2026-09-23')
+        ->and($list->first()->publishedDate?->format('Y-m-d\TH:i:s.uP'))->toBe($expectedDate)
         ->and($service->forVersion($list->first()->eTag)->get())->toBeInstanceOf(QuotaFrameModel::class);
-});
+})->with([
+    'whole seconds' => ['2026-09-23T10:00:00Z', '2026-09-23T10:00:00.000000+00:00'],
+    'microseconds' => ['2026-01-13T07:28:21.725733Z', '2026-01-13T07:28:21.725733+00:00'],
+    'milliseconds' => ['2026-01-13T07:28:21.725Z', '2026-01-13T07:28:21.725000+00:00'],
+    'timezone offset' => ['2026-01-13T07:28:21.725733+08:00', '2026-01-13T07:28:21.725733+08:00'],
+    'null date' => [null, null],
+]);

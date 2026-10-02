@@ -13,7 +13,7 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
         php: [8.2, 8.3, 8.4]
@@ -30,7 +30,9 @@ jobs:
           - laravel: 10.*
             php: 8.4
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: >-
+      P${{ matrix.php }} - L${{ matrix.laravel }} -
+      ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -40,7 +42,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite3, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: >-
+            dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite3, pdo_sqlite,
+            bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: pcov
 
       - name: Setup problem matchers
@@ -48,10 +52,26 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      # Compatibility jobs exercise legacy and lowest dependencies.
+      # Keep this exception in CI, not in the published package configuration.
+      - name: Allow advisory-affected dependencies for compatibility tests
+        if: matrix.laravel != '12.*' || matrix.stability == 'prefer-lowest'
+        run: composer config policy.advisories.block false
+
+      # Older Canvas releases have an incompatible migration method signature.
+      - name: Select compatible Laravel 10 generators
+        if: matrix.laravel == '10.*'
+        run: >-
+          composer require "orchestra/canvas:^8.11"
+          --dev --no-interaction --no-update
+
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" \
+            "orchestra/testbench:${{ matrix.testbench }}" \
+            --dev --no-interaction --no-update
+          composer update --${{ matrix.stability }} \
+            --prefer-dist --no-interaction
 
       - name: Execute tests
         run: vendor/bin/pest
