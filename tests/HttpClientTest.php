@@ -388,20 +388,28 @@ it('retries on 503 server error and succeeds', function () {
 it('retries on connection exception', function () {
     config()->set('nfield-admin.cache.enabled', false);
 
+    $attempts = 0;
+
     Http::fake([
         '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
-        '*/v2/surveys' => Http::sequence()
-            ->pushResponse(fn (Request $request) => new RejectedPromise(
-                new ConnectException('Connection timed out', $request->toPsrRequest())
-            ))
-            ->push(['SurveyId' => 'survey-1'], 200),
+        '*/v2/surveys' => function (Request $request) use (&$attempts) {
+            $attempts++;
+
+            if ($attempts === 1) {
+                return new RejectedPromise(
+                    new ConnectException('Connection timed out', $request->toPsrRequest())
+                );
+            }
+
+            return Http::response(['SurveyId' => 'survey-1'], 200);
+        },
     ]);
 
     $client = app(HttpClient::class);
     $response = $client->get('/v2/surveys');
 
-    expect($response->json())->toBe(['surveyId' => 'survey-1']);
-    Http::assertSentCount(3);
+    expect($response->json())->toBe(['surveyId' => 'survey-1'])
+        ->and($attempts)->toBe(2);
 });
 
 it('wraps terminal connection exception in ApiRequestException', function () {
