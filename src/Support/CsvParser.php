@@ -38,7 +38,7 @@ class CsvParser
             $header = null;
             $rowNumber = 0;
 
-            while (($row = fgetcsv($stream, 0, "\t")) !== false) {
+            while (($row = fgetcsv($stream, 0, "\t", '"', '\\')) !== false) {
                 $rowNumber++;
 
                 if (self::isEmptyRow($row)) {
@@ -56,7 +56,7 @@ class CsvParser
             $headerCount = count($header);
             $results = [];
 
-            while (($row = fgetcsv($stream, 0, "\t")) !== false) {
+            while (($row = fgetcsv($stream, 0, "\t", '"', '\\')) !== false) {
                 $rowNumber++;
 
                 if (self::isEmptyRow($row)) {

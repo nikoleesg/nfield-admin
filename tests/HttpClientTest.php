@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Promise\RejectedPromise;
+use Illuminate\Cache\ArrayStore;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -388,7 +391,9 @@ it('retries on connection exception', function () {
     Http::fake([
         '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
         '*/v2/surveys' => Http::sequence()
-            ->pushFailedConnection('Connection timed out')
+            ->pushResponse(fn (Request $request) => new RejectedPromise(
+                new ConnectException('Connection timed out', $request->toPsrRequest())
+            ))
             ->push(['SurveyId' => 'survey-1'], 200),
     ]);
 
@@ -404,7 +409,9 @@ it('wraps terminal connection exception in ApiRequestException', function () {
 
     Http::fake([
         '*/v2/token' => Http::response(['AccessToken' => 'test-token'], 200),
-        '*/v2/surveys' => Http::failedConnection('Failed to connect'),
+        '*/v2/surveys' => fn (Request $request) => new RejectedPromise(
+            new ConnectException('Failed to connect', $request->toPsrRequest())
+        ),
     ]);
 
     $client = app(HttpClient::class);
@@ -447,8 +454,11 @@ it('locks token acquisition to prevent stampede', function () {
     $client = app(HttpClient::class);
     $cache = Cache::store('array');
 
+    /** @var ArrayStore $store */
+    $store = $cache->getStore();
+
     // Simulate another worker that acquired the lock and populated the cache
-    $lock = $cache->lock($client->cacheKey('lock:token'), 10);
+    $lock = $store->lock($client->cacheKey('lock:token'), 10);
     $lock->get(function () use ($cache, $client) {
         $cache->put($client->cacheKey('access_token'), ['accessToken' => 'locked-token'], 600);
     });

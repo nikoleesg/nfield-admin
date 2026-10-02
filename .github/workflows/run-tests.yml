@@ -58,6 +58,13 @@ jobs:
         if: matrix.laravel != '12.*' || matrix.stability == 'prefer-lowest'
         run: composer config policy.advisories.block false
 
+      # Older Canvas releases have an incompatible migration method signature.
+      - name: Select compatible Laravel 10 generators
+        if: matrix.laravel == '10.*'
+        run: >-
+          composer require "orchestra/canvas:^8.11"
+          --dev --no-interaction --no-update
+
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" \
