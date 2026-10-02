@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
+use Mockery\MockInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaFrameEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaTargetsEndpointInterface;
 use Nikoleesg\NfieldAdmin\Contracts\Endpoints\SurveyQuotaVersionsEndpointInterface;
@@ -75,6 +76,7 @@ it('refuses a version call before the version scope is set', function () {
 });
 
 it('reads the quota frame', function () {
+    /** @var SurveyQuotaFrameEndpointInterface&MockInterface $frame */
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
     $frame->shouldReceive('get')->with('survey-1')->once()->andReturn([
@@ -92,6 +94,7 @@ it('reads the quota frame', function () {
 });
 
 it('writes the quota frame from an array or a request model', function () {
+    /** @var SurveyQuotaFrameEndpointInterface&MockInterface $frame */
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
     $frame->shouldReceive('update')
@@ -112,6 +115,7 @@ it('writes the quota frame from an array or a request model', function () {
 });
 
 it('updates the targets of a frame version', function () {
+    /** @var SurveyQuotaFrameEndpointInterface&MockInterface $frame */
     $frame = Mockery::mock(SurveyQuotaFrameEndpointInterface::class);
 
     $levels = [['id' => 'level-1', 'target' => 10, 'maxTarget' => 20, 'maxOvershoot' => 0]];
@@ -134,6 +138,7 @@ it('updates the targets of a frame version', function () {
 });
 
 it('reads the current targets and the targets of one version', function () {
+    /** @var SurveyQuotaTargetsEndpointInterface&MockInterface $targets */
     $targets = Mockery::mock(SurveyQuotaTargetsEndpointInterface::class);
 
     $targets->shouldReceive('get')->with('survey-1')->once()->andReturn([
@@ -170,6 +175,7 @@ it('reads the current targets and the targets of one version', function () {
 });
 
 it('lists the quota versions and reads one by its eTag', function (?string $publishedDate, ?string $expectedDate) {
+    /** @var SurveyQuotaVersionsEndpointInterface&MockInterface $versions */
     $versions = Mockery::mock(SurveyQuotaVersionsEndpointInterface::class);
 
     $versions->shouldReceive('list')->with('survey-1')->once()->andReturn([
